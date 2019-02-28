@@ -312,7 +312,7 @@ Suppose that the integrand, $f$, is drawn from a Gaussian process, i.e., $f \sim
  \text{for all } \va \ne 0, \;
  n\in \mathbb{N}, \; \vx_1, \ldots, \vx_n \in [0,1]^d.
 \end{multline}
-The function, $C$, and the Gram matrix, $\mC$ depend implicitly on $\vtheta$, but the notation may omit this parameter for simplicity's sake.
+The function, $C_{\vtheta}$, and the Gram matrix, $\mC$ depend implicitly on $\vtheta$, but the notation may omit this parameter for simplicity's sake.
 
 For a Gaussian process, all vectors of linear functionals of $f$ have a multivariate Gaussian distribution. Defining  $\vf  := \left( f(\vx_i)\right)_{i=1}^n$ as the multivariate normal vector of function values, it follows that 
 \begin{subequations} \label{eqn:fGaussDist}
@@ -326,13 +326,13 @@ c_0 &= \int_{[0,1]^{d}\times [0,1]^{d}} C_\vtheta(\vx,\vt) \, \dif{\vx} \, \dif{
 \cov(\vf, \mu) &= \left(  \int_{[0,1]^d} C(\vt,\vx_i) \, \D \vt \right)_{i=1}^n  =: \vc.
 \end{align}
 \end{subequations}
-We need the following lemma to derive the distribution of the posterior error of our cubature. 
+We need the following lemma on conditional normal distribution to derive the distribution of the posterior error of our cubature. 
 
-\begin{lemma} \cite[(A.6), (A.11--13)]{RasWil06a} \label{thrm:condDist} If $\vY = (\vY_1, \vY_2)^T \sim \calN (\vm,\mC)$, where $\vY_1$ and $\vY_2$ are random vectors of arbitrary length, and 
+\begin{lemma} \cite[(A.6), (A.11--13)]{RasWil06a} \label{thrm:condDist} If $\vY = (\vY_1, \vY_2)^T \sim \calN (\vm,\mSigma)$, where $\vY_1$ and $\vY_2$ are random vectors of arbitrary length, and 
 	\begin{gather*}
 	\vm = \begin{pmatrix} \vm_1 \\ \vm_2 \end{pmatrix} = \begin{pmatrix} \Ex(\vY_1) \\ \Ex(\vY_2) \end{pmatrix}, \\
-	\mC = \begin{pmatrix}
-	\mC_{11} & \mC_{21}^T \\ 	\mC_{21} & \mC_{22}
+	\mSigma = \begin{pmatrix}
+	\mSigma_{11} & \mSigma_{21}^T \\ 	\mSigma_{21} & \mSigma_{22}
 	\end{pmatrix} =
 	\begin{pmatrix}
 	\var(\vY_{1}) & \cov(\vY_{1}, \vY_2) \\ 	\cov(\vY_2,\vY_{1}) & \var(\vY_{2})
@@ -340,14 +340,14 @@ We need the following lemma to derive the distribution of the posterior error of
 	\end{gather*}
 	then 
 	\begin{multline*}
-	\vY_1 \vert \vY_2 \; \sim \; \calN \bigl(\vm_1 + \mC_{21}^T \mC_{22}^{-1}(\vY_2 - \vm_2), \\ \mC_{11} - \mC_{21}^T \mC_{22}^{-1} \mC_{21} \bigr).
+	\vY_1 \vert \vY_2 \; \sim \; \calN \bigl(\vm_1 + \mSigma_{21}^T \mSigma_{22}^{-1}(\vY_2 - \vm_2), \\ \mSigma_{11} - \mSigma_{21}^T \mSigma_{22}^{-1} \mSigma_{21} \bigr).
 	\end{multline*}
-Moreover, the inverse of the matrix $\mC$ may be partitioned as
+Moreover, the inverse of the matrix $\mSigma$ may be partitioned as
 \begin{gather*}
-\mC^{-1} = \begin{pmatrix} \mA_{11} & \mA_{21}^T \\ \mA_{21} & \mA_{22} \end{pmatrix}, \\
-\mA_{11} = (\mC_{11} - \mC_{12} \mC_{22}^{-1} \mC_{21})^{-1}, \qquad 
-\mA_{21} = -  \mC_{22}^{-1} \mC_{21} \mA_{11}, \\ 
-\mA_{22} = \mC_{22}^{-1} + \mC_{22}^{-1} \mC_{21} \mA_{11} \mC_{21}^T \mC_{22}^{-1}.
+\mSigma^{-1} = \begin{pmatrix} \mA_{11} & \mA_{21}^T \\ \mA_{21} & \mA_{22} \end{pmatrix}, \\
+\mA_{11} = (\mSigma_{11} - \mSigma_{12} \mSigma_{22}^{-1} \mSigma_{21})^{-1}, \qquad 
+\mA_{21} = -  \mSigma_{22}^{-1} \mSigma_{21} \mA_{11}, \\ 
+\mA_{22} = \mSigma_{22}^{-1} + \mSigma_{22}^{-1} \mSigma_{21} \mA_{11} \mSigma_{21}^T \mSigma_{22}^{-1}.
 \end{gather*}
 
 \end{lemma}
@@ -363,7 +363,7 @@ The natural choice for  the cubature is the posterior mean of the integral, name
 \begin{align}
 \label{eqn:BayesCub}
 \widehat{\mu}  \vert ( \vf = \vy)
-= m(1 - \vone^T  \mC^{-1}\vc )
+= m(1 - \vc^T  \mC^{-1} \vone)
 + \vc^T \mC^{-1} \vy,
 \end{align}
 which takes the form of \eqref{eqn:defn_hmu}.
@@ -417,7 +417,10 @@ s^2_{\MLE}
 \left[ 
 \mCInv - 
 \frac{ \mCInv \vone \vone^T \mCInv }{\vone^T\mCInv \vone}
-\right] \vy, \\
+\right] \vy, 
+\end{align}
+To obtain $\vtheta_\MLE$, substitute $m_\MLE$ and $s_\MLE$ into $l(s,m,\vtheta | \vy)$ and then numerically minimize
+\begin{align}
 \nonumber
 \vtheta_\MLE
 &= \argmin_{\vtheta} \biggl \{
@@ -432,7 +435,7 @@ s^2_{\MLE}
 \end{align}
 The MLE estimate of $\vtheta$ balances minimizing the covariance scale factor, $s^2_{\MLE}$, against minimizing  $\det(\mC)$. 
 
-Under these estimates of the parameters, the cubature \eqref{eqn:BayesCub} and the credible interval \eqref{eqn_prob_confidence_interval} simplify to 
+Under these estimates of the parameters, the cubature \eqref{eqn:BayesCub} and the credible interval \eqref{eqn_prob_confidence_interval} are explicitly written as
 \begin{align} \label{eqn:cubMLE}
 \hmu_\MLE  &= 
 \left(
@@ -524,7 +527,7 @@ Because the shape parameter, $\vtheta$, enters the definition of the covariance 
 
 
 \subsubsection{Generalized Cross-Validation} \label{sec:GCV}
-A third parameter optimization technique is \emph{leave-one-out cross-validation} (CV).  Let $\widetilde{y}_i = \Ex[f(\vx_i ) | \vf_{-i} = \vy_{-i}]$, where the subscript $-i$ denotes the vector excluding the $i^{\text{th}}$ component.  This is the conditional expectation of $f(\vx_i )$ given all data but the function value at $\vx_i$.  The cross-validation criterion, which is to be minimized, is sum of squares of the difference between these conditional expectations and the observed values:
+A third parameter optimization technique is \emph{leave-one-out cross-validation} (CV).  Let $\widetilde{y}_i = \Ex[f(\vx_i ) | \vf_{-i} = \vy_{-i}]$, where the subscript $-i$ denotes the vector excluding the $i^{\text{th}}$ component.  This is the conditional expectation of $f(\vx_i )$ given all data but the function value at $\vx_i$.  The cross-validation criterion, which is to be minimized, is the sum of squares of the difference between these conditional expectations and the observed values:
 \begin{align} \label{FJH:eq:CVA}
 \textup{CV} = \sum_{i=1}^n (y_i - \widetilde{y}_i)^2.
 \end{align}
@@ -727,7 +730,7 @@ So, Algorithm \ref{algorithm1}  in its current form is impractical.
 
 \section{Fast Automatic Bayesian Cubature}\label{sec:fast_BC}
 
-The generic automatic Bayesian cubature algorithm described in the last section requires $\Order(n^3)$ operations to estimate $\vtheta$, compute the credible interval width, and compute the cubature. Now we explain how to speed up the calculations. A key is to choose kernels that match the nodes, $\{\vx_i\}_{i=1}^n$, so that the vector-matrix operations required by Bayesian cubature can be accomplished using fast transforms at a cost of $\Order(n \log(n))$.
+The generic automatic Bayesian cubature algorithm described in the previous section requires $\Order(n^3)$ operations to estimate $\vtheta$, compute the credible interval width, and compute the cubature. Now we explain how to speed up the calculations. A key is to choose covariance kernels that match the nodes, $\{\vx_i\}_{i=1}^n$, so that the vector-matrix operations required by Bayesian cubature can be accomplished using fast transforms at a cost of $\Order(n \log(n))$.
 
 \subsection{Fast Transform Kernel}
 We make some assumptions about the relationship between the covariance kernel and the nodes, which will be shown to hold in Section \ref{sec:shift_invariant_kernel} for rank-1 lattices and shift-invariant kernels.  First we introduce the notation
@@ -802,7 +805,7 @@ $\widetilde{\vc} = \mV^H \vc$.  For any real $\vb$, with $\widetilde{\vb} = \mV^
 
 The covariance kernel used in practice also may satisfy an additional assumption:
 \begin{align} \label{addAssump}
-\int_{[0,1]^d} C(\vt,\vx) \, \D \vt = 1 \qquad \forall \vx \in [0,1]^d,
+\int_{[0,1]^d} C_{\vtheta}(\vt,\vx) \, \D \vt = 1 \qquad \forall \vx \in [0,1]^d,
 \end{align}
 which implies that $c_0 = 1$ and $\vc = \vone$.  Under \eqref{addAssump}, the expressions above may be further simplified:
 \begin{align*}
@@ -1010,7 +1013,7 @@ For general shift-invariance covariance functions, the Gram matrix takes the for
 
 We now demonstrate that the eigenvector matrix for $\mC$ is 
 \begin{align} \label{latticeVdef}
-\mV = \Bigl ( \me^{2 \pi n \sqrt{-1} \phi(i-1)\phi(j-1)} \Bigr)_{i = 1}^n.
+\mV = \Bigl ( \me^{2 \pi n \sqrt{-1} \phi(i-1)\phi(j-1)} \Bigr)_{i,j = 1}^n.
 \end{align}
 Assumption \eqref{fastcompAssumpB} follows automatically.
 Now, note that the $k,j$ element of $\mV^H\mV$ is
@@ -1249,7 +1252,7 @@ Periodizing variable transforms are used for the numerical examples below. In so
 \subsection{Test Results and Observations}
 %\label{sec:numerical_experiments}
 
-Three integrals were evaluated using the GAIL algorithm \code{cubBayesLattice\_g}:  a multivariate normal probability, the Keister's example, and an option pricing example.  Four different error tolerances, $\varepsilon$,  were set for each example, with the tolerances chosen depending on the difficulty of the problem.  The sequences $\{\vx_i\}_{i=1}^\infty$ were the randomly shifted lattice node sequences supplied by GAIL. The accuracy of the algorithm differs depends on the shift. For each integral,  each tolerance, and each of our stopping criteria---empirical Bayes, full Bayes, and generalized cross-validation---our algorithm was run for $100$ different random shifts.  For each test, the execution times were plotted against $\abs{\mu - \hmu}/\varepsilon$.  We expect $\abs{\mu - \hmu}/\varepsilon$ to be no greater than one, but hope that it is not too much smaller than one, which would indicate a stopping criterion that is too conservative. 
+Three integrals were evaluated using the GAIL algorithm \code{cubBayesLattice\_g}:  a multivariate normal probability, the Keister's example, and an option pricing example.  Four different error tolerances, $\varepsilon$,  were set for each example, with the tolerances chosen depending on the difficulty of the problem.  The sequences $\{\vx_i\}_{i=1}^\infty$ were the randomly shifted lattice node sequences supplied by GAIL. The accuracy of the algorithm differs based on the shift. For each integral,  each tolerance, and each of our stopping criteria---empirical Bayes, full Bayes, and generalized cross-validation---our algorithm was run for $100$ different random shifts.  For each test, the execution times were plotted against $\abs{\mu - \hmu}/\varepsilon$.  We expect $\abs{\mu - \hmu}/\varepsilon$ to be no greater than one, but hope that it is not too much smaller than one, which would indicate a stopping criterion that is too conservative. 
 
 Figures \ref{fig:mvn-guaranteed-MLE} to \ref{fig:optprice-guaranteed-GCV} can be reproduced using the script \code{cubBayesLattice\_guaranteed\_plots.m} in GAIL.
 
@@ -1352,16 +1355,16 @@ f(\vx) &= \text{payoff} \left(\mL
 \end{align*}
 The Asian arithmetic mean call option has a payoff of the form
 \begin{align*}
-\text{payoff}(\vz) &= \max\left( \frac 1d  \sum_{j=1}^d S_j(\vz) - K, 0 \right) \me^{-r T}, \\
+\text{payoff}(\vz) &= \max\left( \frac 1d  \sum_{j=1}^d S_j(\vz) - K, 0 \right) \me^{-\upsilon T}, \\
 \text{where}\;
-S_j(\vz) &= S_0 \exp\bigl((r-\sigma^2/2)jT/d + \sigma \sqrt{T/d} z_j \bigr).
+S_j(\vz) &= S_0 \exp\bigl((\upsilon-\sigma^2/2)jT/d + \sigma \sqrt{T/d} z_j \bigr).
 \end{align*}
-Here, $T$ denotes the time to maturity of the option, $d$ the number of time steps, $S_0$ the initial price of the stock, $r$ the interest rate, $\sigma$ the volatility, and $K$ the strike price.  
+Here, $T$ denotes the time to maturity of the option, $d$ the number of time steps, $S_0$ the initial price of the stock, $\upsilon$ the interest rate, $\sigma$ the volatility, and $K$ the strike price.  
 
 Figures \ref{fig:optprice-guaranteed-MLE}, \ref{fig:optprice-guaranteed-FB} and 
 \ref{fig:optprice-guaranteed-GCV} summarize the numerical results for this example using
 $
-T = 1/4, \ \ d = 13, \ \ S_0 = 100, \ \ r =  0.05, \ \ \sigma = 0.5, \ \ K = 100.
+T = 1/4, \ \ d = 13, \ \ S_0 = 100, \ \ \upsilon =  0.05, \ \ \sigma = 0.5, \ \ K = 100.
 $
 Moreover, $\mL$ is chosen to be the matrix of eigenvectors of $\mSigma$ times the square root of the diagonal matrix of eigenvalues of $\mSigma$.
 Because the integrand has a kink caused by the $\max$ function, it does not help to use a periodizing transform that is very smooth.  We choose the Baker's transform \eqref{eq:bakerTrans} and $r = 1$.

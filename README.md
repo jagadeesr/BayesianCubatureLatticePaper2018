@@ -1,4 +1,4 @@
-Fast Automatic Bayesian Cubature suing Lattice Sampling.
+Fast Automatic Bayesian Cubature using Lattice Sampling.
 Manuscript submitted for review
 
 --------------------------------------------------------------------------------------------------
