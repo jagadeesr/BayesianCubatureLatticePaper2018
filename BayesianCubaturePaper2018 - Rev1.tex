@@ -656,7 +656,7 @@ b_j - \sum_{k=1}^{j-1} l_{jk} \Phi^{-1}(\alpha_k + x_k(\beta_k-\alpha_k))
 \label{fGenzdef}
 f_{\text{Genz}}(\vx) = \prod_{j=1}^d [\beta_j(\vx) - \alpha_j(\vx)].
 \end{align}
-where $\Phi$ is the cumulative standard normal distribution function.  Then, $\mu = \int_{[0,1]^{d'-1}} f_{\text{Genz}}(\vx) \, \dvx$.
+where $\Phi$ is the cumulative standard normal distribution function.  Then, $\mu = \int_{[0,1]^{d'-1}} f_{\text{Genz}}(\vx) \, \dvx$. As we can see, this approach transforms $d'$ integral into a $d=d'-1$ integral.
 
 \begin{figure}
 	\captionsetup[subfigure]{labelformat=empty}
@@ -667,7 +667,7 @@ where $\Phi$ is the cumulative standard normal distribution function.  Then, $\m
 	%\begin{subfigure}[h]{0.48\linewidth}
 		\includegraphics[width=0.7\linewidth]{GenzFunc_varTx_none}
 	%\end{subfigure}
-	\caption{The $d'=3$ multivariate normal probability transformed to an integral of $f_{\text{Genz}}$ with  $d=2$. This plot can be reproduced using \code{IntegrandPlots.m} in GAIL}
+	\caption{The $d'=3$ multivariate normal probability transformed to an integral of $f_{\text{Genz}}$ of $d=2$. This plot can be reproduced using \code{IntegrandPlots.m} in GAIL}
 	\label{fig:MVN_Genz}
 \end{figure}
 
@@ -986,6 +986,47 @@ For general shift-invariant covariance functions, the Gram matrix takes the form
 \mC &= \bigl ( C(\vx_i, \vx_j) \bigr)_{i, j = 1}^n \\
 & = \Bigl ( K(\vh(\phi(i-1) - \phi(j-1)) \bmod \vone ) \Bigr)_{i, j = 1}^n.
 \end{align*}
+Here we show the resulting matrix $\mC$ is circulant.
+Then using the well known fact, circulant matrices are diagonalized by discrete Fourier transform (DFT), one can obtain the eigenvectors analytically and the eigenvalues using DFT.
+% The speedup of their algorithm is in the linear algebra part of the calculations. 
+% But the derivation in Sections 4.3 and 4.4 can be obtained much faster by realising that their definition of the covariance matrix,
+By the definition of $\mC$, $i,j$th element
+\begin{align*}
+\mC_{i,j} & = K( x_i - x_j \bmod 1 ) \\
+&= K\bigl( \bigl(\vh \phi(i-1) - \vh \phi(j-1)\bigr) \bmod 1 \bigr) 
+\end{align*}
+Noting that the sequence $\{\phi(i-1)\}_{i=1}^n$ is a re-ordering of $0, \ldots, 1-1/n$ for $n$ a power of $2$, and $\vh$ is a vector integers, one can rewrite
+\begin{align*}
+\mC_{i,j} &= K_{\vh}\bigl( \bigl(\pi_{2^m}(i-1) - \pi_{2^m}(j-1)\bigr) \bmod 2^m \bigr)
+\end{align*}
+where $\pi_{2^m}(i-1) = 2^m\phi(i-1)$ is the ''integer version'' of the radical inverse function for the full initial sequence of $2^m$ points and $K_{\vh}(\vt) = K(\vh^T \vt)$. By similar approach
+\begin{align*}
+\mC_{i,j} &= K_{\vh,\pi_{2^m}}( (i-1) - (j-1) \bmod 2^m ) , 
+\\
+& \hspace{4cm} \text{for}\; i,j=1,...,2^m ,
+\end{align*}
+is a permutation of a circulant matrix.
+ 
+The function $\pi_{2^m}$ is a permutation on $\{0, 1, ..., 2^m-1\}$, undoing this
+permutation on the rows and columns of the matrix $\mC$ one obtains a circulant
+matrix:
+$P_{2^m}^T \mC P_{2^m}$.
+%The current Sections 4.3 and 4.4 are therefore not needed. See further.
+Eigenvectors of the circulant matrices are 
+\begin{align} \label{latticeVdef}
+\mV = \Bigl ( \me^{2 \pi n \sqrt{-1} \phi(i-1)\phi(j-1)} \Bigr)_{i,j = 1}^n.
+\end{align}
+and the eigenvalues are
+\begin{align*}
+\vlambda = \mV \vC_1
+\end{align*}
+which automatically follow from the properties of circulant matrices.
+This proves the assumption $\eqref{fastcompAssumpB}$.
+
+
+\iftrue
+\JRNote{Original content of Section 4.3 begins from here:}
+
 
 We now demonstrate that the eigenvector matrix for $\mC$ is 
 \begin{align} \label{latticeVdef}
@@ -1025,9 +1066,10 @@ For this last equality to hold for all integers $m$, we must have $k = \ell$ or 
 & = n \delta_{k,\ell}  \sum_{i=1}^n K\left ( \left(\frac{i\vh}{n} \right) \bmod \vone \right)  \me^{-2 \pi \sqrt{-1} i \phi(k-1) }.
 \end{align*}
 This establishes $\mV^H \mC \mV$ as a diagonal matrix whose diagonal elements are $n$ times the eigenvalues, i.e., $\lambda_k = \omega_{k,k}/n$.  Furthermore, $\mV$ is the matrix of eigenvectors, which satisfies assumption \eqref{fastcompAssumpA}.
+\fi
 
 \subsection{Iterative Computation of the Fast Transform}
-Assumption \eqref{fastcompAssumpA} is that computing $\mV^H \vb$ requires only $\Order(n \log(n)) $ operations.  Recall that we assume that $n$ is a power of $2$.  This can be accomplished by an iterative algorithm.  Let $\mV^{(n)}$ denote the $n \times n$ matrix $\mV$ defined in  \eqref{latticeVdef}.  We show how to compute $\mV^{(2n)H}\vb$ quickly for all $\vb \in \reals^{2n}$ assuming that $\mV^{(n)H}\vb$ can be computed quickly for all $\vb \in \reals^n$.
+Assumption \eqref{fastcompAssumpA} is that computing $\mV^H \vb$ requires only $\Order(n \log(n)) $ operations.  Recall that we assume that $n$ is a power of $2$.  This can be accomplished by an iterative algorithm.  Let $\mV^{(n)}$ denote the $n \times n$ matrix $\mV$ defined in  \eqref{latticeVdef}.  One can compute $\mV^{(2n)H}\vb$ quickly for all $\vb \in \reals^{2n}$ assuming that $\mV^{(n)H}\vb$ can be computed quickly for all $\vb \in \reals^n$, using the butterfly structure of the Fast Fourier Transform (FFT). For the brevity, we only provide the results. 
 
 From the definition of the van der Corput sequence in \eqref{vdCDef}, it follows that
 \begin{gather} 
@@ -1052,24 +1094,22 @@ Let $\widetilde{\vb} = \mV^{(2n)H}\vb$ for some arbitrary $\vb \in \reals^{2n}$,
 It follows from these definitions and the definition of $\mV$ in  \eqref{latticeVdef} that
 \begin{align*}
 \widetilde{\vb}^{(1)} &= \left( \sum_{j=1}^{2n}  \me^{-4 \pi n \sqrt{-1} \phi(2i-2)\phi(j-1)} b_{j} \right)_{i=1}^n \\
-&= \left( \sum_{j=1}^{2n}  \me^{-2 \pi n \sqrt{-1} \phi(i-1)\phi(j-1)} b_{j} \right)_{i=1}^n \quad \text{by \eqref{vdCProp}}\\
-&= \left( \sum_{j=1}^{n}  \me^{-2 \pi n \sqrt{-1} \phi(i-1)\phi(j-1)} b_{j} \right)_{i=1}^n \quad \\
-&\qquad \qquad +  \left( \sum_{j=1}^{n}  \me^{-2 \pi n \sqrt{-1} \phi(i-1)\phi(n+j-1)} b_{n+j} \right)_{i=1}^n \\
-&= \mV^{(n)H}\vb^{(1)}  +  \biggl(  \me^{-\pi \sqrt{-1} \phi(i-1)}  \\
-& \quad \times \sum_{j=1}^{n}  \me^{-2 \pi n \sqrt{-1} \phi(i-1)\phi(j-1)} b_{n+j} \biggr)_{i=1}^n \quad  \text{by \eqref{vdCPropB}}\\
+% &= \left( \sum_{j=1}^{2n}  \me^{-2 \pi n \sqrt{-1} \phi(i-1)\phi(j-1)} b_{j} \right)_{i=1}^n \quad \text{by \eqref{vdCProp}}\\
+% &= \left( \sum_{j=1}^{n}  \me^{-2 \pi n \sqrt{-1} \phi(i-1)\phi(j-1)} b_{j} \right)_{i=1}^n \quad \\
+% &\qquad \qquad +  \left( \sum_{j=1}^{n}  \me^{-2 \pi n \sqrt{-1} \phi(i-1)\phi(n+j-1)} b_{n+j} \right)_{i=1}^n \\
+% &= \mV^{(n)H}\vb^{(1)}  +  \biggl(  \me^{-\pi \sqrt{-1} \phi(i-1)}  \\
+% & \quad \times \sum_{j=1}^{n}  \me^{-2 \pi n \sqrt{-1} \phi(i-1)\phi(j-1)} b_{n+j} \biggr)_{i=1}^n \quad  \text{by \eqref{vdCPropB}}\\
 &= \mV^{(n)H}\vb^{(1)} +  \left(  \me^{-\pi \sqrt{-1} \phi(i-1)} \right)_{i=1}^n \odot \bigl(\mV^{(n)H}\vb^{(2)} \bigr),
 \end{align*}
 where $\odot$ denotes the Hadamard (term-by-term) product.  By a similar argument, 
 \begin{align*}
 \widetilde{\vb}^{(2)} &= \left( \sum_{j=1}^{2n}  \me^{-4 \pi n \sqrt{-1} \phi(2i-1)\phi(j-1)} b_{j} \right)_{i=1}^n \\
-&= \left( \sum_{j=1}^{2n}  \me^{-2 \pi n \sqrt{-1} [\phi(i-1)+1]\phi(j-1)} b_{j} \right)_{i=1}^n \quad \text{by \eqref{vdCProp}}\\
-&= \left( \sum_{j=1}^{n}  \me^{-2 \pi n \sqrt{-1} [\phi(i-1)+1]\phi(j-1)} b_{j} \right)_{i=1}^n \quad \\
-&\qquad  +  \left( \sum_{j=1}^{n}  \me^{-2 \pi n \sqrt{-1} [\phi(i-1)+1]\phi(n+j-1)} b_{n+j} \right)_{i=1}^n \\
-&= \mV^{(n)H}\vb^{(1)} 
-+  \left(  \me^{ -\pi \sqrt{-1} [\phi(i-1) + 1]} \right. 
-\\
-& \qquad \qquad \left . \times \sum_{j=1}^{n}  \me^{-2 \pi n \sqrt{-1} \phi(i-1)\phi(j-1)} b_{n+j} \right)_{i=1}^n \\
-& \hspace{4cm}  \text{by \eqref{vdCPropB} and \eqref{vdCPropC}}\\
+% &= \left( \sum_{j=1}^{2n}  \me^{-2 \pi n \sqrt{-1} [\phi(i-1)+1]\phi(j-1)} b_{j} \right)_{i=1}^n \quad \text{by \eqref{vdCProp}}\\
+% &= \left( \sum_{j=1}^{n}  \me^{-2 \pi n \sqrt{-1} [\phi(i-1)+1]\phi(j-1)} b_{j} \right)_{i=1}^n \quad \\
+% &\qquad  +  \left( \sum_{j=1}^{n}  \me^{-2 \pi n \sqrt{-1} [\phi(i-1)+1]\phi(n+j-1)} b_{n+j} \right)_{i=1}^n \\
+% &= \mV^{(n)H}\vb^{(1)} +  \left(  \me^{ -\pi \sqrt{-1} [\phi(i-1) + 1]} \right. \\
+% & \qquad \qquad \left . \times \sum_{j=1}^{n}  \me^{-2 \pi n \sqrt{-1} \phi(i-1)\phi(j-1)} b_{n+j} \right)_{i=1}^n \\
+% & \hspace{4cm}  \text{by \eqref{vdCPropB} and \eqref{vdCPropC}}\\
 &= \mV^{(n)H}\vb^{(1)} -  \left(  \me^{-\pi \sqrt{-1} \phi(i-1)} \right)_{i=1}^n \odot \bigl(\mV^{(n)H}\vb^{(2)} \bigr).
 \end{align*}
 
@@ -1079,7 +1119,11 @@ The computational cost to compute $\mV^{(2n)H}\vb$ is then twice the cost of com
 \subsection{Overcoming Cancellation Error}
 For the kernels used in our computation, it may happen that $n/\lambda_1$ is close to $1$.  Thus, the term $1-n/\lambda_1$, which appears in the credible interval widths, $\err_{\MLE}$, $\err_{\textup{full}}$, and $\err_{\textup{GCV}}$, may suffer from cancellation error.  We can avoid this cancellation error by modifying how we compute the Gram matrix and its eigenvalues.
 
-Define a new function $\rC : = C -1$, and its associated Gram matrix $\rmC = \mC - \vone \vone^T$.   Note that $\rC$ inherits the shift-invariant properties of $C$.  Since $\vone$ is the first eigenvector of $\mC$, it follows that the eigenvalues of $\rmC$ are $\rlambda_1 = \lambda_1 - n, \lambda_2, \ldots, \lambda_n$.  Moreover,
+The shift-invariant kernel of our interest \eqref{the_kernel_eqn_bernoulli} has the form $C = 1 + \rC$. 
+One could take advantage of it to avoid the subtraction in $1-n/\lambda_1$. 
+Define the new function $\rC : = C -1$, and its associated Gram matrix $\rmC = \mC - \vone \vone^T$, where $\rmC$ is simply the original kernel after discarding ``$1$", there is no actual subtraction involved in the computation.  So we are not really shifting the cancellation error to another place.
+Note that $\rC$ inherits the shift-invariant properties of $C$.  
+Since $\vone$ is the first eigenvector of $\mC$, it follows that the eigenvalues of $\rmC$ are $\rlambda_1 = \lambda_1 - n, \lambda_2, \ldots, \lambda_n$.  Moreover,
 \begin{equation*}
 1 - \frac{n}{\lambda_1}  = \frac{\lambda_1 - n}{\lambda_1} = \frac{\rlambda_1}{\rlambda_1 +n},
 \end{equation*}
@@ -1196,9 +1240,9 @@ where $g$ has sufficient smoothness, but lacks periodicity.  The Baker's transfo
 \begin{multline} \label{eq:bakerTrans}
 \vPsi: \vx \mapsto (\Psi(x_1),  \ldots, \Psi(x_d)), \\ \Psi(x)  =1 - 2 \abs{x - 1/2},
 \end{multline}
-allows us to write $\mu$ in the form of \eqref{eqn:defn_mu}, where $f(\vx) = g(\vPsi(\vx))$.  
+allows us to write $\mu$ in the form of \eqref{eqn:defn_mu}, where $f(\vx) = g(\vPsi(\vx))$. Also called tent transform, $\Psi'(x)$ is not defined, not suitable when the $f$ is required to have also smooth derivatives. 
 
-A family of variable transforms take the form
+A family of variable transforms that also provide some derivatives take the form
 \begin{subequations} %\label{eq:varTrans}
 \begin{equation*}
 \vPsi: \vx \mapsto (\Psi(x_1),  \ldots, \Psi(x_d)), \quad \Psi:[0,1] \mapsto [0,1],
