@@ -1,0 +1,23 @@
+Section 2.1, line 9: I think "The function $C$" should be "The function $C_\theta$," since there is no function $C$.
+
+Right before (12):  Not sure if "simplify to" is the right expression, since it does not look like a simplification of those formulas.
+
+Section 2.2.3, line 5: This is conditional on the data, but also a function of the parameters, I suppose?  I think this should be clarified.  On line 7, read "is the sum".
+
+Two lines before Equation (20): "confidence interval" and not "credibility interval" like the other ones?
+
+Five lines after (21): err$_{\rm CI}$ refers to what exactly? The value in (20)?  Clarify.
+
+In (24), are $C_1,\dots,C_n$ the columns of C?
+
+It took me a while to figure out what the four different colors of the points in Figures 5 to 13 mean.  There is a continuum of colors on the right, but only four specific colors for the points are used, so I think it would be useful to say explicitly what each of these four colors  represent.  In the text on page 12, it would be useful to say for example that $\epsilon = 10^{-5}$ corresponds to the green points.   By the way, are there 100 green points, for the 100 independent shifts?
+
+Section 5.2, line 8: correct "differs depends".
+
+Page 14: The three figures look all the same!  Any comment on that?
+
+In this example, does it really make sense to assume that the integrand comes from a Gaussian process?
+
+Four lines below Figure 13:  "A noticeable aspect from the plots is how much ....":  It may be good to explain exactly how we see that in the plots.
+
+Reference [1]:  "Griolami"?   Mark may not recognize himself!
