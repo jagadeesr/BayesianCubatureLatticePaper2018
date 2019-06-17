@@ -309,8 +309,8 @@ Section \ref{sec:shift_invariant_kernel} implements this concept for shift invar
 Suppose that the integrand, $f$, is drawn from a Gaussian process, i.e., $f \sim \mathcal{GP}(m,s^2 C_\vtheta)$.  Specifically, $f$ has real-valued constant mean $m$ and covariance function $s^2C_\vtheta$, where $s$ is a non-negative scale factor, and $C_\vtheta: [0,1]^d \times [0,1]^d \to \mathbb{R} $ is a symmetric, positive-definite function and parameterized by $\vtheta$:
 \begin{multline} \label{FJH:eq:CondPosDef}
 \mC^T = \mC,  \quad \va^T \mC \va > 0, \quad \text{where }  \mC = \left(  C_\vtheta(\vx_i,\vx_j)  \right)_{i,j=1}^n,\\
- \forall \va \ne 0, \;
- n\in \mathbb{N}, \; \text{ distinct }\vx_1, \ldots, \vx_n \in [0,1]^d.
+ \text{for all } \va \ne 0, \;
+ n\in \mathbb{N}, \; \vx_1, \ldots, \vx_n \in [0,1]^d.
 \end{multline}
 The function, $C$, and the Gram matrix, $\mC$ depend implicitly on $\vtheta$, but the notation may omit this parameter for simplicity's sake.
 
@@ -730,8 +730,7 @@ So, Algorithm \ref{algorithm1}  in its current form is impractical.
 The generic automatic Bayesian cubature algorithm described in the last section requires $\Order(n^3)$ operations to estimate $\vtheta$, compute the credible interval width, and compute the cubature. Now we explain how to speed up the calculations. A key is to choose kernels that match the nodes, $\{\vx_i\}_{i=1}^n$, so that the vector-matrix operations required by Bayesian cubature can be accomplished using fast transforms at a cost of $\Order(n \log(n))$.
 
 \subsection{Fast Transform Kernel}
-We make some assumptions about the relationship between the covariance kernel and the nodes, which will be shown to hold in Section \ref{sec:shift_invariant_kernel} for rank-1 lattices and shift-invariant kernels. 
-We introduce some notation
+We make some assumptions about the relationship between the covariance kernel and the nodes, which will be shown to hold in Section \ref{sec:shift_invariant_kernel} for rank-1 lattices and shift-invariant kernels.  First we introduce the notation
 \begin{align}
 \nonumber
 \mC &= \Big(C_\vtheta(\vx_i,\vx_j)\Big)_{i,j=1}^n  = (\vC_1,...,\vC_n) 
@@ -744,7 +743,7 @@ We introduce some notation
 \nonumber
 \mC^p  &= \frac 1n \mV \mLambda^{p} \mV^H, \qquad \forall p \in \integers,
 \end{align}
-where $\mV^H$ is the Hermitian of $\mV$.  The columns of matrix $\mV$ are eigenvectors of $\mC$, and $\mLambda$ is a diagonal matrix of eigenvalues of $\mC$.  
+where $\mV^H$ is the Hermitian of $\mV$.  The columns of matrix $\mV$ are eigenvectors of $\mC$, and $\mLambda$ is a diagonal matrix of eigenvalues of $\mC$.
 For any $n \times n$ vector $\vb$, define the notation  $\widetilde{\vb} := \mV^H \vb$.
 
 We make three assumptions that allow the fast computation:
