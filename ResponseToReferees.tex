@@ -1,0 +1,243 @@
+\documentclass{amsart}
+
+\usepackage{xcolor}
+
+\voffset -1in
+\hoffset -0.75in
+\textheight 9in
+\textwidth 6.5in
+
+\newcommand{\vV}{\boldsymbol{V}}
+\newcommand{\vone}{\boldsymbol{1}}
+
+\begin{document}
+\title[Response for Fast Automatic Bayesian Cubature]{Response to Referees of the manuscript \\
+\emph{Fast Automatic Bayesian Cubature Using Lattice Sampling}}
+\maketitle
+
+\newcommand{\Response}[1]{{\color{blue}#1}}
+\renewcommand{\vec}[1]{\boldsymbol{#1}}
+
+Thanks to the the referees and the editors for their helpful comments.  We have revised our manuscript in light of these comments, which we address point-by-point below.
+
+\section*{Reviewer 1: The paper is an interesting read on Bayesian cubature \ldots}
+
+The speedup of their algorithm is in the linear algebra part of the
+calculations. But the derivation in Sections 4.3 and 4.4 can be obtained much
+faster by realising that their definition of the covariance matrix, \ldots 
+is a permutation of a circulant matrix from which all required properties follow. \ldots The current Sections 4.3 and 4.4 are therefore not
+needed. \Response{We have altered these sections.}
+
+A second contribution is made in section 4.5 titled 'Overcoming cancellation
+error', but here it is not so clear to me if what is proposed will really help.
+See further.
+
+\begin{itemize}
+\item Abstract
+\begin{itemize}
+\item The second sentence doesn't make sense to me.
+\item In the third sentence I would replace 'postulates' with 'considers'.
+\end{itemize}
+
+\item Section 1
+\begin{itemize}
+\item The authors write 'We construct a reliable stopping criterion' but it is
+unclear what they mean with 'reliable'.
+\item On page 2 they write 'If function evaluation is expensive, then $\$(f)$ might
+be similar in magnitude to $\log(n)$.': this makes no sense as evaluating $f$
+depends on the dimension $d$. So this depends on how big $n$ is and if we want more
+accuracy then $n$ becomes bigger.
+\end{itemize}
+
+\item Section 2
+\begin{itemize}
+\item '$f$ is drawn from a Guaussian process': it should be explained what this
+means, e.g., does it mean $f$ is the Gaussian function with unknown mean and
+covariance, or does it behave like this in expectation, or \ldots This sounds like
+a very strong assumption.
+\item It should maybe be mentioned here that there are hyper distributions for the
+hyper parameters.
+\item It is never said how the $x_i$ are sampled. Does (5a) hold for any
+distribution of samples $x_i$?
+\item In this section there are different quantities being defined: the matrix
+$C_{\vec{\theta}}$ which involves evaluating the covariance function, $c_0$ which
+involves integrating the covariance function and $\vec{c}$ which involves
+calculating integrals of the covariance function with one leg fixed to a sample
+point. Only at the end the authors say that they assume these things to be
+cheap. I think this should be spelled out immediately.
+\item  It think is not a good idea to leave out the dependence on $\vec{\theta}$ for
+$C$. E.g. in (11) the $\vec{\theta}$ is not visible at all in the expression to be
+minimized for it. The $C$ without subscript also clashes that of lemma 1.
+\item  The lead in to lemma 1 makes it feel like this is a field specific lemma but
+in fact it is just the well known conditional gaussian. Please write something
+like 'We need the following lemma on conditional normal distribution ...'.
+\item  Do not use $C$ in this lemma.
+\item  The other derivations in the paper are all made in prose. It would be better
+to formally state some of them. E.g., the results on the top of page 3.
+\item  From (6) to (7) the notation is different: $c^T C^{-1} 1$ vs $1^T C^{-1} c$,
+this might be corrected.
+\end{itemize}
+
+
+\item Section 2.2.1
+\begin{itemize}
+\item It would help to see the dependence on $\vec{\theta}$ in (9), (10) and (11).
+\item It looks like (11) is independent of $m_{\text{MLE}}$ and $s^2_{\text{MLE}}$, how does it pop up?
+Otherwise we could just first optimize for $\vec{\theta}$, then for m and then
+for $s^2$.
+\end{itemize}
+
+\item Section 2.2.2
+\begin{itemize}
+\item I cannot follow the derivation.
+\item At the end of the section the authors say that this is not a good method.
+Why then list it? Maybe the final paragraph needs to be rewritten.
+\end{itemize}
+
+\item Section 2.3. The authors stress here that the integrand must be a 'typical' draw from the assumed Gaussian process and not an outlier. That sounds scary.
+
+\item Section 2.4. Please use $d'$ for the dimension of the original integral in (22) and
+immediately say that the dimension for the computation is $d = d' - 1$, 'as will
+now be explained \ldots'. So put $d'$ after the display (22) and in the display (23)
+and update the formula for $\mu$ at the bottom of the page and the display on the
+next page. After these changes you can keep the '$d=2$' in the caption of Fig 2.
+
+
+\item Section 3
+\begin{itemize}
+\item Maybe write 'previous section' instead of 'last section'.
+-- Maybe write 'covariance kernel' instead of just 'kernel'. I think the word
+kernel hasn't been used up till this point.
+\end{itemize}
+
+\item Section 3.1. Use $C_{\vec{\theta}}$ in (27) for clarity.
+
+\item Section 3.3. Elaborate on what is meant with the second sentence.
+
+\item Sections 4.2, 4.3 and 4.4. 
+The definition (35) makes it that the covariance matrix $C$ is a permutation
+of a circulant matrix. \ldots
+
+\item  Section 4.5. 
+\begin{itemize}
+    \item The authors present an alternative form of calculating the matrix $C$ for
+covariance functions of the particular product form in Section 4.2 \ldots I think they are right that this is a good
+way of calculating Ccirc without doing the -1 at the end.
+However, it is not clear whether this will actually help. \ldots It is not clear to me if operating
+the FFT on the first (permuted) column of $\mathring{C}$ in this form is not going to
+increase the error on $\mathring{\lambda}_1$, so putting the numerical error elsewhere.
+
+\item Please delete the word 'periodic' in proposition 1, this is covered by the
+shift-invariantness.
+\end{itemize}
+
+\item Section 5.1. The Baker's transform is introduced first and then the authors talk about
+more general transforms without saying so. For the Baker's transform the
+substitution written with $\Psi'$ is undefined. This paragraph should be
+restructured.
+
+\end{itemize}
+
+
+
+\section*{Reviewer 2: The authors study a stopping criterion \ldots}
+
+\begin{itemize}
+\item p.\ 3, Sec.\ 2.2 The application of Lemma 1 to automatic Bayesian cubature is not clear to me, since integrand data is accumulated sequentially, which does not correspond to applying a single linear mapping to all integrands (realizations) $f$.
+
+\item Sec.\ 2.2.1, 2.2.2 I suggest to include some references for the results that are presented in Sections 2.2.1 and 2.2.2.
+
+\item p.\ 5, Sec.\ 2.4 Why are Sobol points chosen for the Matern kernel? Is there some theoretical link?
+
+In the example the integral (22) is considered over a compact set. What is the benefit of Genz’s transformation, compared to a simple affine linear transformation, in this case?
+
+\item p.\ 6 Why Hermitian? Are you considering complex-valued kernels? \Response{It is convenient since we are working with FFT's of real vectors, which are complex vectors.  Some explanation is provided at the beginning of Section 3.1.}
+
+\item p.\ 7, top left Definition of v1∗?
+...where ...(lower case)
+
+\item Sec.\ 3.2--3.4 Does the operation count also include the computational cost for the minimization problem to estimate $\theta$? I suspect that this is not the case, since there is no assumption concerning the dependence of $C_\theta$ on $\theta$. The same question arises in the setting of Section 4.
+
+\item Sec.\ 4.1 and 4.2 As the authors state, larger $r$ implies a greater degree of smoothness of the kernel. This should lead to a greater amount of smoothness of the integrands, and thus to a fast convergence of suitable cubature formulas. It might be that this is not exploited by the integration lattices (plus periodization), as studied in the present paper. Please comment.
+
+\item p.\ 9, eqn. (37) $i, j = 1$
+
+\item p.\ 9, bottom, right Assumption (25c) \ldots 
+
+\item p.\ 12, center left  \ldots differs depends \ldots ?
+
+\item Sec.\ 5.1 Is there some kind of a universal periodization that ‘works’ for every value of $r$?
+
+\item Sec. 5.2 You take $r = 2$ or $r = 1$ for the periodization in these examples. Does this mean that $\theta = (2,\gamma)$ is considered for the shift-invariant kernel, or do you still consider $\theta = (r,\gamma)$ with $r \in \mathbb{N}$ as the unknown parameter?
+I suggest not to use $r$ also in the drift term in the option pricing example.
+
+\end{itemize}
+
+\section*{Reviewer 3}
+
+\begin{itemize}
+    \item Section 2.1, line 9: I think ``The function $C$" should be "The function $C_\theta$," since there is no function $C$.
+
+\item Right before (12):  Not sure if ``simplify to" is the right expression, since it does not look like a simplification of those formulas.
+
+\item Section 2.2.3, line 5: This is conditional on the data, but also a function of the parameters, I suppose?  I think this should be clarified.  On line 7, read "is the sum".
+
+\item Two lines before Equation (20): ``confidence interval" and not ``credibility interval" like the other ones?
+
+\item Five lines after (21): err$_{\rm CI}$ refers to what exactly? The value in (20)?  Clarify.
+
+\item In (24), are $C_1,\dots,C_n$ the columns of C?
+
+\item It took me a while to figure out what the four different colors of the points in Figures 5 to 13 mean.  There is a continuum of colors on the right, but only four specific colors for the points are used, so I think it would be useful to say explicitly what each of these four colors  represent.  In the text on page 12, it would be useful to say for example that $\epsilon = 10^{-5}$ corresponds to the green points.   By the way, are there 100 green points, for the 100 independent shifts?
+
+\item Section 5.2, line 8: correct ``differs depends".
+
+\item Page 14: The three figures look all the same!  Any comment on that?
+
+\item In this example, does it really make sense to assume that the integrand comes from a Gaussian process?
+
+\item Four lines below Figure 13:  "A noticeable aspect from the plots is how much ....":  It may be good to explain exactly how we see that in the plots.
+
+\item Reference [1]:  "Griolami"?   Mark may not recognize himself!
+
+\end{itemize}
+
+\section*{Editor: We have received two very careful reviews of this paper \ldots}
+
+
+The revision should at a minimum point out the connection to the FFT. 
+
+Because the goal is to reach people outside of PN some additional explanations are in order.
+
+\begin{enumerate}
+\renewcommand{\labelenumi}{\arabic{enumi}.}
+    \item The results in Section 2.2.2 were confusing. \ldots 
+
+    \item It is weird to use complex numbers for the eigenvectors of a real symmetric matrix \ldots \Response{While it may be strange, it is convenient since we are working with FFT's of real vectors, which are complex vectors.  Some explanation is provided at the beginning of Section 3.1.}
+
+\item In(24), why is $V^H =nV^{-1}$ and not just $V^{-1}$? \ldots \Response{This normalization allows $\vV_1 = \vone$.}
+
+\item The argument at the end of section 4.3 involving is very slippery. \ldots
+
+\end{enumerate} 
+
+
+Some minor points
+
+\begin{enumerate}
+\renewcommand{\labelenumi}{\arabic{enumi}.}
+
+\item The $x_i$ in (4) would have to be distinct to force a strictly positive quadratic form. \Response{Clarified.}
+
+\item The notation for the full Bayes treatment is not consistent. \ldots 
+\item  First paragraph of 2.3: for the $\mu$ $\rightarrow$ for $\mu$. Also intervals $\rightarrow$ interval. \Response{Fixed.}
+\item  End of Section 2: the the Mat\'ern $\rightarrow$ the Mat\'ern
+\item  In the big display near the middle of the left column on page 7 should $c^T$
+be $c^H$ ? Otherwise how do we get $\tilde{c}^*_i$?
+\item  In equation (30), I think t should have $n-1$ df, not $n_{j-1}$ df. Otherwise
+what is $n_j$?
+\item  1st sentence of 4.3: shift-invariance $\rightarrow$ shift-invariant
+
+\end{enumerate}
+
+\end{document}
