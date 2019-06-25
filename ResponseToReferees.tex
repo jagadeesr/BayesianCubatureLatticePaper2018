@@ -17,8 +17,9 @@
 
 \newcommand{\Response}[1]{{\color{blue}#1}}
 \renewcommand{\vec}[1]{\boldsymbol{#1}}
+\newcommand{\vtheta}{\vec{\theta}}
 
-Thanks to the the referees and the editors for their helpful comments.  We have revised our manuscript in light of these comments, which we address point-by-point below.
+Thanks to the the referees and the editors for their helpful comments.  We have revised our manuscript in light of these comments, \Response{which we address point-by-point below in blue.}
 
 \section*{Reviewer 1: The paper is an interesting read on Bayesian cubature \ldots}
 
@@ -35,78 +36,77 @@ See further.
 \begin{itemize}
 \item Abstract
 \begin{itemize}
-\item The second sentence doesn't make sense to me.
-\item In the third sentence I would replace 'postulates' with 'considers'.
+\item The second sentence doesn't make sense to me. \Response{Re-written.}
+\item In the third sentence I would replace 'postulates' with 'considers'.  \Response{Done.}
 \end{itemize}
 
 \item Section 1
 \begin{itemize}
 \item The authors write 'We construct a reliable stopping criterion' but it is
-unclear what they mean with 'reliable'.
-\item On page 2 they write 'If function evaluation is expensive, then $\$(f)$ might
-be similar in magnitude to $\log(n)$.': this makes no sense as evaluating $f$
+unclear what they mean with 'reliable'. \Response{This paragraph has been rewritten for clarity.}
+\item On page 2 they write 'If function evaluation is expensive, then $\$(f)$ might be similar in magnitude to $\log(n)$.': this makes no sense as evaluating $f$
 depends on the dimension $d$. So this depends on how big $n$ is and if we want more
-accuracy then $n$ becomes bigger.
+accuracy then $n$ becomes bigger. \Response{We have added some clarification. If function evaluation from an expensive simulation takes an 5 minutes for one value, then performing the FFT calculations is going to take less time for practical $n$, say up to a million.}
 \end{itemize}
 
 \item Section 2
 \begin{itemize}
-\item '$f$ is drawn from a Guaussian process': it should be explained what this
+\item '$f$ is drawn from a Gaussian process': it should be explained what this
 means, e.g., does it mean $f$ is the Gaussian function with unknown mean and
 covariance, or does it behave like this in expectation, or \ldots This sounds like
-a very strong assumption.
+a very strong assumption. \Response{Some further explanation has been provided.  The assumption may be strong, but it is common in this literature.  The fact that we require some parameters to be inferred from data should make that assumption more palatable.}
 \item It should maybe be mentioned here that there are hyper distributions for the
-hyper parameters.
+hyper parameters. \Response{Done.}
 \item It is never said how the $x_i$ are sampled. Does (5a) hold for any
-distribution of samples $x_i$?
+distribution of samples $x_i$? \Response{Yes, any distinct nodes.}
 \item In this section there are different quantities being defined: the matrix
 $C_{\vec{\theta}}$ which involves evaluating the covariance function, $c_0$ which
 involves integrating the covariance function and $\vec{c}$ which involves
 calculating integrals of the covariance function with one leg fixed to a sample
 point. Only at the end the authors say that they assume these things to be
-cheap. I think this should be spelled out immediately.
+cheap. I think this should be spelled out immediately. \Response{Done.}
 \item  It think is not a good idea to leave out the dependence on $\vec{\theta}$ for
 $C$. E.g. in (11) the $\vec{\theta}$ is not visible at all in the expression to be
-minimized for it. The $C$ without subscript also clashes that of lemma 1.
+minimized for it. The $C$ without subscript also clashes that of lemma 1. \Response{$\vec{\theta}$ has been added into the equations where there is optimization.}
 \item  The lead in to lemma 1 makes it feel like this is a field specific lemma but
-in fact it is just the well known conditional gaussian. Please write something
-like 'We need the following lemma on conditional normal distribution ...'.
-\item  Do not use $C$ in this lemma.
+in fact it is just the well known conditional Gaussian. Please write something
+like 'We need the following lemma on conditional normal distribution ...'.  \Response{Done.}
+\item  Do not use $C$ in this lemma. \Response{Notation has been changed.}
 \item  The other derivations in the paper are all made in prose. It would be better
-to formally state some of them. E.g., the results on the top of page 3.
+to formally state some of them. E.g., the results on the top of page 3. \Response{The key results from Sections 2.2.1--2.2.3 have been collected in a theorem just before Section 2.2.1.}
 \item  From (6) to (7) the notation is different: $c^T C^{-1} 1$ vs $1^T C^{-1} c$,
-this might be corrected.
+this might be corrected. \Response{Done.}
 \end{itemize}
 
 
 \item Section 2.2.1
 \begin{itemize}
-\item It would help to see the dependence on $\vec{\theta}$ in (9), (10) and (11).
+\item It would help to see the dependence on $\vec{\theta}$ in (9), (10) and (11). \Response{We have added the dependence on $\vec{\theta}$ through the end of Section 2.  However, we have omitted it later where it would make the derivations hard to follow.}
 \item It looks like (11) is independent of $m_{\text{MLE}}$ and $s^2_{\text{MLE}}$, how does it pop up?
 Otherwise we could just first optimize for $\vec{\theta}$, then for m and then
-for $s^2$.
+for $s^2$. \Response{No, the optimization problem for $\vec{\theta}$ already has  $m_{\text{MLE}}$ and $s^2_{\text{MLE}}$ inserted into the log-likelihood.}
 \end{itemize}
 
 \item Section 2.2.2
 \begin{itemize}
-\item I cannot follow the derivation.
+\item I cannot follow the derivation.  \Response{The notation has been clarified.  This is a tedious derivation and has been moved to the Appendix.}
 \item At the end of the section the authors say that this is not a good method.
-Why then list it? Maybe the final paragraph needs to be rewritten.
+Why then list it? Maybe the final paragraph needs to be rewritten.  \Response{We only cast doubt on the full Bayes approach for estimating $\vec{\theta}$.}
 \end{itemize}
 
-\item Section 2.3. The authors stress here that the integrand must be a 'typical' draw from the assumed Gaussian process and not an outlier. That sounds scary.
+\item Section 2.3. The authors stress here that the integrand must be a 'typical' draw from the assumed Gaussian process and not an outlier. That sounds scary. \Response{It may sound scary, but that is the common implicit assumption of probabilistic approaches, such as this one.  Other traditional methods for estimating the error of a cubature rule either assume that the integrand lies in the ball of some function space (how do you know the radius of that ball?) or estimate the error heuristically.}
 
 \item Section 2.4. Please use $d'$ for the dimension of the original integral in (22) and
 immediately say that the dimension for the computation is $d = d' - 1$, 'as will
 now be explained \ldots'. So put $d'$ after the display (22) and in the display (23)
 and update the formula for $\mu$ at the bottom of the page and the display on the
-next page. After these changes you can keep the '$d=2$' in the caption of Fig 2.
+next page. After these changes you can keep the '$d=2$' in the caption of Fig 2.  \Response{Excellent suggestion.  Done.}
 
 
 \item Section 3
 \begin{itemize}
 \item Maybe write 'previous section' instead of 'last section'.
--- Maybe write 'covariance kernel' instead of just 'kernel'. I think the word
+\item Maybe write 'covariance kernel' instead of just 'kernel'. I think the word
 kernel hasn't been used up till this point.
 \end{itemize}
 
@@ -231,12 +231,12 @@ Some minor points
 
 \item The notation for the full Bayes treatment is not consistent. \ldots 
 \item  First paragraph of 2.3: for the $\mu$ $\rightarrow$ for $\mu$. Also intervals $\rightarrow$ interval. \Response{Fixed.}
-\item  End of Section 2: the the Mat\'ern $\rightarrow$ the Mat\'ern
+\item  End of Section 2: the the Mat\'ern $\rightarrow$ the Mat\'ern \Response{Fixed.}
 \item  In the big display near the middle of the left column on page 7 should $c^T$
-be $c^H$ ? Otherwise how do we get $\tilde{c}^*_i$?
+be $c^H$ ? Otherwise how do we get $\tilde{c}^*_i$? \Response{It is correct as stands.  A sentence of explanation has been added just before those equations.}
 \item  In equation (30), I think t should have $n-1$ df, not $n_{j-1}$ df. Otherwise
-what is $n_j$?
-\item  1st sentence of 4.3: shift-invariance $\rightarrow$ shift-invariant
+what is $n_j$?  \Response{Corrected.}
+\item  1st sentence of 4.3: shift-invariance $\rightarrow$ shift-invariant \Response{Corrected.}
 
 \end{enumerate}
 
