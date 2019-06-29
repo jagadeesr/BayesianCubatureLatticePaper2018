@@ -294,7 +294,7 @@ The primary contribution of this article is to demonstrate how the choice of a f
 \begin{equation} \label{eqn:OuralgoCost}
     \Order\bigl(K_{\textup{opt}}[n \$(f) + n\$(C) + n \log(n)] \bigr),
 \end{equation} 
-where $\$(f)$ is the cost of one integrand value, $\$(C)$ is the cost of a single covariance kernel value,  $\Order(n \log(n))$ is the cost of a fast Fourier transform, and $K_{\textup{opt}$ is an upper bound on the number of optimization steps required to choose the hyperparameters. If function evaluation is expensive, such as coming from computationally intensive simulation, or $\$(f) = \Order(d)$ for large $d$, then $\$(f)$ might be similar in magnitude to $\log(n)$ in practice.  Note that the $\Order(n \log(n))$ contribution is $d$ independent.
+where $\$(f)$ is the cost of one integrand value, $\$(C)$ is the cost of a single covariance kernel value,  $\Order(n \log(n))$ is the cost of a fast Fourier transform, and $K_{\textup{opt}}$ is an upper bound on the number of optimization steps required to choose the hyperparameters. If function evaluation is expensive, such as coming from computationally intensive simulation, or $\$(f) = \Order(d)$ for large $d$, then $\$(f)$ might be similar in magnitude to $\log(n)$ in practice.  Note that the $\Order(n \log(n))$ contribution is $d$ independent.
 
 By contrast to our fast algorithm, the typical computational cost for Bayesian cubature is
 \begin{equation} \label{eqn:TheiralgoCost}
@@ -723,9 +723,9 @@ So, Algorithm \ref{algorithm1}  in its current form is impractical.
 
 \begin{figure}
 	\centering
-		\includegraphics[width=0.95\linewidth]{MVN_guaranteed_time_Matern_d2_2018-Aug-31}
+		\includegraphics[width=0.95\linewidth]{MVN_guaranteed_time_Matern_d2_2019-Jun-29}
 	\centering
-		\includegraphics[width=0.95\linewidth]{MVN_rapid_n_vs_time_Matern_d2_2018-Aug-31}
+		\includegraphics[width=0.95\linewidth]{MVN_rapid_n_vs_time_Matern_d2_2019-Jun-29}
 	\caption{Multivariate normal probability estimated using Mat\'ern kernel with $d=2$ using empirical stopping criterion. Top: Guaranteed integration within error tolerance $\varepsilon$. Bottom: Computation time rapidly increases with increase of $n$. These figures can be reproduced using \code{matern\_guaranteed\_plots.m} in GAIL.}
 	\label{fig:MVN_Metern_d2b2}
 \end{figure}
@@ -1329,15 +1329,15 @@ This could be due to the periodized integrand being smoother than the $r=2$ kern
 \begin{figure}
 	\centering
 	%d=3 problem transformed into d=2
-	\includegraphics[width=0.98\linewidth]{"MVN_guaranteed_time_MLE_C2sin_d2_r2_2018-Sep-6"}
+	\includegraphics[width=0.98\linewidth]{"Lattice_MVN_guaranteed_time_MLE_C2sin_d2_r2_2019-Jun-27"}
 	\caption[Guaranteed:]{Multivariate normal probability example using the empirical Bayes stopping criterion.}
 	\label{fig:mvn-guaranteed-MLE}
 	\centering
-	\includegraphics[width=0.98\linewidth]{"MVN_guaranteed_time_full_C2sin_d2_r2_2018-Sep-6"}
+	\includegraphics[width=0.98\linewidth]{"Lattice_MVN_guaranteed_time_full_C2sin_d2_r2_2019-Jun-27"}
 	\caption[MVN guaranteed : FB]{Multivariate normal probability example using the full Bayes stopping criterion.}
 	\label{fig:mvn-guaranteed-FB}
 	\centering
-	\includegraphics[width=0.98\linewidth]{"MVN_guaranteed_time_GCV_C2sin_d2_r2_2018-Sep-6"}
+	\includegraphics[width=0.98\linewidth]{"Lattice_MVN_guaranteed_time_GCV_C2sin_d2_r2_2019-Jun-27"}
 	\caption[MVN guaranteed : GCV]{Multivariate normal probability example using the GCV stopping criterion.}
 	\label{fig:mvn-guaranteed-GCV}
 \end{figure}
@@ -1379,19 +1379,19 @@ I_s(j) &= \frac{(j-2)I_s(j-2)-I_c(j-1)}{2},
 \end{align*}
 \begin{figure}
 	\centering
-	\includegraphics[width=0.95\linewidth]{"Keister_guaranteed_time_MLE_C1sin_d4_r2_2018-Sep-6"}
+	\includegraphics[width=0.95\linewidth]{"Lattice_Keister_guaranteed_time_MLE_C1sin_d4_r2_2019-Jun-27"}
 	\caption[Keister guaranteed:MLE]{Keister example using the empirical Bayes stopping criterion.}
 	\label{fig:keister-guaranteed-MLE}
 %\end{figure}
 %\begin{figure}
 	\centering
-	\includegraphics[width=0.95\linewidth]{"Keister_guaranteed_time_full_C1sin_d4_r2_2018-Sep-6"}
+	\includegraphics[width=0.95\linewidth]{"Lattice_Keister_guaranteed_time_full_C1sin_d4_r2_2019-Jun-27"}
 	\caption[Keister guaranteed:FB]{Keister example using the full Bayes stopping criterion.}
 	\label{fig:keister-guaranteed-FB}
 %\end{figure}
 %\begin{figure}
 	\centering
-	\includegraphics[width=0.95\linewidth]{"Keister_guaranteed_time_GCV_C1sin_d4_r2_2018-Sep-6"}
+	\includegraphics[width=0.95\linewidth]{"Lattice_Keister_guaranteed_time_GCV_C1sin_d4_r2_2019-Jun-27"}
 	\caption[Keister guaranteed:GCV]{Keister example using the GCV stopping criterion.}
 	\label{fig:keister-guaranteed-GCV}
 \end{figure}
@@ -1431,19 +1431,19 @@ Because the integrand has a kink caused by the $\max$ function, it does not help
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.95\linewidth]{"optPrice_guaranteed_time_MLE_Baker_d12_r1_2018-Sep-6"}
+	\includegraphics[width=0.95\linewidth]{"Lattice_optPrice_guaranteed_time_MLE_Baker_d12_r1_2019-Jun-29"}
 	\caption[Option pricing Guaranteed: MLE]{Option pricing using the empirical Bayes stopping criterion.}
 	\label{fig:optprice-guaranteed-MLE}
 %\end{figure}
 %\begin{figure}
 	\centering
-	\includegraphics[width=0.95\linewidth]{"optPrice_guaranteed_time_full_Baker_d12_r1_2018-Sep-6"}
+	\includegraphics[width=0.95\linewidth]{"Lattice_optPrice_guaranteed_time_full_Baker_d12_r1_2019-Jun-29"}
 	\caption[OptPrice guaranteed : FB]{Option pricing using the full Bayes stopping criterion.}
 	\label{fig:optprice-guaranteed-FB}
 %\end{figure}
 %\begin{figure}
 	\centering
-	\includegraphics[width=0.95\linewidth]{"optPrice_guaranteed_time_GCV_Baker_d12_r1_2018-Sep-6"}
+	\includegraphics[width=0.95\linewidth]{"Lattice_optPrice_guaranteed_time_GCV_Baker_d12_r1_2019-Jun-28"}
 	\caption[OptPrice guaranteed : GCV]{Option pricing using the  GCV stopping criterion.}
 	\label{fig:optprice-guaranteed-GCV}
 \end{figure}
