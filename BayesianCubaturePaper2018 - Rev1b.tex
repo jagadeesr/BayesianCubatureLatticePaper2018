@@ -294,7 +294,7 @@ The primary contribution of this article is to demonstrate how the choice of a f
 \begin{equation} \label{eqn:OuralgoCost}
     \Order\bigl(K_{\textup{opt}}[n \$(f) + n\$(C) + n \log(n)] \bigr),
 \end{equation} 
-where $\$(f)$ is the cost of one integrand value, $\$(C)$ is the cost of a single covariance kernel value,  $\Order(n \log(n))$ is the cost of a fast Fourier transform, and $K_{\textup{opt}$ is an upper bound on the number of optimization steps required to choose the hyperparameters. If function evaluation is expensive, such as coming from computationally intensive simulation, or $\$(f) = \Order(d)$ for large $d$, then $\$(f)$ might be similar in magnitude to $\log(n)$ in practice.  Note that the $\Order(n \log(n))$ contribution is $d$ independent.
+where $\$(f)$ is the cost of one integrand value, $\$(C)$ is the cost of a single covariance kernel value,  $\Order(n \log(n))$ is the cost of a fast Fourier transform, and $K_{\textup{opt}}$ is an upper bound on the number of optimization steps required to choose the hyperparameters. If function evaluation is expensive, such as coming from computationally intensive simulation, or $\$(f) = \Order(d)$ for large $d$, then $\$(f)$ might be similar in magnitude to $\log(n)$ in practice.  Note that the $\Order(n \log(n))$ contribution is $d$ independent.
 
 By contrast to our fast algorithm, the typical computational cost for Bayesian cubature is
 \begin{equation} \label{eqn:TheiralgoCost}
