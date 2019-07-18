@@ -133,6 +133,8 @@
 \newcommand{\tvone}{\tilde{\bm{1}}}
 \newcommand{\mA}{\mathsf{A}}
 \newcommand{\mC}{\mathsf{C}}
+\newcommand{\mP}{\mathsf{P}}
+\newcommand{\mK}{\mathsf{K}}
 \newcommand{\rmC}{\mathring{\mathsf{C}}}
 \newcommand{\mCtheta}{{\mathsf{C}_{\vtheta}}}
 %\newcommand{\mCthetaInv}{{\mathsf{C}^{-1}_{\vtheta}}}
@@ -141,6 +143,7 @@
 \newcommand{\mCInv}{\mathsf{C}^{-1}}
 \newcommand{\cov}{{\textup{cov}}}
 \newcommand{\var}{{\textup{var}}}
+\newcommand{\opt}{{\textup{opt}}}
 
 
 \newcommand{\tmC}{\widetilde{\mathsf{C}}}
@@ -205,7 +208,7 @@
 \newcommand{\JRNote}[1]{{\textcolor{green}{JR: #1}}}
 
 
-%\allowdisplaybreaks[4]
+\allowdisplaybreaks
 \begin{document}
 \setlength\abovedisplayskip{1pt}
 \setlength{\belowdisplayskip}{1pt}
@@ -292,13 +295,13 @@ Some stopping criteria used in practice are heuristic.  Other rigorous algorithm
 
 The primary contribution of this article is to demonstrate how the choice of a family of covariance kernels that match the low discrepancy sampling nodes facilitates fast computation of the cubature and the data-driven stopping criterion.  Our Bayesian cubature requires a computational cost of
 \begin{equation} \label{eqn:OuralgoCost}
-    \Order\bigl(N_{\textup{opt}}[n \$(f) + n\$(C) + n \log(n)] \bigr),
+    \Order\bigl(n \$(f) + N_{\textup{opt}}[n\$(C) + n \log(n)] \bigr),
 \end{equation} 
-where $\$(f)$ is the cost of one integrand value, $\$(C)$ is the cost of a single covariance kernel value,  $\Order(n \log(n))$ is the cost of a fast Fourier transform, and $N_{\textup{opt}}$ is an upper bound on the number of optimization steps required to choose the hyperparameters. If function evaluation is expensive, such as coming from computationally intensive simulation, or $\$(f) = \Order(d)$ for large $d$, then $\$(f)$ might be similar in magnitude to $\log(n)$ in practice.  Typically, $\$(C) = \Order(d)$.  Note that the $\Order(n \log(n))$ contribution is $d$ independent.
+where $\$(f)$ is the cost of one integrand value, $\$(C)$ is the cost of a single covariance kernel value,  $\Order(n \log(n))$ is the cost of a fast Fourier transform, and $N_{\textup{opt}}$ is an upper bound on the number of optimization steps required to choose the hyperparameters. If function evaluation is expensive, such as coming from computationally intensive simulation, or $\$(f) = \Order(d)$ for large $d$, then $\$(f)$ might be similar in magnitude to $N_{\textup{opt}} \log(n)$ in practice.  Typically, $\$(C) = \Order(d)$.  Note that the $\Order(n \log(n))$ contribution is $d$ independent.
 
 By contrast to our fast algorithm, the typical computational cost for Bayesian cubature is
 \begin{equation} \label{eqn:TheiralgoCost}
-    \Order\bigl(N_{\textup{opt}}[n \$(f) + n^2\$(C) + n^3] \bigr),
+    \Order\bigl(n \$(f) + N_{\textup{opt}}[n^2\$(C) + n^3] \bigr),
 \end{equation} 
 which is explained in Section \ref{sec:bayes_cubature_algo}. Note that the work beyond evaluating the integrand in \eqref{eqn:TheiralgoCost} is much larger than that in \eqref{eqn:OuralgoCost}.  
 
@@ -308,7 +311,7 @@ Hickernell and Jim\'enez-Rugama~\cite{HicJim16a,JimHic16a} have developed stoppi
 
 Section \ref{sec:BC} explains the Bayesian approach to estimate the posterior cubature error and defines our automatic Bayesian cubature. Although much of this material is known, it is included for completeness.  We end Section \ref{sec:BC}  by demonstrating why Bayesian cubature is typically computationally expensive.
 Section \ref{sec:fast_BC}  introduces the concept of covariance kernels that match the nodes and expedite the computations required by our automatic Bayesian cubature. 
-Section \ref{sec:shift_invariant_kernel} implements this concept for shift invariant kernels and rank-1 lattice nodes.  It also describes how to avoid cancellation error for kernels of product form.  Numerical examples are provided in Section \ref{sec:NumExp} to demonstrate our new algorithm.  We conclude with a brief discussion.
+Section \ref{sec:shift_invariant_kernel} implements this concept for shift-invariant kernels and rank-1 lattice nodes.  It also describes how to avoid cancellation error for kernels of product form.  Numerical examples are provided in Section \ref{sec:NumExp} to demonstrate our new algorithm.  We conclude with a brief discussion.
 
 
 
@@ -415,7 +418,7 @@ The credible interval in \eqref{eqn_prob_confidence_interval} suggests how our a
 Note that $\err_{\textup{CI}}$ has no explicit dependence on the integrand values, even though one would intuitively expect that larger integrand should imply a  larger $\err_{\textup{CI}}$.  This is because parameters, $m, s$, and $\vtheta$, have not yet been inferred from integrand data.  After inferring the parameters, $\err_{\textup{CI}}$ does reflect the size of the integrand values. This section describes three approaches to parameter estimation.
 
 \begin{theorem} \label{thm:param} There are at least three approaches to estimating or integrating out the hyperparameters defining the Gaussian process from which the integrand is drawn: empirical Bayes, full Bayes, and generalized cross validation.  Under these three approaches we have the following:
-\begin{allowdisplaybreaks}
+%\begin{allowdisplaybreaks}
 \begin{align}
     \label{eqn_m_MLE}
 m_\MLE &= \frac{\vone^T \mCInv_\vtheta \vy }{ \vone^T \mCInv_\vtheta \vone}, \qquad
@@ -458,14 +461,14 @@ s^2_{\MLE}
 \right)^T  \mCInv_\vtheta \vy, \\
 \label{eqn:muCV}
 \widehat{\mu}_{\textup{GCV}}
-& = \left(\frac{(1 - \vone^T  \mC_\vtheta^{-1}\vc_{\vtheta}) \mC_\vtheta^{-1} \vone}{\vone^T \mC_\vtheta^{-2} \vone} + \vc_{\vtheta} \right)^T \mC_\vtheta^{-1} \vy, \\
-\nonumber 
-\err_{\mathsf{x}} & = 2.58 s_{\mathsf{x}} \sqrt{c_{0\vtheta} - \vc_{\vtheta}^T\mC_\vtheta^{-1}\vc_{\vtheta} }, \quad \mathsf{x} \in \{\MLE, \GCV\}, \\
-\nonumber 
+& = \left(\frac{(1 - \vone^T  \mC_\vtheta^{-1}\vc_{\vtheta}) \mC_\vtheta^{-1} \vone}{\vone^T \mC_\vtheta^{-2} \vone} + \vc_{\vtheta} \right)^T \mC_\vtheta^{-1} \vy, \\ 
+\nonumber
+\err_{\mathsf{x}} & = 2.58 s_{\mathsf{x}} \sqrt{c_{0\vtheta} - \vc_{\vtheta}^T\mC_\vtheta^{-1}\vc_{\vtheta} }, \\
+& \hspace{3.5cm} \mathsf{x} \in \{\MLE, \GCV\},  \label{eqn:err_MLEGCV}\\ 
 \err_{\textup{full}} 
-& = t_{n-1,0.995} \hsigma_{\textup{full}} > \err_\MLE,
+& = t_{n-1,0.995} \hsigma_{\textup{full}} > \err_\MLE, \label{FJH:eq:errFull}
 \end{align}
-\end{allowdisplaybreaks}
+%\end{allowdisplaybreaks}
 \begin{multline}
 \label{eqn_prob_CI}
 \mathbb{P}_f \left[
@@ -489,20 +492,8 @@ l(s,m,\vtheta | \vy)
  - \frac{1}{2} \log(\det\, \mC_\vtheta) - \frac{n}{2} \log(s^2) + \text{constants.}
 \end{multline*}
 Maximizing the log-likelihood first with respect to $m$ and then with respect to $s$ yields the values given in Theorem \ref{thm:param}.
-To obtain $\vtheta_\MLE$, we substitute $m_\MLE$ and $s_\MLE$ into $l(s,m,\vtheta | \vy)$ and then numerically optimize:
-\begin{align}
-\nonumber
-\vtheta_\MLE
-&= \argmin_{\vtheta} \biggl \{
-\log\left(\vy^T 
-\left[ \mCInv_\vtheta - 
-\frac{ \mCInv_\vtheta \vone \vone^T \mCInv_\vtheta }{\vone^T\mCInv_\vtheta \vone}
-\right] \vy 
-\right)  \\
-\label{eqn:thetaMLE}
- & \qquad +  \frac{1}{n} \log(\det(\mC_\vtheta))
-\biggr \}.
-\end{align}
+To obtain $\vtheta_\MLE$, we substitute $m_\MLE$ and $s_\MLE$ into $l(s,m,\vtheta | \vy)$, which leads directly to the optimization problem in \eqref{eqn:thetaMLE}.
+
 The empirical Bayes estimate of $\vtheta$ balances minimizing the covariance scale factor, $s^2_{\MLE}$, against minimizing  $\det(\mC_\vtheta)$. 
 Under these estimates of the parameters, the cubature \eqref{eqn:BayesCub} and the credible interval \eqref{eqn_prob_confidence_interval} are explicitly written as in Theorem \ref{thm:param}.
 The quantities $c_{0\vtheta}$, $\vc_\vtheta$, and $\mC_\vtheta$ are assumed implicitly to be based on $\vtheta = \vtheta_\MLE$.   
@@ -622,7 +613,7 @@ Our  Bayesian cubature algorithm increases the sample size until the width of th
       
         \State\label{LoopStart}Generate $\{ \vx_i\}_{i=n' + 1}^{n}$ and sample $\{f(\vx_i)\}_{i=n'+1}^{n}$
         \State Compute $\vtheta$ by \eqref{eqn:thetaMLE} or \eqref{vthetaGCV}
-        \State Compute $\err_{\textup{CI}}$  according to \eqref{eqn:errMLE}, \eqref{FJH:eq:errFull}, or \eqref{GCVerr}
+        \State Compute $\err_{\textup{CI}}$  according to \eqref{eqn:err_MLEGCV} or \eqref{FJH:eq:errFull}
         
        	\State	$n' \gets n, \; n \gets 2n'$
         
@@ -630,11 +621,21 @@ Our  Bayesian cubature algorithm increases the sample size until the width of th
         
         \State Update sample size to compute $\hmu$, $n \gets n'$
         \State Compute $\hmu$, the approximate integral,   according to \eqref{eqn:cubMLE} or \eqref{eqn:muCV}
-      \State \Return $\hmu, \; n$  and $\err_{\textup{CI}}$
+      \State \Return $\hmu$, $n$,  and $\err_{\textup{CI}}$
   \end{algorithmic}
 \end{algorithm}
 
-\FJHNote{Add something about the cost.}
+As described above, the computational cost of Algorithm \ref{algorithm1} is the sum of the following:
+\begin{itemize}
+	\item $\Order\bigl(n\$(f) \bigr)$ for the function data, where $\$(f)$ is the computational cost of a single $f(\vx)$; $\$(f)$ may be large if it is the result of an expensive simulation; $\$(f)$ is typically proportional to $d$;
+	
+	\item $\Order\bigl(N_{\opt} n^2 \$(C_\vtheta) \bigr)$ for the evaluation of the matrix $\mC_{\vtheta}$, $N_\opt$ is the number of optimization steps required, and  $\$(C_\vtheta)$ is the computational cost of a single $C_\vtheta(\vt,\vx)$; $\$(C)$ is typically proportional to $d$; and
+	
+	\item $\Order\bigl(N_{\opt} n^3 \bigr)$ for the matrix inversions and determinant calculations.
+	
+\end{itemize}
+As we see in the example in the next section, this cost increases quickly as the $n$ required to meet the error tolerance increases.  This motivates the fast Bayesian cubature algorithm presented in Section \ref{sec:fast_BC}.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -655,6 +656,7 @@ Also, consider the integration problem of evaluating  \emph{multivariate normal 
 where $(\va,\vb)$ is a finite, semi-infinite or infinite box in $\reals^{d'}$.  This integral does not have an analytic expression for general $\mSigma$, so cubatures are required.  
 
 Genz \cite{Gen93} introduced a variable transformation to transform \eqref{eqn:GaussDef} into an integral on the unit cube.  Let $\mSigma= \mL \mL^T$ be the Cholesky decomposition where $\mL = (l_{jk})_{j,k=1}^d$ is a lower triangular matrix.  Iteratively define
+\allowdisplaybreaks
 \begin{align*}
 \alpha_1& = \Phi(a_1), \qquad \beta_1 = \Phi(b_1)
 \\
@@ -718,7 +720,7 @@ The node sets are randomly scrambled Sobol' points \cite{DicEtal14a,DicPil10a}. 
 %On our test computer, 
 As shown in \figref{fig:MVN_Metern_d2b2}, computation time increases rapidly with $n$. 
 The  maximum likelihood estimation of $\vtheta$, which requires repeated evaluation of the objective function, is the most time consuming of all. It takes tens of seconds to compute $\hmu_n$ once with $\varepsilon = 10^{-5}$.   In contrast, this example in Section \ref{sec:NumExp} take less than a hundredth of a second to compute $\hmu_n$ once with $\varepsilon = 10^{-5}$ using our new algorithm. Not only is the Bayesian cubature with the Mat\'ern kernel slow, but also $\mC_\vtheta$ becomes highly ill-conditioned as $n$ increases.
-So, Algorithm \ref{algorithm1}  in its current form is impractical. 
+So, Algorithm \ref{algorithm1}  in its current form is impractical when $n$ must be large. 
 %\FJHNote{Jags, please check this re-write} %\JRNote{looks good}
 
 \begin{figure}
@@ -736,7 +738,7 @@ So, Algorithm \ref{algorithm1}  in its current form is impractical.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The generic automatic Bayesian cubature algorithm described in the previous section requires $\Order(n^3)$ operations to estimate $\vtheta$, compute the credible interval width, and compute the cubature. Now we explain how to speed up the calculations. A key is to choose covariance kernels that match the nodes, $\{\vx_i\}_{i=1}^n$, so that the vector-matrix operations required by Bayesian cubature can be accomplished using fast transforms at a cost of $\Order(n \log(n))$.
+The generic automatic Bayesian cubature algorithm described in the previous section requires $\Order\bigl(n \$(f) + \break N_{\opt} [n^2 \$(C_\vtheta)  + n^3]\bigr)$ operations to estimate $\vtheta$, compute the credible interval width, and compute the cubature. Now we explain how to speed up the calculations. A key is to choose covariance kernels that match the nodes, $\{\vx_i\}_{i=1}^n$, so that the vector-matrix operations required by Bayesian cubature can be accomplished using fast transforms at a cost of $\Order\bigl(n \$(f) + N_{\opt} [n \$(C_\vtheta)  + n \log(n)] \bigr)$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -786,7 +788,7 @@ Under assumptions \eqref{fastcompAssump} the eigenvalues may be identified as th
 = \mV^H \vC_1 =  \widetilde{\vC}_1,
 \label{eqn:fast_transform_to_eigvalues}
 \end{align}
-Where $\mathsf{I}$ is the identity matrix.
+where $\mathsf{I}$ is the identity matrix and $\vv_1^*$ is the complex conjugate of the first row of $\mV$.
 Also note that the fast transform of $\vone$ has a simple form
 \begin{align*} 
 \widetilde{\vone}
@@ -830,7 +832,6 @@ The assumptions and derivations above lead to the following theorem.
 
 \begin{theorem} \label{thm:fastparam}
 Under assumptions \eqref{fastcompAssump}, the parameters and credible interval widths in Theorem \ref{thm:param} may be expressed in terms of the fast transforms of the function data, the first column of the Gram matrix, and $\vc_\vtheta$ as follows:
-\allowdisplaybreaks
 \begin{align}
 \nonumber
 m_\MLE &=  m_{\full} = m_{\GCV} =  \frac{\widetilde{y}_1}{n} = \frac 1n \sum_{i=1}^n y_i,
@@ -926,16 +927,16 @@ t_{n-1,0.995}
 \section{Integration Lattices and Shift Invariant Kernels}
 \label{sec:shift_invariant_kernel}
 
-The preceding sections lay out an automatic Bayesian cubature algorithm whose computational cost is only $\Order(n \log(n))$ if $n$ function values are used.  However, this algorithm relies on covariance kernel functions, $C$ and node sets, $\{\vx_i\}_{i=1}^n$ that satisfy assumptions \eqref{fastcompAssump}.  We  also want to satisfy assumption \eqref{addAssump}.  
+The preceding sections lay out an automatic Bayesian cubature algorithm whose computational cost is drastically reduced.  However, this algorithm relies on covariance kernel functions, $C_\vtheta$ and node sets, $\{\vx_i\}_{i=1}^n$ that satisfy assumptions \eqref{fastcompAssump}.  We  also want to satisfy assumption \eqref{addAssump}.  
 %To facilitate the fast transform, it is assumed in this section and the next that $n$ is power of $2$.  
 To facilitate the fast transform, $n$ must be power of $2$.  
 
 \subsection{Extensible Integration Lattice Node Sets}
 
 The set of nodes used is defined by a shifted extensible integration lattice node sequence, which takes the form
-\begin{equation*}
+\begin{equation} \label{eqn:lattice_def}
 \vx_{i} = \vh \phi(i-1) + \vDelta \mod \vone, \qquad i \in \naturals.
-\end{equation*} 
+\end{equation} 
 Here, $\vh$ is a $d$-dimensional generating vector of positive integers, $\vDelta$ is some point in $[0,1)^d$, often chosen at random, and $\{\phi(i)\}_{i=0}^n$ is the van der Corput sequence, defined by reflecting the binary digits of the integer about the decimal point, i.e., 
 \begin{align} \label{vdCDef}
 \begin{array}{r|ccccccccccccc}
@@ -946,6 +947,11 @@ i & 0_2 & 1_2 & 10_2 & 11_2 & 100_2 & 101_2 & 110_2 & 111_2  & \cdots\\
 \phi(i) & 0 &  0.5 &  0.25 & 0.75 &  0.125 & 0.625  &  0.375 & 0.875 & \cdots
 \end{array}
 \end{align}
+Note that $\phi$ is one-to-one, and 
+\begin{equation} \label{phiprop}
+\phi:\{0, \ldots, n-1 \} \to \{0, 1/n, \ldots, (n-1)/n\},
+\end{equation}
+when $n$ is a power of $2$.
 
 An example of $64$ nodes is given in \figref{latticefig}.  The even coverage of the unit cube is ensured by a well chosen generating vector.  The choice of generating vector is typically done offline by computer search.  See \cite{DicEtal14a,HicNie03a} for more on extensible integration lattices.
 \begin{figure}[htp]
@@ -956,13 +962,13 @@ An example of $64$ nodes is given in \figref{latticefig}.  The even coverage of 
 \end{figure}
 
 \subsection{Shift Invariant Kernels}
-The covariance functions $C$ that match integration lattice node sets have the form
+The covariance functions $C_\vtheta$ that match integration lattice node sets have the form
 \begin{align} \label{eq:shInv}
-C(\vt,\vx) = K(\vt - \vx \bmod \vone).
+C_\vtheta(\vt,\vx) = K_\vtheta(\vt - \vx \bmod \vone).
 \end{align}
-This is called a \emph{shift invariant kernel} because shifting both arguments of the covariance function by the same amount leaves the value unchanged.   By a proper scaling of the kernel $K$ it follows that assumption \eqref{addAssump} is satisfied. Of course, $K$ must also be of the form that ensures that $C$ is symmetric and positive definite, as assumed in \eqref{FJH:eq:CondPosDef}. 
+This is called a \emph{shift-invariant kernel} because shifting both arguments of the covariance function by the same amount leaves the value unchanged.   By a proper scaling of the kernel $K$ it follows that assumption \eqref{addAssump} is satisfied. Of course, $K_\vtheta$ must also be of the form that ensures that $C_\vtheta$ is symmetric and positive definite, as assumed in \eqref{FJH:eq:CondPosDef}. 
 
-A family of shift invariant kernels is constructed via even degree Bernoulli polynomials:
+A family of shift-invariant kernels is constructed via even degree Bernoulli polynomials:
 \begin{multline}
 \label{the_kernel_eqn_bernoulli}
 C_\vtheta(\vt, \vx) =
@@ -982,12 +988,32 @@ Larger $r$ implies a greater degree of smoothness of the kernel.  Larger $\eta$ 
 \end{figure}
 
 \subsection{Eigenvectors}
-For general shift-invariant covariance functions, the Gram matrix takes the form
+For general shift-invariant covariance functions, the Gram matrix takes the form of a permutation of the rows and columns of a circulant matrix:
 \begin{align*}
 %\label{shInvKernGramMatrix}
-\mC &= \bigl ( C(\vx_i, \vx_j) \bigr)_{i, j = 1}^n \\
-& = \Bigl ( K(\vh(\phi(i-1) - \phi(j-1)) \bmod \vone ) \Bigr)_{i, j = 1}^n.
+\mC &= \mC_\vtheta = \bigl ( C_\vtheta(\vx_i, \vx_j) \bigr)_{i, j = 1}^n \\
+& = \Bigl ( K_\vtheta \bigl(\vh(\phi(i-1) - \phi(j-1) \bigr) \bmod \vone ) \Bigr)_{i, j = 1}^n \\
+& \qquad \qquad  \text{by \eqref{eqn:lattice_def} and \eqref{eq:shInv}}  \\
+& = \mP^T \Bigl ( K_\vtheta \bigl (\vh (i-j)/n \bmod \vone \bigr ) \Bigr)_{i, j = 1}^n \mP\\
+& = \mP^T \mK \mP
 \end{align*}
+where $\mP = \bigl( \delta_{\phi(i-1), (j-1)/n}  \bigr)_{i,j=1}^n$, $\delta$ is the Kronecker delta function, and $\mK = \bigl ( K_\vtheta \bigl (\vh (i-j)/n \bmod \vone \bigr ) \bigr)_{i, j = 1}^n$.  \FJHNote{Check this.}
+
+Because $\mK$ is circulant,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Here we show the resulting matrix $\mC$ is circulant.
 Then using the well known fact, circulant matrices are diagonalized by discrete Fourier transform (DFT), one can obtain the eigenvectors analytically and the eigenvalues using DFT.
 % The speedup of their algorithm is in the linear algebra part of the calculations. 
@@ -1221,10 +1247,19 @@ The computational steps for the improved, faster, automatic Bayesian cubature ar
 	\end{algorithmic}
 \end{algorithm}
 
-We summarize the results of this section and the previous one as follows:
-\begin{prop}
-Any symmetric, positive definite, shift-invariant covariance kernel of the form \eqref{eq:shInv} scaled to satisfy \eqref{addAssump}, when matched with rank-1 lattice data-sites, must satisfy assumptions \eqref{fastcompAssump}.  The \emph{fast Fourier transform} (FFT) can be used to expedite the estimates of $\vtheta$ in \eqref{thetaSimple} and the credible interval widths \eqref{fastStoppingCriterions} in $\Order(n \log(n))$ operations. The cubature, $\hmu$, is just the sample mean.
-\end{prop}
+We summarize the results of this section and the previous one in the theorem below.  In comparison to Algorithm \ref{algorithm1}, the cost second and third components of the computational cost of Algorithm  \ref{algorithm2} are substantially reduced.
+\begin{theorem}
+Any symmetric, positive definite,  shift-\break invariant covariance kernel of the form \eqref{eq:shInv} scaled to satisfy \eqref{addAssump}, when matched with rank-1 lattice data-sites, must satisfy assumptions \eqref{fastcompAssump}.  The cubature, $\hmu$, is just the sample mean.  The \emph{fast Fourier transform} (FFT) can be used to expedite the estimates of $\vtheta$ in \eqref{thetaSimple} and the credible interval widths \eqref{fastStoppingCriterions} so that Algorithm \ref{algorithm2} has a computational cost which is the sum of the following:
+\begin{itemize}
+	\item $\Order\bigl(n\$(f) \bigr)$ for the function data, where $\$(f)$ is the computational cost of a single $f(\vx)$;
+	
+	\item $\Order\bigl(N_{\opt} n \$(C_\vtheta) \bigr)$ for the evaluations of the vector $\vC_{1}$, where $N_\opt$ is the number of optimization steps required, and  $\$(C_\vtheta)$ is the computational cost of a single $C_\vtheta(\vt,\vx)$; and
+	
+	\item $\Order\bigl(N_{\opt} n \log(n) \bigr)$ for the FFT calculations.
+	
+\end{itemize}
+
+\end{theorem}
 
 We have implemented the fast adaptive Bayesian cubature algorithm in MATLAB as part of the Guaranteed Adaptive Integration Library (GAIL) \cite{ChoEtal17b} as \allowbreak \code{cubBayesLattice\_g}. This algorithm uses the kernel defined in  \eqref{the_kernel_eqn_bernoulli} with  $r=1,2$ and the periodizing variable transforms in  \secref{period_var_tx}.  The rank-1 lattice node generator is taken from \cite{Nuy17a} (\code{exod2\_base2\_m20}).
 
