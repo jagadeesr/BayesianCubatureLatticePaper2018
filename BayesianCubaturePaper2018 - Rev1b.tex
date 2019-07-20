@@ -947,11 +947,12 @@ i & 0_2 & 1_2 & 10_2 & 11_2 & 100_2 & 101_2 & 110_2 & 111_2  & \cdots\\
 \phi(i) & 0 &  0.5 &  0.25 & 0.75 &  0.125 & 0.625  &  0.375 & 0.875 & \cdots
 \end{array}
 \end{align}
-Note that $\phi$ is one-to-one, and 
-\begin{equation} \label{phiprop}
-\phi:\{0, \ldots, n-1 \} \to \{0, 1/n, \ldots, (n-1)/n\},
+Note that 
+\begin{multline} \label{phiprop}
+\phi:\{0, \ldots, n-1 \} \to \{0, 1/n, \ldots, (n-1)/n\} \\
+\text{is one-to-one},
 \end{equation}
-when $n$ is a power of $2$.
+assuming $n$ is a power of $2$.
 
 An example of $64$ nodes is given in \figref{latticefig}.  The even coverage of the unit cube is ensured by a well chosen generating vector.  The choice of generating vector is typically done offline by computer search.  See \cite{DicEtal14a,HicNie03a} for more on extensible integration lattices.
 \begin{figure}[htp]
@@ -966,7 +967,7 @@ The covariance functions $C_\vtheta$ that match integration lattice node sets ha
 \begin{align} \label{eq:shInv}
 C_\vtheta(\vt,\vx) = K_\vtheta(\vt - \vx \bmod \vone).
 \end{align}
-This is called a \emph{shift-invariant kernel} because shifting both arguments of the covariance function by the same amount leaves the value unchanged.   By a proper scaling of the kernel $K$ it follows that assumption \eqref{addAssump} is satisfied. Of course, $K_\vtheta$ must also be of the form that ensures that $C_\vtheta$ is symmetric and positive definite, as assumed in \eqref{FJH:eq:CondPosDef}. 
+This is called a \emph{shift-invariant kernel} because shifting both arguments of the covariance function by the same amount leaves the value unchanged.   Of course, $K_\vtheta$ must also be of the form that ensures that $C_\vtheta$ is symmetric and positive definite, as assumed in \eqref{FJH:eq:CondPosDef}. 
 
 A family of shift-invariant kernels is constructed via even degree Bernoulli polynomials:
 \begin{multline}
@@ -987,171 +988,43 @@ Larger $r$ implies a greater degree of smoothness of the kernel.  Larger $\eta$ 
 	\label{fig:fourierkernel-dim1}
 \end{figure}
 
-\subsection{Eigenvectors}
-For general shift-invariant covariance functions, the Gram matrix takes the form of a permutation of the rows and columns of a circulant matrix:
-\begin{align*}
-%\label{shInvKernGramMatrix}
-\mC &= \mC_\vtheta = \bigl ( C_\vtheta(\vx_i, \vx_j) \bigr)_{i, j = 1}^n \\
+\subsection{The Gram Matrix as the Permutation of a Circulant Matrix}
+For general shift-invariant covariance functions, the Gram matrix takes the form of a permutation of the rows and columns of a circulant matrix. By the properties of $\phi$ in \eqref{phiprop}, it follows tht
+\begin{equation} \label{PermMat}
+    \mP = \bigl( \delta_{\phi(i-1), (j-1)/n}  \bigr)_{i,j=1}^n
+\end{equation}
+is a permuation matrix, where $\delta$ is the Kronecker delta function.  Then,
+\begin{align}
+\nonumber
+\mC_\vtheta &= \bigl ( C_\vtheta(\vx_i, \vx_j) \bigr)_{i, j = 1}^n \\
+\nonumber
 & = \Bigl ( K_\vtheta \bigl(\vh(\phi(i-1) - \phi(j-1) \bigr) \bmod \vone ) \Bigr)_{i, j = 1}^n \\
+\nonumber
 & \qquad \qquad  \text{by \eqref{eqn:lattice_def} and \eqref{eq:shInv}}  \\
-& = \mP^T \Bigl ( K_\vtheta \bigl (\vh (i-j)/n \bmod \vone \bigr ) \Bigr)_{i, j = 1}^n \mP\\
-& = \mP^T \mK \mP
-\end{align*}
-where $\mP = \bigl( \delta_{\phi(i-1), (j-1)/n}  \bigr)_{i,j=1}^n$, $\delta$ is the Kronecker delta function, and $\mK = \bigl ( K_\vtheta \bigl (\vh (i-j)/n \bmod \vone \bigr ) \bigr)_{i, j = 1}^n$.  \FJHNote{Check this.}
-
-Because $\mK$ is circulant,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Here we show the resulting matrix $\mC$ is circulant.
-Then using the well known fact, circulant matrices are diagonalized by discrete Fourier transform (DFT), one can obtain the eigenvectors analytically and the eigenvalues using DFT.
-% The speedup of their algorithm is in the linear algebra part of the calculations. 
-% But the derivation in Sections 4.3 and 4.4 can be obtained much faster by realising that their definition of the covariance matrix,
-By the definition of $\mC$, $i,j$th element
-\begin{align*}
-\mC_{i,j} & = K( x_i - x_j \bmod 1 ) \\
-&= K\bigl( \bigl(\vh \phi(i-1) - \vh \phi(j-1)\bigr) \bmod 1 \bigr) 
-\end{align*}
-Noting that the sequence $\{\phi(i-1)\}_{i=1}^n$ is a re-ordering of $0, \ldots, 1-1/n$ for $n$ a power of $2$, and $\vh$ is a vector integers, one can rewrite
-\begin{align*}
-\mC_{i,j} &= K_{\vh}\bigl( \bigl(\pi_{2^m}(i-1) - \pi_{2^m}(j-1)\bigr) \bmod 2^m \bigr)
-\end{align*}
-where $\pi_{2^m}(i-1) = 2^m\phi(i-1)$ is the ''integer version'' of the radical inverse function for the full initial sequence of $2^m$ points and $K_{\vh}(\vt) = K(\vh^T \vt)$. By similar approach
-\begin{align*}
-\mC_{i,j} &= K_{\vh,\pi_{2^m}}( (i-1) - (j-1) \bmod 2^m ) , 
-\\
-& \hspace{4cm} \text{for}\; i,j=1,...,2^m ,
-\end{align*}
-is a permutation of a circulant matrix.
- 
-The function $\pi_{2^m}$ is a permutation on $\{0, 1, ..., 2^m-1\}$, undoing this
-permutation on the rows and columns of the matrix $\mC$ one obtains a circulant
-matrix:
-$P_{2^m}^T \mC P_{2^m}$.
-%The current Sections 4.3 and 4.4 are therefore not needed. See further.
-Eigenvectors of the circulant matrices are 
-\begin{align} \label{latticeVdef}
-\mV = \Bigl ( \me^{2 \pi n \sqrt{-1} \phi(i-1)\phi(j-1)} \Bigr)_{i,j = 1}^n.
+& = \mP \mK_{\vtheta}  \mP^T,  \label{shInvKernGramMatrix} \\
+\nonumber 
+\text{where } \mK_{\vtheta} &= \bigl ( K_\vtheta \bigl (\vh (i-j)/n \bmod \vone \bigr ) \bigr)_{i, j = 1}^n.
 \end{align}
-and the eigenvalues are
-\begin{align*}
-\vlambda = \mV \vC_1
-\end{align*}
-which automatically follow from the properties of circulant matrices.
-This proves the assumption $\eqref{fastcompAssumpB}$.
+\FJHNote{Check this.}
 
+Because $\mK_\vtheta$ is circulant, we know the form of it's eigevector-eigenvalue decomposition:
+\begin{equation} \label{Keig}
+    \mK_{\vtheta} = \frac 1n \mW \mLambda_\vtheta \mW^H, \; \ \mW =  \Bigl ( \me^{2 \pi \sqrt{-1} (i-1)(j-1)/n} \Bigr)_{i,j = 1}^n.
+\end{equation}
+By \eqref{shInvKernGramMatrix} we then have the eigevector-eigenvalue decomposition for $\mC_{\vtheta}$ assumed in \eqref{eqn:ftk_factor}, namely
+\begin{equation} \label{Clateig}
+    \mC_{\vtheta} = \frac 1n \mV \mLambda_\vtheta \mV^H , \qquad \mV = \mP \mW,
+\end{equation}
+where the eigenvalues of $\mK_{\vtheta}$ and $\mC_{\vtheta}$ are identical.
 
-\iftrue
-\JRNote{Original content of Section 4.3 begins from here:}
+Assumptions \eqref{fastcompAssumpA} and \eqref{fastcompAssumpB} can be verified by \eqref{PermMat}, \eqref{Keig}, and \eqref{Clateig}.  Assumption \eqref{fastcompAssumpC} is satisfied because $\mV^H \vb = \mW^H \mP^T \vb$ is just the permutation of the rows of the discrete Fourier transform of a vector.  This can be performed in $\Order(n \log(n))$ operations by the FFT algorithm. By a proper scaling of the kernel $K_\vtheta$ ensures that assumption \eqref{addAssump} is satisfied. 
 
-
-We now demonstrate that the eigenvector matrix for $\mC$ is 
-\begin{align} \label{latticeVdef}
-\mV = \Bigl ( \me^{2 \pi n \sqrt{-1} \phi(i-1)\phi(j-1)} \Bigr)_{i,j = 1}^n.
-\end{align}
-Assumption \eqref{fastcompAssumpB} follows automatically.
-Now, note that the $k,j$ element of $\mV^H\mV$ is
-\begin{equation*}
-\sum_{i=1}^n \me^{2 \pi n \sqrt{-1} \phi(i-1)[\phi(j-1) - \phi(k-1)]} .
-\end{equation*}
-Noting that the sequence $\{\phi(i-1)\}_{i=1}^n$ is a re-ordering of $0, \ldots, 1-1/n$ for $n$ a power of $2$, this sum may be re-written by replacing $\phi(i-1)$ by $(i-1)/n$:
-\begin{equation*}
-\sum_{i=1}^n \me^{2 \pi \sqrt{-1} (i-1)[\phi(j-1) - \phi(k-1)]}.
-\end{equation*}
-Since $\phi(j-1) - \phi(k-1)$ is some integer multiple of $1/n$, it follows that this sum is $n \delta_{j,k}$, where $\delta$ is the Kronecker delta function.  This establishes that $\mV^H = n \mV^{-1}$ as in \eqref{eqn:ftk_factor}.
-
-Next, let $\omega_{k, \ell}$ denote the $k,\ell$ element of $\mV^H \mC \mV$, which is given by the double sum
-\begin{multline*}
-\omega_{k, \ell} = \sum_{i,j=1}^n K(\vh(\phi(i-1) - \phi(j-1)) \bmod \vone ) \\
-\times   \me^{-2 \pi n \sqrt{-1} \phi(k-1)\phi(i-1)}  \me^{2 \pi n \sqrt{-1} \phi(j-1)\phi(l-1)}
-\end{multline*}
-Noting that the sequence $\{\phi(i-1)\}_{i=1}^n$ is a re-ordering of $0, \ldots, 1-1/n$ for $n$ a power of $2$, this sum may be re-written by replacing $\phi(i-1)$ by $(i-1)/n$ and $\phi(j-1)$ by $(j-1)/n$:
-\begin{multline*}
-\omega_{k, \ell} = \sum_{i,j=1}^n K\left (\vh \left(\frac{i-j}{n} \right) \bmod \vone \right) \\
-\times   \me^{-2 \pi \sqrt{-1} \phi(k-1)(i-1)}  \me^{2 \pi \sqrt{-1} (j-1)\phi(\ell-1)}.
-\end{multline*}
-This sum also remains unchanged if $i$ is replaced by $i+m$ and $j$ is replaced by $j+m$ for any integer $m$:
-\begin{multline*}
-\omega_{k, \ell} = \sum_{i,j=1}^n K\left (\vh \left(\frac{i-j}{n} \right) \bmod \vone \right) \\
-\times   \me^{-2 \pi \sqrt{-1} \phi(k-1)(i+m-1)}  \me^{2 \pi \sqrt{-1} (j+m-1)\phi(\ell-1)} \\
-=   \omega_{k, \ell}  \me^{2 \pi \sqrt{-1} m(\phi(\ell-1) - \phi(k-1))}.
-\end{multline*}
-For this last equality to hold for all integers $m$, we must have $k = \ell$ or $\omega_{k,\ell} = 0$.  Thus, 
-\begin{align*}
-\omega_{k, \ell} &= \delta_{k,\ell} \sum_{i,j=1}^n K\left (\vh \left(\frac{i-j}{n} \right) \bmod \vone \right) \\
-& \qquad \qquad \qquad \qquad \times   \me^{-2 \pi \sqrt{-1} (i - j) \phi(k-1)} \\
-& = n \delta_{k,\ell}  \sum_{i=1}^n K\left ( \left(\frac{i\vh}{n} \right) \bmod \vone \right)  \me^{-2 \pi \sqrt{-1} i \phi(k-1) }.
-\end{align*}
-This establishes $\mV^H \mC \mV$ as a diagonal matrix whose diagonal elements are $n$ times the eigenvalues, i.e., $\lambda_k = \omega_{k,k}/n$.  Furthermore, $\mV$ is the matrix of eigenvectors, which satisfies assumption \eqref{fastcompAssumpA}.
-\fi
-
-\subsection{Iterative Computation of the Fast Transform}
-Assumption \eqref{fastcompAssumpA} is that computing $\mV^H \vb$ requires only $\Order(n \log(n)) $ operations.  Recall that we assume that $n$ is a power of $2$.  This can be accomplished by an iterative algorithm.  Let $\mV^{(n)}$ denote the $n \times n$ matrix $\mV$ defined in  \eqref{latticeVdef}.  One can compute $\mV^{(2n)H}\vb$ quickly for all $\vb \in \reals^{2n}$ assuming that $\mV^{(n)H}\vb$ can be computed quickly for all $\vb \in \reals^n$, using the butterfly structure of the Fast Fourier Transform (FFT). For the brevity, we only provide the results. 
-
-From the definition of the van der Corput sequence in \eqref{vdCDef}, it follows that
-\begin{gather} 
-\label{vdCProp}
-\phi(2i) = \phi(i)/2, \;  \phi(2i+1) = [\phi(i)+1]/2, \ \ \ i \in \natzero\\
-\label{vdCPropB}
-\phi(i+n) = \phi(i) + 1/(2n), \qquad i = 0, \ldots, n-1,
-\\
-\label{vdCPropC}
-n \phi(i) \in \natzero, \qquad i = 0, \ldots, n-1,
-\end{gather}
-still assuming that $n$ is an integer power of two.
-Let $\widetilde{\vb} = \mV^{(2n)H}\vb$ for some arbitrary $\vb \in \reals^{2n}$, and define
-\begin{gather*}
-\vb = \begin{pmatrix} b_1 \\ \vdots \\ b_{2n} \end{pmatrix}, \quad 
-\vb^{(1)} = \begin{pmatrix} b_1 \\ \vdots \\ b_{n} \end{pmatrix}, \quad 
-\vb^{(2)}  = \begin{pmatrix} b_{n+1} \\ \vdots \\ b_{2n} \end{pmatrix}, \\ 
-\widetilde{\vb} = \begin{pmatrix} \widetilde{b}_1 \\ \vdots \\ \widetilde{b}_{2n} \end{pmatrix}, \quad 
-\widetilde{\vb}^{(1)} = \begin{pmatrix} \widetilde{b}_1 \\ \widetilde{b}_3 \\ \vdots \\ \widetilde{b}_{2n-1} \end{pmatrix}, \quad 
-\widetilde{\vb}^{(2)}  = \begin{pmatrix} \widetilde{b}_{2} \\  \widetilde{b}_{4} \\ \vdots \\ \widetilde{b}_{2n} \end{pmatrix}. 
-\end{gather*}
-It follows from these definitions and the definition of $\mV$ in  \eqref{latticeVdef} that
-\begin{align*}
-\widetilde{\vb}^{(1)} &= \left( \sum_{j=1}^{2n}  \me^{-4 \pi n \sqrt{-1} \phi(2i-2)\phi(j-1)} b_{j} \right)_{i=1}^n \\
-% &= \left( \sum_{j=1}^{2n}  \me^{-2 \pi n \sqrt{-1} \phi(i-1)\phi(j-1)} b_{j} \right)_{i=1}^n \quad \text{by \eqref{vdCProp}}\\
-% &= \left( \sum_{j=1}^{n}  \me^{-2 \pi n \sqrt{-1} \phi(i-1)\phi(j-1)} b_{j} \right)_{i=1}^n \quad \\
-% &\qquad \qquad +  \left( \sum_{j=1}^{n}  \me^{-2 \pi n \sqrt{-1} \phi(i-1)\phi(n+j-1)} b_{n+j} \right)_{i=1}^n \\
-% &= \mV^{(n)H}\vb^{(1)}  +  \biggl(  \me^{-\pi \sqrt{-1} \phi(i-1)}  \\
-% & \quad \times \sum_{j=1}^{n}  \me^{-2 \pi n \sqrt{-1} \phi(i-1)\phi(j-1)} b_{n+j} \biggr)_{i=1}^n \quad  \text{by \eqref{vdCPropB}}\\
-&= \mV^{(n)H}\vb^{(1)} +  \left(  \me^{-\pi \sqrt{-1} \phi(i-1)} \right)_{i=1}^n \odot \bigl(\mV^{(n)H}\vb^{(2)} \bigr),
-\end{align*}
-where $\odot$ denotes the Hadamard (term-by-term) product.  By a similar argument, 
-\begin{align*}
-\widetilde{\vb}^{(2)} &= \left( \sum_{j=1}^{2n}  \me^{-4 \pi n \sqrt{-1} \phi(2i-1)\phi(j-1)} b_{j} \right)_{i=1}^n \\
-% &= \left( \sum_{j=1}^{2n}  \me^{-2 \pi n \sqrt{-1} [\phi(i-1)+1]\phi(j-1)} b_{j} \right)_{i=1}^n \quad \text{by \eqref{vdCProp}}\\
-% &= \left( \sum_{j=1}^{n}  \me^{-2 \pi n \sqrt{-1} [\phi(i-1)+1]\phi(j-1)} b_{j} \right)_{i=1}^n \quad \\
-% &\qquad  +  \left( \sum_{j=1}^{n}  \me^{-2 \pi n \sqrt{-1} [\phi(i-1)+1]\phi(n+j-1)} b_{n+j} \right)_{i=1}^n \\
-% &= \mV^{(n)H}\vb^{(1)} +  \left(  \me^{ -\pi \sqrt{-1} [\phi(i-1) + 1]} \right. \\
-% & \qquad \qquad \left . \times \sum_{j=1}^{n}  \me^{-2 \pi n \sqrt{-1} \phi(i-1)\phi(j-1)} b_{n+j} \right)_{i=1}^n \\
-% & \hspace{4cm}  \text{by \eqref{vdCPropB} and \eqref{vdCPropC}}\\
-&= \mV^{(n)H}\vb^{(1)} -  \left(  \me^{-\pi \sqrt{-1} \phi(i-1)} \right)_{i=1}^n \odot \bigl(\mV^{(n)H}\vb^{(2)} \bigr).
-\end{align*}
-
-The computational cost to compute $\mV^{(2n)H}\vb$ is then twice the cost of computing $\mV^{(n)H}\vb^{(1)}$ plus $2n$ multiplications plus $2n$ additions.  An inductive argument shows that $\mV^{(n)H}\vb$ requires only $\Order(n \log(n))$ operations.
 
 
 \subsection{Overcoming Cancellation Error}
-For the kernels used in our computation, it may happen that $n/\lambda_1$ is close to $1$.  Thus, the term $1-n/\lambda_1$, which appears in the credible interval widths, $\err_{\MLE}$, $\err_{\textup{full}}$, and $\err_{\textup{GCV}}$, may suffer from cancellation error.  We can avoid this cancellation error by modifying how we compute the Gram matrix and its eigenvalues.
+For the kernels used in our computation, it may happen that $n/\lambda_1$ is close to $1$.  Thus, the term $1-n/\lambda_1$, which appears in the credible interval widths, $\err_{\MLE}$, $\err_{\textup{full}}$, and $\err_{\textup{GCV}}$, may suffer from cancellation error and even become negative.  We have observed this phenomenon.  We can avoid this cancellation error by modifying how we compute the Gram matrix and its eigenvalues.
 
-The shift-invariant kernel of our interest \eqref{the_kernel_eqn_bernoulli} has the form $C = 1 + \rC$. 
-One could take advantage of it to avoid the subtraction in $1-n/\lambda_1$. 
-Define the new function $\rC : = C -1$, and its associated Gram matrix $\rmC = \mC - \vone \vone^T$, where $\rmC$ is simply the original kernel after discarding ``$1$", there is no actual subtraction involved in the computation.  So we are not really shifting the cancellation error to another place.
-Note that $\rC$ inherits the shift-invariant properties of $C$.  
-Since $\vone$ is the first eigenvector of $\mC$, it follows that the eigenvalues of $\rmC$ are $\rlambda_1 = \lambda_1 - n, \lambda_2, \ldots, \lambda_n$.  Moreover,
+Any shift-invariant covariance kernel can be written as $C_\vtheta = 1 + \rC_\vtheta$. The associated Gram matrix for $\rC_\vtheta$ is then $\rmC_\vtheta = \mC_\vtheta - \vone \vone^T$, and the eigenvalues of $\rmC_\vtheta$ are $\rlambda_1 = \lambda_1 - n, \lambda_2, \ldots, \lambda_n$, which follows because $\vone$ is the first eigenvector of both $\mC_\vtheta$ and $\rmC_\vtheta$. Then, 
 \begin{equation*}
 1 - \frac{n}{\lambda_1}  = \frac{\lambda_1 - n}{\lambda_1} = \frac{\rlambda_1}{\rlambda_1 +n},
 \end{equation*}
@@ -1159,41 +1032,18 @@ where now the right hand side is free of cancellation error.
 
 We show how to compute $\rC$ without introducing round-off error.  The covariance functions that we use are of product form, namely,
 \begin{equation*}
-C(\vt, \vx) = \prod_{\ell=1}^d \left[1 + \rC_\ell(t_\ell,x_\ell) \right], \qquad  \rC_\ell:[0,1]^2 \to \reals.
+C_\vtheta(\vt, \vx) = \prod_{\ell=1}^d \left[1 + \rC_{_\vtheta\ell}(t_\ell,x_\ell) \right], \qquad  \rC_\ell:[0,1]^2 \to \reals.
 \end{equation*}
-Direct computation of $\rC (\vt,\vx) = C(\vt,\vx) -1$ introduces cancellation error if the $ \rC_\ell$ are small.  So, we employ the iteration
+Direct computation of $\rC_\vtheta(\vt,\vx) = C_\vtheta(\vt,\vx) -1$ introduces cancellation error if the $ \rC_{_\vtheta \ell}$ are small.  So, we employ the iteration
 \begin{align*}
-\rC^{(1)} &= \rC_1(t_1,x_1),  \\
-\rC^{(\ell)} &  = \rC^{(\ell-1)}[1 + \rC_\ell(t_\ell,x_\ell)] + \rC_\ell(t_\ell,x_\ell), \\
+\rC^{(1)}_\vtheta(\vt,\vx) &= \rC_{\vtheta 1}(t_1,x_1),  \\
+\rC^{(\ell)}_\vtheta(\vt,\vx) &  = \rC^{(\ell-1)}_\vtheta[1 + \rC_{_\vtheta\ell}(t_\ell,x_\ell)] + \rC_\ell(t_\ell,x_\ell), \\
 & \hspace{5cm} \ell = 2, \ldots, d, \\
-\rC(\vt,\vx)  & = \rC^{(d)}.
+\rC_\vtheta(\vt,\vx)  & = \rC^{(d)}_\vtheta(\vt,\vx).
 \end{align*}
-In this way, the Gram matrix $\rmC$, whose $i,j$-element is $\rC(\vx_i,\vx_j)$ can be constructed with minimal round-off error.
+In this way, the Gram matrix $\rmC_\vtheta$, whose $i,j$-element is $\rC_\vtheta(\vx_i,\vx_j)$ can be constructed with minimal round-off error.
 
-Computing the eigenvalues of $\rmC$ via the procedure given in \eqref{eqn:fast_transform_to_eigvalues} yields $\rlambda_1 = \lambda_1 - n, \lambda_2, \ldots, \lambda_n$. The estimates of $\vtheta$ are computed in terms of the eigenvalues of $\rmC$, so \eqref{eqn_MLE_loss_func_optimized_2} and \eqref{thetaGCV} become
-\begin{subequations}
-\label{thetaSimple}
-\begin{align}
-\label{thetaSimpleMLE}
-\vtheta_\MLE
-&= 
-\argmin_{\vtheta}
-\left[
-\log\left(
-\sum_{i=2}^n \frac{\abs{\widetilde{y}_i}^2}{\lambda_i}
-\right) 
-%\label{thetaMLEsimple}
- + 
- \frac{1}{n}\sum_{i=1}^n \log(\lambda_i)
-\right], \\
-\label{thetaSimpleGCV}
-\vtheta_{\GCV} 
-&= \argmin_\vtheta \left[ \log \left ( \sum_{i=2}^n \frac{\abs{\widetilde{y}_i}^2}{\lambda_i^2} 
-\right)  -2\log\left( \sum_{i=1}^n \frac{1}{\lambda_i} \right)
-\right],
-\end{align}
-\end{subequations}
-where $\lambda_1 = n + \rlambda_1$.  The widths of the credible intervals in \eqref{eq:errMLEAllAsump}, \eqref{FJH:eq:errFullSimple}, and   \eqref{errGCVSimple} become
+Computing the eigenvalues of $\rmC$ via the procedure given in \eqref{eqn:fast_transform_to_eigvalues} yields $\rlambda_1 = \lambda_1 - n, \lambda_2, \ldots, \lambda_n$. The widths of the credible intervals in \eqref{eq:errMLEAllAsump}, \eqref{FJH:eq:errFullSimple}, and   \eqref{errGCVSimple} become
 \begin{subequations}
 \label{fastStoppingCriterions}
 	\begin{align}
@@ -1215,7 +1065,7 @@ where $\lambda_1 = n + \rlambda_1$.  The widths of the credible intervals in \eq
 \frac{2.58}{n}\sqrt{	\frac{\rlambda_1}{\lambda_1} \sum_{i=2}^n \frac{\abs{\widetilde{y}_i}^2}{\lambda_i^2}  \left [ \frac 1n \sum_{i=1}^n \frac{1}{\lambda_i} \right]^{-1}} .
 	\end{align}
 \end{subequations}
-Since $\rlambda_1 = \lambda_1 - n$ and $\lambda_1 \sim n$ it follows $\rlambda_1/\lambda_1 \approx \rlambda_1/(n-1)$ and is small for  large $n$.  Moreover, the credible intervals via empirical Bayes and full Bayes are similar, since $t_{n-1,0.995}$ is approximately $2.58$. 
+For large $n$, $\lambda_1 \sim n$ and it follows that $\rlambda_1/\lambda_1 \approx \rlambda_1/(n-1)$  is small.  Moreover, for large $n$, the credible intervals via empirical Bayes and full Bayes are similar, since $t_{n-1,0.995} \approx 2.58$. 
 The computational steps for the improved, faster, automatic Bayesian cubature are detailed in Algorithm \ref{algorithm2}.
 
 \begin{algorithm}
