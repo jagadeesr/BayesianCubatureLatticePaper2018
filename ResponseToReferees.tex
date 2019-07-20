@@ -125,16 +125,16 @@ covariance functions of the particular product form in Section 4.2 \ldots I thin
 way of calculating Ccirc without doing the -1 at the end.
 However, it is not clear whether this will actually help. \ldots It is not clear to me if operating
 the FFT on the first (permuted) column of $\mathring{C}$ in this form is not going to
-increase the error on $\mathring{\lambda}_1$, so putting the numerical error elsewhere.
+increase the error on $\mathring{\lambda}_1$, so putting the numerical error elsewhere. \Response{A key quantity can lose accuracy due to catastrophic cancellation.  This has been observed by us in practice.  The proposed method avoids this.  We do not see how we are introducing significantly more numerical error elsewhere.  We are basically pulling a large constant matrix one out of the Gram matrix.  Then the FFT of the first column is not essentially $n$.  We want the difference from $n$.}
 
 \item Please delete the word 'periodic' in proposition 1, this is covered by the
-shift-invariantness.
+shift-invariantness. \Response{Done.}
 \end{itemize}
 
 \item Section 5.1. The Baker's transform is introduced first and then the authors talk about
 more general transforms without saying so. For the Baker's transform the
 substitution written with $\Psi'$ is undefined. This paragraph should be
-restructured.
+restructured. \Response{Done.}
 
 \end{itemize}
 
@@ -143,9 +143,9 @@ restructured.
 \section*{Reviewer 2: The authors study a stopping criterion \ldots}
 
 \begin{itemize}
-\item p.\ 3, Sec.\ 2.2 The application of Lemma 1 to automatic Bayesian cubature is not clear to me, since integrand data is accumulated sequentially, which does not correspond to applying a single linear mapping to all integrands (realizations) $f$.
+\item p.\ 3, Sec.\ 2.2 The application of Lemma 1 to automatic Bayesian cubature is not clear to me, since integrand data is accumulated sequentially, which does not correspond to applying a single linear mapping to all integrands (realizations) $f$.  \Response{This is a valid criticism, which we address in Section 2.3.}
 
-\item Sec.\ 2.2.1, 2.2.2 I suggest to include some references for the results that are presented in Sections 2.2.1 and 2.2.2.
+\item Sec.\ 2.2.1, 2.2.2 I suggest to include some references for the results that are presented in Sections 2.2.1 and 2.2.2.  \Response{Our knowledge of the literature is limited, but much of what we read assumes a zero mean for the Gaussian process.  We would welcome sources to cite that consider our setting.}
 
 \item p.\ 5, Sec.\ 2.4 Why are Sobol points chosen for the Matern kernel? Is there some theoretical link?  \Response{Added ``Sobol' points are a typical space-filling design.''}
 
@@ -157,7 +157,7 @@ In the example the integral (22) is considered over a compact set. What is the b
 
 \item Sec.\ 3.2--3.4 Does the operation count also include the computational cost for the minimization problem to estimate $\theta$? I suspect that this is not the case, since there is no assumption concerning the dependence of $C_\theta$ on $\theta$. The same question arises in the setting of Section 4.  \Response{You are correct.  This has been clarified.}
 
-\item Sec.\ 4.1 and 4.2 As the authors state, larger $r$ implies a greater degree of smoothness of the kernel. This should lead to a greater amount of smoothness of the integrands, and thus to a fast convergence of suitable cubature formulas. It might be that this is not exploited by the integration lattices (plus periodization), as studied in the present paper. Please comment.
+\item Sec.\ 4.1 and 4.2 As the authors state, larger $r$ implies a greater degree of smoothness of the kernel. This should lead to a greater amount of smoothness of the integrands, and thus to a fast convergence of suitable cubature formulas. It might be that this is not exploited by the integration lattices (plus periodization), as studied in the present paper. Please comment.  \Response{Greater smoothness of the covariance kernel implies an \emph{assumption} of greater smoothness of the integrands, which may or may not be justified.  Lattice rules work well for all degrees of smoothness. }
 
 \item p.\ 9, eqn. (37) $i, j = 1$. \Response{Done.}
 
