@@ -850,15 +850,21 @@ s^2_\MLE
 & \qquad \times
 \left[\frac{\lambda_1}{n}{\left(1 - \frac{\widetilde{c}_1}{\lambda_1}\right)^2} + \left(c_0  - \frac 1n \sum_{i=1}^n \frac{\abs{\widetilde{c}_i}^2}{\lambda_i}\right) \right], \\
 \nonumber 
-s^2_{\textup{GCV}} & : =  \frac 1{n} \sum_{i=2}^n \frac{\abs{\widetilde{y}_i}^2}{\lambda_i^2}  \left [ \sum_{i=1}^n \frac{1}{\lambda_i} \right]^{-1},\\
-\label{eqn_MLE_loss_func_optimized_2} %\nonumber
+s^2_{\textup{GCV}} & : =  \frac 1{n} \sum_{i=2}^n \frac{\abs{\widetilde{y}_i}^2}{\lambda_i^2}  \left [ \sum_{i=1}^n \frac{1}{\lambda_i} \right]^{-1},
+\end{align}
+\begin{subequations}
+	\label{fastTheta}
+	\begin{align}
+\nonumber
 \vtheta_\MLE
 &= 
 \argmin_{\vtheta}
 \left[
 \log\left(
 \sum_{i=2}^n \frac{\abs{\widetilde{y}_i}^2}{\lambda_{\vtheta i}}
-\right) %\right .\\ \hspace{3cm} \left .
+\right) \right .\\ 
+\label{eqn_MLE_loss_func_optimized_2} %
+& \hspace{3cm} \left .
  + \frac{1}{n}\sum_{i=1}^n \log(\lambda_{\vtheta i})
 \right],\\
 \nonumber 
@@ -867,7 +873,10 @@ s^2_{\textup{GCV}} & : =  \frac 1{n} \sum_{i=2}^n \frac{\abs{\widetilde{y}_i}^2}
 \right) \right .\\
 \label{thetaGCV}
 & \qquad \qquad \qquad \qquad  \left . -2\log\left( \sum_{i=1}^n \frac{1}{\lambda_{\vtheta i}} \right)
-\right], \\
+\right], 
+\end{align}
+\end{subequations}
+\begin{align}
 \nonumber
 \hmu_\MLE  &= \hmu_{\full} = \hmu_{\GCV} =
 \frac{\widetilde{y}_1}{n} +
@@ -892,11 +901,11 @@ s^2_{\textup{GCV}} & : =  \frac 1{n} \sum_{i=2}^n \frac{\abs{\widetilde{y}_i}^2}
 \right\}^{1/2}.
 \end{align}
 Under the further assumption \eqref{addAssump}, it follows that 
-\begin{align}
-\nonumber
-\hmu_\MLE  &= \hmu_{\full} = \hmu_{\GCV} =
+\begin{equation}
+\label{muhatGCV-FB-MLE-Simple}
+\hmu_\MLE  = \hmu_{\full} = \hmu_{\GCV} =
 \frac{\widetilde{y}_1}{n} = \frac 1n \sum_{i=1}^n y_i,
-\end{align}
+\end{equation}
 and so $\hmu$ is simply the sample mean.  Also, under assumption \eqref{addAssump}, the credible interval widths simplify to
 \begin{align}
 \label{eq:errMLEAllAsump}
@@ -951,7 +960,7 @@ Note that
 \begin{multline} \label{phiprop}
 \phi:\{0, \ldots, n-1 \} \to \{0, 1/n, \ldots, (n-1)/n\} \\
 \text{is one-to-one},
-\end{equation}
+\end{multline}
 assuming $n$ is a power of $2$.
 
 An example of $64$ nodes is given in \figref{latticefig}.  The even coverage of the unit cube is ensured by a well chosen generating vector.  The choice of generating vector is typically done offline by computer search.  See \cite{DicEtal14a,HicNie03a} for more on extensible integration lattices.
@@ -979,7 +988,7 @@ C_\vtheta(\vt, \vx) =
 \end{multline}
 Symmetric, periodic, positive definite kernels of this form appear in  \cite{DicEtal14a,Hic96a}.  Bernoulli polynomials are described in \cite[Chapter 24]{OlvEtal10a}.
 
-Larger $r$ implies a greater degree of smoothness of the kernel.  Larger $\eta$ implies greater fluctuations of the output with respect to the input.  Plots of $C(\cdot, 0.3)$ are given in \figref{fig:fourierkernel-dim1} for various $r$ and $\eta$ values.
+Larger $r$ implies a greater degree of smoothness of the covariance kernel.  Larger $\eta$ implies greater fluctuations of the output with respect to the input.  Plots of $C(\cdot, 0.3)$ are given in \figref{fig:fourierkernel-dim1} for various $r$ and $\eta$ values.
 
 \begin{figure}
 	\centering
@@ -1017,12 +1026,12 @@ By \eqref{shInvKernGramMatrix} we then have the eigevector-eigenvalue decomposit
 \end{equation}
 where the eigenvalues of $\mK_{\vtheta}$ and $\mC_{\vtheta}$ are identical.
 
-Assumptions \eqref{fastcompAssumpA} and \eqref{fastcompAssumpB} can be verified by \eqref{PermMat}, \eqref{Keig}, and \eqref{Clateig}.  Assumption \eqref{fastcompAssumpC} is satisfied because $\mV^H \vb = \mW^H \mP^T \vb$ is just the permutation of the rows of the discrete Fourier transform of a vector.  This can be performed in $\Order(n \log(n))$ operations by the FFT algorithm. By a proper scaling of the kernel $K_\vtheta$ ensures that assumption \eqref{addAssump} is satisfied. 
+Assumptions \eqref{fastcompAssumpA} and \eqref{fastcompAssumpB} can be verified by \eqref{PermMat}, \eqref{Keig}, and \eqref{Clateig}.  Assumption \eqref{fastcompAssumpC} is satisfied because $\mV^H \vb = \mW^H \mP^T \vb$ is just the permutation of the rows of the discrete Fourier transform of a vector.  This can be performed in $\Order(n \log(n))$ operations by the FFT algorithm. A proper scaling of the kernel $K_\vtheta$ ensures that assumption \eqref{addAssump} is satisfied. 
 
 
 
 \subsection{Overcoming Cancellation Error}
-For the kernels used in our computation, it may happen that $n/\lambda_1$ is close to $1$.  Thus, the term $1-n/\lambda_1$, which appears in the credible interval widths, $\err_{\MLE}$, $\err_{\textup{full}}$, and $\err_{\textup{GCV}}$, may suffer from cancellation error and even become negative.  We have observed this phenomenon.  We can avoid this cancellation error by modifying how we compute the Gram matrix and its eigenvalues.
+For the covariance kernels used in our computation, it may happen that $n/\lambda_1$ is close to $1$.  Thus, the term $1-n/\lambda_1$, which appears in the credible interval widths, $\err_{\MLE}$, $\err_{\textup{full}}$, and $\err_{\textup{GCV}}$, may suffer from cancellation error and even become negative.  We have observed this phenomenon.  We can avoid this cancellation error by modifying how we compute the Gram matrix and its eigenvalues.
 
 Any shift-invariant covariance kernel can be written as $C_\vtheta = 1 + \rC_\vtheta$. The associated Gram matrix for $\rC_\vtheta$ is then $\rmC_\vtheta = \mC_\vtheta - \vone \vone^T$, and the eigenvalues of $\rmC_\vtheta$ are $\rlambda_1 = \lambda_1 - n, \lambda_2, \ldots, \lambda_n$, which follows because $\vone$ is the first eigenvector of both $\mC_\vtheta$ and $\rmC_\vtheta$. Then, 
 \begin{equation*}
@@ -1073,7 +1082,7 @@ The computational steps for the improved, faster, automatic Bayesian cubature ar
 	\begin{algorithmic}[1]
 		\Require a generator for the rank-1 Lattice sequence
 		$\vx_1, \vx_2, \ldots$; 
-		a shift-invariant periodic kernel, $C$;
+		a shift-invariant periodic kernel, $C_\vtheta$;
 		a black-box function, $f$; 
 		an absolute error tolerance,
 		$\varepsilon>0$; the positive initial sample size, $n_0$;
@@ -1084,7 +1093,7 @@ The computational steps for the improved, faster, automatic Bayesian cubature ar
 		\While{$\err_{\textup{CI}} > \varepsilon$ and $n \le n_{\textup{max}}$}
 		
 		\State\label{LoopStart}Generate $\{ \vx_i\}_{i=n' + 1}^{n}$ and sample $\{f(\vx_i)\}_{i=n'+1}^{n}$
-		\State Compute $\vtheta$ by \eqref{thetaSimpleMLE} or \eqref{thetaSimpleGCV}
+		\State Compute $\vtheta$ by \eqref{eqn_MLE_loss_func_optimized_2} or \eqref{thetaGCV}
 		\State Compute $\err_{\textup{CI}}$  according to \eqref{fastStoppingCriterionMLE}, \eqref{fastStoppingCriterionFull}, or \eqref{fastStoppingCriterionGCV}
 		
 		\State	$n' \gets n, \; n \gets 2n'$
@@ -1099,25 +1108,27 @@ The computational steps for the improved, faster, automatic Bayesian cubature ar
 
 We summarize the results of this section and the previous one in the theorem below.  In comparison to Algorithm \ref{algorithm1}, the cost second and third components of the computational cost of Algorithm  \ref{algorithm2} are substantially reduced.
 \begin{theorem}
-Any symmetric, positive definite,  shift-\break invariant covariance kernel of the form \eqref{eq:shInv} scaled to satisfy \eqref{addAssump}, when matched with rank-1 lattice data-sites, must satisfy assumptions \eqref{fastcompAssump}.  The cubature, $\hmu$, is just the sample mean.  The \emph{fast Fourier transform} (FFT) can be used to expedite the estimates of $\vtheta$ in \eqref{thetaSimple} and the credible interval widths \eqref{fastStoppingCriterions} so that Algorithm \ref{algorithm2} has a computational cost which is the sum of the following:
+Any symmetric, positive definite,  shift-\break invariant covariance kernel of the form \eqref{eq:shInv} scaled to satisfy \eqref{addAssump}, when matched with rank-1 lattice data-sites, must satisfy assumptions \eqref{fastcompAssump}.  The cubature, $\hmu$, is just the sample mean.  The \emph{fast Fourier transform} (FFT) can be used to expedite the estimates of $\vtheta$ in \eqref{fastTheta} and the credible interval widths \eqref{fastStoppingCriterions} so that Algorithm \ref{algorithm2} has a computational cost which is the sum of the following:
 \begin{itemize}
 	\item $\Order\bigl(n\$(f) \bigr)$ for the function data, where $\$(f)$ is the computational cost of a single $f(\vx)$;
 	
 	\item $\Order\bigl(N_{\opt} n \$(C_\vtheta) \bigr)$ for the evaluations of the vector $\vC_{1}$, where $N_\opt$ is the number of optimization steps required, and  $\$(C_\vtheta)$ is the computational cost of a single $C_\vtheta(\vt,\vx)$; and
 	
-	\item $\Order\bigl(N_{\opt} n \log(n) \bigr)$ for the FFT calculations.
+	\item $\Order\bigl(N_{\opt} n \log(n) \bigr)$ for the FFT calculations; there is no $d$ dependence in these calculations.
 	
 \end{itemize}
 
 \end{theorem}
 
-We have implemented the fast adaptive Bayesian cubature algorithm in MATLAB as part of the Guaranteed Adaptive Integration Library (GAIL) \cite{ChoEtal17b} as \allowbreak \code{cubBayesLattice\_g}. This algorithm uses the kernel defined in  \eqref{the_kernel_eqn_bernoulli} with  $r=1,2$ and the periodizing variable transforms in  \secref{period_var_tx}.  The rank-1 lattice node generator is taken from \cite{Nuy17a} (\code{exod2\_base2\_m20}).
+Although the third part of the computational cost has the largest dependence on $n$, in practice it need not be the largest contributor to the computational cost.  If function values are the result of an expensive simulation, then the first part may consume most of the computation time.
+
+We have implemented the fast adaptive Bayesian cubature algorithm in MATLAB as part of the Guaranteed Adaptive Integration Library (GAIL) \cite{ChoEtal17b} as \allowbreak \code{cubBayesLattice\_g}. This algorithm uses the covariance kernel defined in  \eqref{the_kernel_eqn_bernoulli} with  $r=1,2$ and the periodizing variable transforms in  \secref{period_var_tx}.  The rank-1 lattice node generator is taken from \cite{Nuy17a} (\code{exod2\_base2\_m20}).
 
 \section{Numerical Experiments} \label{sec:NumExp}
 
 \subsection{Periodizing Variable Transformations}
 \label{period_var_tx}
-The shift-invariant covariance kernels underlying our Bayesian cubature  assume that the integrand has a degree of periodicity, with the smoothness assumed depending on the smoothness of the kernel.  While integrands arising in practice may be smooth, they might not be periodic.  Variable transformations can be used to ensure periodicity.
+The shift-invariant covariance kernels underlying our Bayesian cubature  assume that the integrand has a degree of periodicity, with the smoothness assumed depending on the smoothness of the covariance kernel.  While integrands arising in practice may be smooth, they might not be periodic.  Variable transformations can be used to ensure periodicity.
 
 Suppose that the original integral has been expressed as 
 \begin{equation*}
