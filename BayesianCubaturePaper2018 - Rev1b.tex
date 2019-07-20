@@ -992,6 +992,8 @@ Symmetric, periodic, positive definite kernels of this form appear in  \cite{Dic
 
 Larger $r$ implies a greater degree of smoothness of the covariance kernel.  Larger $\eta$ implies greater fluctuations of the output with respect to the input.  Plots of $C(\cdot, 0.3)$ are given in \figref{fig:fourierkernel-dim1} for various $r$ and $\eta$ values.
 
+Integration lattice cubature rules are known to have convergence rates that depend on the smoothness of the integrands \cite{DicEtal14a}.  Thus, we expect integration lattice node sets to perform well regardless of the smoothness of the covariance kernel.  The bigger concern is whether the derivatives of the integrand are as smooth as the covariance kernel implies.  This topic is touched upon again in Section  \ref{period_var_tx}.
+
 \begin{figure}
 	\centering
 	\includegraphics[width=0.9\linewidth]{"fourier_kernel_dim_1"}
@@ -1028,7 +1030,7 @@ By \eqref{shInvKernGramMatrix} we then have the eigevector-eigenvalue decomposit
 \end{equation}
 where the eigenvalues of $\mK_{\vtheta}$ and $\mC_{\vtheta}$ are identical.
 
-Assumptions \eqref{fastcompAssumpA} and \eqref{fastcompAssumpB} can be verified by \eqref{PermMat}, \eqref{Keig}, and \eqref{Clateig}.  Assumption \eqref{fastcompAssumpC} is satisfied because $\mV^H \vb = \mW^H \mP^T \vb$ is just the permutation of the rows of the discrete Fourier transform of a vector.  This can be performed in $\Order(n \log(n))$ operations by the FFT algorithm. A proper scaling of the kernel $K_\vtheta$ ensures that assumption \eqref{addAssump} is satisfied. 
+Assumptions \eqref{fastcompAssumpA} and \eqref{fastcompAssumpB} can be verified by \eqref{PermMat}, \eqref{Keig}, and \eqref{Clateig}.  Assumption \eqref{fastcompAssumpC} is satisfied because $\mV^H \vb = \mW^H \mP^T \vb$ is just the discrete Fourier transform of a vectors whose rows have been permuted.  This can be performed in $\Order(n \log(n))$ operations by the FFT algorithm. A proper scaling of the kernel $K_\vtheta$ ensures that assumption \eqref{addAssump} is satisfied. 
 
 
 
@@ -1168,6 +1170,7 @@ Examples of this kind of transform include \cite{Sid08a}:
 \end{align*}
 
 Periodizing variable transforms are used in the numerical examples below. In some cases, they can speed the convergence of the Bayesian cubature because they allow one to take advantage of smoother kernels. 
+However, there is a trade-off.  Smoother periodizing transformations tend to give integrands $f$ with larger inferred $s$ values and thus wider credible intervals.
 	
 
 
@@ -1176,9 +1179,11 @@ Periodizing variable transforms are used in the numerical examples below. In som
 %\label{sec:numerical_experiments}
 
 Three integrals were evaluated using the GAIL algorithm \code{cubBayesLattice\_g}:  a multivariate normal probability, the Keister's example, and an option pricing example.  
-The sequences $\{\vx_i\}_{i=1}^\infty$ were the randomly shifted lattice node sequences supplied by GAIL. 
-For each integral,  each of our stopping criteria---empirical Bayes, full Bayes, and generalized cross-validation---our algorithm was run for $400$ different randomly chosen error tolerances. The error tolerances were chosen randomly in an interval depending on the difficulty of the problem. In each run, the nodes were also randomly shifted. The accuracy of the algorithm differs based on the shift.
-For each test, the execution times were plotted against $\abs{\mu - \hmu}/\varepsilon$.  We expect $\abs{\mu - \hmu}/\varepsilon$ to be no greater than one, but hope that it is not too much smaller than one, which would indicate a stopping criterion that is too conservative. 
+The sequences $\{\vx_i\}_{i=1}^\infty$ are the randomly shifted lattice node sequences supplied by GAIL. 
+For each integral,  each of our stopping criteria---empirical Bayes, full Bayes, and generalized cross-validation---our algorithm was run for $400$ different randomly chosen error tolerances. The error tolerances were chosen randomly in an interval depending on the difficulty of the problem. In each run, the nodes were also randomly shifted. The accuracy of the algorithm depends mildly on the shift; there is no universally optimal shift.
+For each test, the execution times are plotted against $\abs{\mu - \hmu}/\varepsilon$.  We expect $\abs{\mu - \hmu}/\varepsilon$ to be no greater than one, but hopefully not too much smaller than one, which would indicate a stopping criterion that is too conservative. 
+
+Ideally, we would optimize both $r$ and $\eta$ simultaneously in the definition of our $C_\vtheta$ in \eqref{the_kernel_eqn_bernoulli}.  However, in these examples we fix $r$ and optimize $\eta$ only.  This is a technical challenge, not a limitation of our theory.
 
 Figures \ref{fig:mvn-guaranteed-MLE} to \ref{fig:optprice-guaranteed-GCV} can be reproduced using the script \code{cubBayesLattice\_guaranteed\_plots.m} in GAIL.
 
@@ -1281,16 +1286,16 @@ f(\vx) &= \text{payoff} \left(\mL
 \end{align*}
 The Asian arithmetic mean call option has a payoff of the form
 \begin{align*}
-\text{payoff}(\vz) &= \max\left( \frac 1d  \sum_{j=1}^d S_j(\vz) - K, 0 \right) \me^{-\upsilon T}, \\
+\text{payoff}(\vz) &= \max\left( \frac 1d  \sum_{j=1}^d S_j(\vz) - K, 0 \right) \me^{-R T}, \\
 \text{where}\;
-S_j(\vz) &= S_0 \exp\bigl((\upsilon-\sigma^2/2)jT/d + \sigma \sqrt{T/d} z_j \bigr).
+S_j(\vz) &= S_0 \exp\bigl((R-\sigma^2/2)jT/d + \sigma \sqrt{T/d} z_j \bigr).
 \end{align*}
-Here, $T$ denotes the time to maturity of the option, $d$ the number of time steps, $S_0$ the initial price of the stock, $\upsilon$ the interest rate, $\sigma$ the volatility, and $K$ the strike price.  
+Here, $T$ denotes the time to maturity of the option, $d$ the number of time steps, $S_0$ the initial price of the stock, $R$ the interest rate, $\sigma$ the volatility, and $K$ the strike price.  
 
 Figures \ref{fig:optprice-guaranteed-MLE}, \ref{fig:optprice-guaranteed-FB} and 
 \ref{fig:optprice-guaranteed-GCV} summarize the numerical results for this example using
 $
-T = 1/4, \ \ d = 13, \ \ S_0 = 100, \ \ \upsilon =  0.05, \ \ \sigma = 0.5, \ \ K = 100.
+T = 1/4, \ \ d = 13, \ \ S_0 = 100, \ \ R =  0.05, \ \ \sigma = 0.5, \ \ K = 100.
 $
 Moreover, $\mL$ is chosen to be the matrix of eigenvectors of $\mSigma$ times the square root of the diagonal matrix of eigenvalues of $\mSigma$.
 Because the integrand has a kink caused by the $\max$ function, it does not help to use a periodizing transform that is very smooth.  We choose the Baker's transform \eqref{eq:bakerTrans} and $r = 1$.
@@ -1319,55 +1324,9 @@ In summary, the Bayesian cubature algorithm computes the integral within the use
 %Also notice, our algorithm finished within 10 seconds for Keister and multivariate Normal examples while the option pricing took closer to 70 seconds, again due to the complexity of the integrand.
 %FH it is difficult to compare apples to orances, and the timing depends on the error tolerances as well
 
-A noticeable aspect from the plots is how much the error bounds differ from the true error. For option pricing example, the error bound is not as conservative as it is for the multivariate normal and Keister examples. A possible reason is that the latter integrands are significantly smoother than the covariance kernel assumed.  This is a matter for further investigation.
+One may question whether an integrand with non-negative values is well represented by a Gaussian process.  Since we allow a nonzero mean, this assumption is somewhat more palatable. Bayesian algorithms assuming non-Gaussian processes are more difficult, but this is an ares for further research.
 
-
-\iffalse
-\subsection{Diagnostics for the Gaussian Process Assumption}
-
-
-The starting point for our Bayesian cubature is the assumption that the integrand arises from a Gaussian process. This means that the function data, $\vf$ satisfy a multivariate Gaussian distribution, as in \eqref{eqn:fGaussDist}.  The transformed data, $\vZ = ( n\mLambda)^{-\frac 12} \mV^H(\vf - m \vone)$ has zero mean and is also uncorrelated because
-\begin{align*}
-\cov (\vZ) 
-&= \frac 1n \Ex\left[  
-\mLambda^{-\frac 12} \mV^H (\vf - m \vone)
-(\vf - m \vone)^T \mV \mLambda^{-\frac 12}
-\right]
-\\
-&=
- \mLambda^{-\frac 12} \mV^H 
-\Ex\left[ (\vf - m \vone)
-(\vf - m \vone)^T \right] \mV \mLambda^{-\frac 12}
-\\
-&=
-\frac{1}{n} \mLambda^{-\frac 12} \mV^H 
-\frac 1n \mV \mLambda \mV^H \mV \mLambda^{-\frac 12}
- = \mathsf{I}
-\end{align*}
-Thus, the elements of $\vZ$ are IID standard Gaussian random variables.  
-
-\figref{fig:mvn-normplot} and \figref{fig:keister-normplot} are normal probability plots of the $Z_i$ using empirical Bayes estimates of $m$ and $\vtheta$. \textbf{more goes here}.
-
-
-
-\begin{figure}
-	\centering
-	\includegraphics[width=0.9\linewidth]{"figures/arbMean/Keister/C1sin/Keister Normplot d_2 bernoulli_2 Period_C1sin n_32768"}
-	\caption{Normal plot : Keister function with arbMean assumption}
-	\label{fig:keister-normplot}
-\end{figure}
-
-
-
-
-\begin{figure}
-	\centering
-	\includegraphics[width=0.9\linewidth]{"figures/arbMean/MVN/C1sin/MVN Normplot d_2 bernoulli_2 Period_C1sin n_32768"}
-	\caption{Normal plot : MVN with arbMean assumption}
-	\label{fig:mvn-normplot}
-\end{figure}
-
-\fi
+A noticeable observation from the plots in all three examples is how much the credible interval widths differ from the true error. The credible interval widths are not much smaller than $\varepsilon$.  The ratio of the true error to $\varepsilon$ ranges from around one to as small as $10^{-7}$.  In the latter case, the credible interval widths are quite conservative.  For option pricing example, this less serious of an issue than for the multivariate normal and Keister examples. A possible reason is that the latter integrands are significantly smoother than the covariance kernel assumed.  This is a matter for further investigation.
 
 
 
