@@ -58,7 +58,7 @@ a very strong assumption. \Response{Some further explanation has been provided. 
 \item It should maybe be mentioned here that there are hyper distributions for the
 hyper parameters. \Response{Done.}
 \item It is never said how the $x_i$ are sampled. Does (5a) hold for any
-distribution of samples $x_i$? \Response{Yes, any distinct nodes.}
+distribution of samples $x_i$? \Response{Yes, any distinct nodes. This has been mentioned explicitly}
 \item In this section there are different quantities being defined: the matrix
 $C_{\vec{\theta}}$ which involves evaluating the covariance function, $c_0$ which
 involves integrating the covariance function and $\vec{c}$ which involves
@@ -67,13 +67,13 @@ point. Only at the end the authors say that they assume these things to be
 cheap. I think this should be spelled out immediately. \Response{Done.}
 \item  It think is not a good idea to leave out the dependence on $\vec{\theta}$ for
 $C$. E.g. in (11) the $\vec{\theta}$ is not visible at all in the expression to be
-minimized for it. The $C$ without subscript also clashes that of lemma 1. \Response{$\vec{\theta}$ has been added into the equations where there is optimization.}
+minimized for it. The $C$ without subscript also clashes that of lemma 1. \Response{$\vec{\theta}$ has been added as much as possible, and particularly into the equations where there is optimization.}
 \item  The lead in to lemma 1 makes it feel like this is a field specific lemma but
 in fact it is just the well known conditional Gaussian. Please write something
 like 'We need the following lemma on conditional normal distribution ...'.  \Response{Done.}
 \item  Do not use $C$ in this lemma. \Response{Notation has been changed.}
 \item  The other derivations in the paper are all made in prose. It would be better
-to formally state some of them. E.g., the results on the top of page 3. \Response{The key results from Sections 2.2.1--2.2.3 have been collected in a theorem just before Section 2.2.1.  The key results of Section 3 are also collected into a theorem.}
+to formally state some of them. E.g., the results on the top of page 3. \Response{The key results from Sections 2.2.1--2.2.3 have been collected in a theorem just before Section 2.2.1.  The key results of Section 3 are also collected into a theorem.  Theorem 3 now summarizes the results of Section 4.}
 \item  From (6) to (7) the notation is different: $c^T C^{-1} 1$ vs $1^T C^{-1} c$,
 this might be corrected. \Response{Done.}
 \end{itemize}
@@ -91,7 +91,7 @@ for $s^2$. \Response{No, the optimization problem for $\vec{\theta}$ already has
 \begin{itemize}
 \item I cannot follow the derivation.  \Response{The notation has been clarified.  This is a tedious derivation and has been moved to the Appendix.}
 \item At the end of the section the authors say that this is not a good method.
-Why then list it? Maybe the final paragraph needs to be rewritten.  \Response{We only cast doubt on the full Bayes approach for estimating $\vec{\theta}$.}
+Why then list it? Maybe the final paragraph needs to be rewritten.  \Response{We only cast doubt on the full Bayes approach for estimating $\vec{\theta}$, not for dealing with the other hyperparameters.}
 \end{itemize}
 
 \item Section 2.3. The authors stress here that the integrand must be a 'typical' draw from the assumed Gaussian process and not an outlier. That sounds scary. \Response{It may sound scary, but that is the common implicit assumption of probabilistic approaches, such as this one.  Other traditional methods for estimating the error of a cubature rule either assume that the integrand lies in the ball of some function space (how do you know the radius of that ball?) or estimate the error heuristically.}
@@ -112,11 +112,11 @@ kernel hasn't been used up till this point.  \Response{Done.}
 
 \item Section 3.1. Use $C_{\vec{\theta}}$ in (27) for clarity. \Response{Done.}
 
-\item Section 3.3. Elaborate on what is meant with the second sentence.
+\item Section 3.3. Elaborate on what is meant with the second sentence.  \Response{This section re-written and eliminaets this sentence.}
 
 \item Sections 4.2, 4.3 and 4.4. 
 The definition (35) makes it that the covariance matrix $C$ is a permutation
-of a circulant matrix. \ldots
+of a circulant matrix. \ldots. \Response{These subsections have been substantially re-written in response to the referee's suggestion.}
 
 \item  Section 4.5. 
 \begin{itemize}
