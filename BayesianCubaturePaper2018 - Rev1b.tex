@@ -592,6 +592,8 @@ The previous section presents three credible intervals, \eqref{eqn_prob_CI}, for
 
 Our  Bayesian cubature algorithm increases the sample size until the width of the credible interval is small enough.  This is accomplished through successively doubling the sample size.  The steps are detailed in Algorithm \ref{algorithm1}.
 
+We recognize that multiple applications of our credible intervals in one run of our algorithm is not strictly justified.  However, if our integrand comes from the middle of the sample space and not the extremes, we expect our automatic Bayesian cubature approximate  the integral within the desired error tolerance with high probability.  The example in the next subsection and the examples in Section \ref{sec:NumExp} support that expectation. We also believe that an important factor contributing to the failure of our algorithm is unreasonable parameterizations of the stochastic process from which the integrand is hypothesized to be drawn.  Overcoming this latter challenge is a topic for future research.
+
 \algnewcommand{\IIf}[1]{\State\algorithmicif\ #1\ \algorithmicthen\ }
 \algnewcommand{\IElse}{\unskip\ \algorithmicelse\ }
 \algnewcommand{\EndIIf}{\unskip\ \algorithmicend\ \algorithmicif}
@@ -629,7 +631,7 @@ As described above, the computational cost of Algorithm \ref{algorithm1} is the 
 \begin{itemize}
 	\item $\Order\bigl(n\$(f) \bigr)$ for the function data, where $\$(f)$ is the computational cost of a single $f(\vx)$; $\$(f)$ may be large if it is the result of an expensive simulation; $\$(f)$ is typically proportional to $d$;
 	
-	\item $\Order\bigl(N_{\opt} n^2 \$(C_\vtheta) \bigr)$ for the evaluation of the matrix $\mC_{\vtheta}$, $N_\opt$ is the number of optimization steps required, and  $\$(C_\vtheta)$ is the computational cost of a single $C_\vtheta(\vt,\vx)$; $\$(C)$ is typically proportional to $d$; and
+	\item $\Order\bigl(N_{\opt} n^2 \$(C_\vtheta) \bigr)$ for the evaluation of the Gram matrix $\mC_{\vtheta}$, $N_\opt$ is the number of optimization steps required, and  $\$(C_\vtheta)$ is the computational cost of a single $C_\vtheta(\vt,\vx)$; $\$(C_\vtheta)$ is typically proportional to $d$; and
 	
 	\item $\Order\bigl(N_{\opt} n^3 \bigr)$ for the matrix inversions and determinant calculations.
 	
@@ -1134,18 +1136,21 @@ Suppose that the original integral has been expressed as
 \begin{equation*}
 \mu := \int_{[0,1]^d} g(\vt) \, \dif \vt
 \end{equation*}
-where $g$ has sufficient smoothness, but lacks periodicity.  The Baker's transform,
+where $g$ has sufficient smoothness, but lacks periodicity.  
+The goal is to transform the integral above to the form of \eqref{eqn:defn_mu}, where the integrand $f$---and perhaps its derivatives---are  periodic.  
+
+The Baker's transform, also called tent transform,
 \begin{multline} \label{eq:bakerTrans}
 \vPsi: \vx \mapsto (\Psi(x_1),  \ldots, \Psi(x_d)), \\ \Psi(x)  =1 - 2 \abs{x - 1/2},
 \end{multline}
-allows us to write $\mu$ in the form of \eqref{eqn:defn_mu}, where $f(\vx) = g(\vPsi(\vx))$. Also called tent transform, $\Psi'(x)$ is not defined, not suitable when the $f$ is required to have also smooth derivatives. 
+allows us to write $\mu$ in the form of \eqref{eqn:defn_mu}, where $f(\vx) = g(\vPsi(\vx))$.  Since  $\Psi'(x)$ is not continuous, $f$ does not have continuous derivatives. 
 
-A family of variable transforms that also provide some derivatives take the form
+A family of variable transforms that can also preserve continuity of the derivatives that exists in the original integrand $g$ takes the form
 \begin{subequations} %\label{eq:varTrans}
 \begin{equation*}
-\vPsi: \vx \mapsto (\Psi(x_1),  \ldots, \Psi(x_d)), \quad \Psi:[0,1] \mapsto [0,1],
+\vPsi: \vx \mapsto (\Psi(x_1),  \ldots, \Psi(x_d)), \quad \Psi:[0,1] \mapsto [0,1].
 \end{equation*}
-which allows us to write $\mu$ in the form of \eqref{eqn:defn_mu} with
+This allows us to write $\mu$ in the form of \eqref{eqn:defn_mu} with
 \begin{equation*}
 f(\vx) = g(\vPsi(\vx)) \prod_{\ell = 1}^d \Psi'(x_l).
 \end{equation*}
@@ -1162,7 +1167,7 @@ Examples of this kind of transform include \cite{Sid08a}:
 &\qquad \qquad \Psi'(x) = \frac {3 \pi[3 \sin(\pi x) - \sin(3 \pi x)]}{16}.
 \end{align*}
 
-Periodizing variable transforms are used for the numerical examples below. In some cases, they can speed the convergence of the Bayesian cubature. 
+Periodizing variable transforms are used in the numerical examples below. In some cases, they can speed the convergence of the Bayesian cubature because they allow one to take advantage of smoother kernels. 
 	
 
 
