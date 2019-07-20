@@ -19,7 +19,7 @@
 \renewcommand{\vec}[1]{\boldsymbol{#1}}
 \newcommand{\vtheta}{\vec{\theta}}
 
-Thanks to the the referees and the editors for their helpful comments.  We have revised our manuscript in light of these comments, \Response{which we address point-by-point below in blue.}
+Thanks to the the referees and the editors for their very helpful comments.  We have revised our manuscript substantially in response. \Response{Specific concerns are addressed point-by-point below in blue.}. We hope that all will find the revision satisfactory.
 
 \section*{Reviewer 1: The paper is an interesting read on Bayesian cubature \ldots}
 
@@ -142,6 +142,8 @@ restructured. \Response{Done.}
 
 \section*{Reviewer 2: The authors study a stopping criterion \ldots}
 
+There is no theory available that covers the whole process (estimation and cubature with credible interval); instead, the authors present numerical experiments to demonstrate the performance of three variants of their new algorithm. \Response{We would disagree with the sweeping nature of the claim that ``there is no theory''.  Our method is taking the established theory of Bayesian numerical analysis and using it to develop adaptive stopping criteria.  In our revised manuscript we summarize our results in three theorems.  We recognize some gaps in the theory.}
+
 \begin{itemize}
 \item p.\ 3, Sec.\ 2.2 The application of Lemma 1 to automatic Bayesian cubature is not clear to me, since integrand data is accumulated sequentially, which does not correspond to applying a single linear mapping to all integrands (realizations) $f$.  \Response{This is a valid criticism, which we address in Section 2.3.}
 
@@ -157,18 +159,19 @@ In the example the integral (22) is considered over a compact set. What is the b
 
 \item Sec.\ 3.2--3.4 Does the operation count also include the computational cost for the minimization problem to estimate $\theta$? I suspect that this is not the case, since there is no assumption concerning the dependence of $C_\theta$ on $\theta$. The same question arises in the setting of Section 4.  \Response{You are correct.  This has been clarified.}
 
-\item Sec.\ 4.1 and 4.2 As the authors state, larger $r$ implies a greater degree of smoothness of the kernel. This should lead to a greater amount of smoothness of the integrands, and thus to a fast convergence of suitable cubature formulas. It might be that this is not exploited by the integration lattices (plus periodization), as studied in the present paper. Please comment.  \Response{Greater smoothness of the covariance kernel implies an \emph{assumption} of greater smoothness of the integrands, which may or may not be justified.  Lattice rules work well for all degrees of smoothness. }
+\item Sec.\ 4.1 and 4.2 As the authors state, larger $r$ implies a greater degree of smoothness of the kernel. This should lead to a greater amount of smoothness of the integrands, and thus to a fast convergence of suitable cubature formulas. It might be that this is not exploited by the integration lattices (plus periodization), as studied in the present paper. Please comment.  \Response{Greater smoothness of the covariance kernel implies an \emph{assumption} of greater smoothness of the integrands, which may or may not be justified.  Lattice rules work well for all degrees of smoothness. This point is mentioned at the end of Section 4.2.}
 
 \item p.\ 9, eqn. (37) $i, j = 1$. \Response{Done.}
 
-\item p.\ 9, bottom, right Assumption (25c) \ldots 
+\item p.\ 9, bottom, right Assumption (25c) \ldots \Response{The rewriting of this section has eliminated that sentence.}
 
 \item p.\ 12, center left  \ldots differs depends \ldots ?  \Response{Fixed.}
 
-\item Sec.\ 5.1 Is there some kind of a universal periodization that ‘works’ for every value of $r$?
+\item Sec.\ 5.1 Is there some kind of a universal periodization that ‘works’ for every value of $r$?  \Response{One could choose an infinitely smooth periodization, but this would change the integrand to potentially make its covariance $s$ large. This is mentioned at the end of Section 5.1.}
 
-\item Sec. 5.2 You take $r = 2$ or $r = 1$ for the periodization in these examples. Does this mean that $\theta = (2,\gamma)$ is considered for the shift-invariant kernel, or do you still consider $\theta = (r,\gamma)$ with $r \in \mathbb{N}$ as the unknown parameter?
-I suggest not to use $r$ also in the drift term in the option pricing example.
+\item Sec. 5.2 You take $r = 2$ or $r = 1$ for the periodization in these examples. Does this mean that $\theta = (2,\gamma)$ is considered for the shift-invariant kernel, or do you still consider $\theta = (r,\gamma)$ with $r \in \mathbb{N}$ as the unknown parameter?  \Response{For technical simplicity we fix $r$.  We mention that in Section 5.2.}
+
+\item I suggest not to use $r$ also in the drift term in the option pricing example. \Response{Excellent suggestion.  Replaced by $R$.}
 
 \end{itemize}
 
@@ -189,15 +192,15 @@ I suggest not to use $r$ also in the drift term in the option pricing example.
 
 \item In (24), are $C_1,\dots,C_n$ the columns of C?  \Response{Yes.}
 
-\item It took me a while to figure out what the four different colors of the points in Figures 5 to 13 mean.  There is a continuum of colors on the right, but only four specific colors for the points are used, so I think it would be useful to say explicitly what each of these four colors  represent.  In the text on page 12, it would be useful to say for example that $\epsilon = 10^{-5}$ corresponds to the green points.   By the way, are there 100 green points, for the 100 independent shifts?
+\item It took me a while to figure out what the four different colors of the points in Figures 5 to 13 mean.  There is a continuum of colors on the right, but only four specific colors for the points are used, so I think it would be useful to say explicitly what each of these four colors  represent.  In the text on page 12, it would be useful to say for example that $\epsilon = 10^{-5}$ corresponds to the green points.   By the way, are there 100 green points, for the 100 independent shifts?  \Response{We have modified our experiments to randomly choose from a continuum of error tolerances.  We have also explained that each experiment correspondes to a different random shift.}
 
 \item Section 5.2, line 8: correct ``differs depends". \Response{Fixed.}
 
-\item Page 14: The three figures look all the same!  Any comment on that?
+\item Page 14: The three figures look all the same!  Any comment on that?  \Response{They are similar, but not the same.}
 
-\item In this example, does it really make sense to assume that the integrand comes from a Gaussian process?
+\item In this example, does it really make sense to assume that the integrand comes from a Gaussian process?  \Response{Theoretically, perhaps not, but with a nonzero mean, maybe this is not too much of a stretch.  Bayesian cubature assuming non-Gaussian processes is much more challenging.  We have addressed this at the end of Section 5.2}
 
-\item Four lines below Figure 13:  "A noticeable aspect from the plots is how much ....":  It may be good to explain exactly how we see that in the plots.
+\item Four lines below Figure 13:  "A noticeable aspect from the plots is how much ....":  It may be good to explain exactly how we see that in the plots. \Response{We have elaborated more.}
 
 \item Reference [1]:  "Griolami"?   Mark may not recognize himself!  \Response{Sorry.  Fixed.}
 
@@ -206,19 +209,19 @@ I suggest not to use $r$ also in the drift term in the option pricing example.
 \section*{Editor: We have received two very careful reviews of this paper \ldots}
 
 
-The revision should at a minimum point out the connection to the FFT. 
+The revision should at a minimum point out the connection to the FFT. \Response{Done.}
 
-Because the goal is to reach people outside of PN some additional explanations are in order.
+Because the goal is to reach people outside of PN some additional explanations are in order. \Response{We have tried.}
 
 \begin{enumerate}
 \renewcommand{\labelenumi}{\arabic{enumi}.}
-    \item The results in Section 2.2.2 were confusing. \ldots 
+    \item The results in Section 2.2.2 were confusing. \ldots \Response{This has been re-written}
 
     \item It is weird to use complex numbers for the eigenvectors of a real symmetric matrix \ldots \Response{While it may be strange, it is convenient since we are working with FFT's of real vectors, which are complex vectors.  Some explanation is provided at the beginning of Section 3.1.}
 
 \item In(24), why is $V^H =nV^{-1}$ and not just $V^{-1}$? \ldots \Response{This normalization allows $\vV_1 = \vone$.}
 
-\item The argument at the end of section 4.3 involving is very slippery. \ldots
+\item The argument at the end of section 4.3 involving is very slippery. \ldots \Response{Section 4 has been substantially re-written.}
 
 \end{enumerate} 
 
@@ -230,7 +233,7 @@ Some minor points
 
 \item The $x_i$ in (4) would have to be distinct to force a strictly positive quadratic form. \Response{Clarified.}
 
-\item The notation for the full Bayes treatment is not consistent. \ldots 
+\item The notation for the full Bayes treatment is not consistent. \ldots \Response{We have tried to fix this.}
 \item  First paragraph of 2.3: for the $\mu$ $\rightarrow$ for $\mu$. Also intervals $\rightarrow$ interval. \Response{Fixed.}
 \item  End of Section 2: the the Mat\'ern $\rightarrow$ the Mat\'ern \Response{Fixed.}
 \item  In the big display near the middle of the left column on page 7 should $c^T$
