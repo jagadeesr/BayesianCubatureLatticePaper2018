@@ -255,11 +255,11 @@
 \maketitle
 
 \begin{abstract}
-Automatic cubatures approximate multidimensional integrals to user-specified error tolerances.  For high dimensional problems it is difficult to adaptively change the sampling pattern, but one can automatically determine the
-sample size, $n$, give a fixed and reasonable sampling pattern. We take this approach here using a Bayesian perspective.  We postulate that the integrand is an instance of a Gaussian stochastic process parameterized by a constant mean and a covariance function defined by a scale parameter times a parameterized function specifying how the integrand values at two different points in the domain are related.
-These hyperparameters are handled using integrand values via empirical Bayes, full Bayes, and generalized cross-validation.  The sample size, $n$, is chosen to make the half-width of the credible interval for the Bayesian posterior mean no greater than the error tolerance. 
+Automatic cubatures approximate multidimensional integrals to user-specified error tolerances.  For high dimensional problems, it is difficult to adaptively change the sampling pattern, but one can automatically determine the
+sample size, $n$, given a fixed and reasonable sampling pattern. We take this approach here using a Bayesian perspective.  We postulate that the integrand is an instance of a Gaussian stochastic process parameterized by a constant mean and a covariance function defined by a scale parameter times a parameterized function specifying how the integrand values at two different points in the domain are related.
+These hyperparameters are handled using integrand values via empirical Bayes, full Bayes, and generalized cross-validation. The sample size, $n$, is chosen to make the half-width of the credible interval for the Bayesian posterior mean no greater than the error tolerance. 
 
-The process outlined above typically requires a computational cost of $O(N_{\text{opt}}n^3)$, where $N_{\text{opt}}$ is the number of optimizations required to identify the hyperparameters. Our innovation is to pair low discrepancy nodes with matching kernels that lower the  computational cost to $O(N_{\text{opt}} n \log n)$.   This approach is demonstrated using rank-1 lattice sequences and shift-invariant kernels.  Our algorithm is  implemented in the Guaranteed Automatic Integration Library (GAIL).
+The process outlined above typically requires a computational cost of $O(N_{\text{opt}}n^3)$, where $N_{\text{opt}}$ is the number of optimization steps required to identify the hyperparameters. Our innovation is to pair low discrepancy nodes with matching kernels that lower the  computational cost to $O(N_{\text{opt}} n \log n)$.   This approach is demonstrated using rank-1 lattice sequences and shift-invariant kernels.  Our algorithm is  implemented in the Guaranteed Automatic Integration Library (GAIL).
 
 
 \keywords{Bayesian cubature \and Fast automatic cubature \and GAIL \and Probabilistic numeric methods }
@@ -762,8 +762,8 @@ We introduce some notation:
 \nonumber
 \mC^p  &= \frac 1n \mV \mLambda^{p} \mV^H, \qquad \forall p \in \integers.
 \end{align}
-Here the $\vC_j$ are the columns of $\mC$.  In this and later sections, we drop the $\vtheta$ dependence of various quantities for simplicty of notation.  Here, $\mV^H$ is the Hermitian of $\mV$, $\vC_1,...,\vC_n$ are columns of $\mC$.  $\vV_1,...,\vV_n$ are columns of $\mV$ and $\vv_1,...,\vv_n$ are rows of $\mV$.  The normalization of $\mV$ assumed in \eqref{eqn:ftk_factor} conveniently allows the first eigenvector, $\vV_1$, to be the vector of ones in \eqref{fastcompAssumpB} below.  The columns of matrix $\mV$ are eigenvectors of $\mC$, and $\mLambda$ is a diagonal matrix of eigenvalues of $\mC$.
-For any $n \times n$ vector $\vb$, define the notation  $\widetilde{\vb} := \mV^H \vb$.
+Here the $\vC_j$ are the columns of $\mC$.  In this and later sections, we drop the $\vtheta$ dependence of various quantities for simplicity of notation.  Here, $\mV^H$ is the Hermitian of $\mV$, $\vC_1,...,\vC_n$ are columns of $\mC$.  $\vV_1,...,\vV_n$ are columns of $\mV$ and $\vv_1,...,\vv_n$ are rows of $\mV$.  The normalization of $\mV$ assumed in \eqref{eqn:ftk_factor} conveniently allows the first eigenvector, $\vV_1$, to be the vector of ones in \eqref{fastcompAssumpB} below.  The columns of matrix $\mV$ are eigenvectors of $\mC$, and $\mLambda$ is a diagonal matrix of eigenvalues of $\mC$.
+For any $n \times 1$ vector $\vb$, define the notation  $\widetilde{\vb} := \mV^H \vb$.
 
 We make three assumptions that allow the fast computation:
 \begin{subequations} \label{fastcompAssump}
@@ -852,7 +852,7 @@ s^2_\MLE
 & \qquad \times
 \left[\frac{\lambda_1}{n}{\left(1 - \frac{\widetilde{c}_1}{\lambda_1}\right)^2} + \left(c_0  - \frac 1n \sum_{i=1}^n \frac{\abs{\widetilde{c}_i}^2}{\lambda_i}\right) \right], \\
 \nonumber 
-s^2_{\textup{GCV}} & : =  \frac 1{n} \sum_{i=2}^n \frac{\abs{\widetilde{y}_i}^2}{\lambda_i^2}  \left [ \sum_{i=1}^n \frac{1}{\lambda_i} \right]^{-1},
+s^2_{\textup{GCV}} & =  \frac 1{n} \sum_{i=2}^n \frac{\abs{\widetilde{y}_i}^2}{\lambda_i^2}  \left [ \sum_{i=1}^n \frac{1}{\lambda_i} \right]^{-1},
 \end{align}
 \begin{subequations}
 	\label{fastTheta}
@@ -1002,11 +1002,11 @@ Integration lattice cubature rules are known to have convergence rates that depe
 \end{figure}
 
 \subsection{The Gram Matrix as the Permutation of a Circulant Matrix}
-For general shift-invariant covariance functions, the Gram matrix takes the form of a permutation of the rows and columns of a circulant matrix. By the properties of $\phi$ in \eqref{phiprop}, it follows tht
+For general shift-invariant covariance functions, the Gram matrix takes the form of a permutation of the rows and columns of a circulant matrix. By the properties of $\phi$ in \eqref{phiprop}, it follows that
 \begin{equation} \label{PermMat}
     \mP = \bigl( \delta_{\phi(i-1), (j-1)/n}  \bigr)_{i,j=1}^n
 \end{equation}
-is a permuation matrix, where $\delta$ is the Kronecker delta function.  Then,
+is a permutation matrix, where $\delta$ is the Kronecker delta function.  Then,
 \begin{align}
 \nonumber
 \mC_\vtheta &= \bigl ( C_\vtheta(\vx_i, \vx_j) \bigr)_{i, j = 1}^n \\
@@ -1110,7 +1110,7 @@ The computational steps for the improved, faster, automatic Bayesian cubature ar
 	\end{algorithmic}
 \end{algorithm}
 
-We summarize the results of this section and the previous one in the theorem below.  In comparison to Algorithm \ref{algorithm1}, the cost second and third components of the computational cost of Algorithm  \ref{algorithm2} are substantially reduced.
+We summarize the results of this section and the previous one in the theorem below.  In comparison to Algorithm \ref{algorithm1}, the second and third components of the computational cost of Algorithm  \ref{algorithm2} are substantially reduced.
 \begin{theorem}
 Any symmetric, positive definite,  shift-\break invariant covariance kernel of the form \eqref{eq:shInv} scaled to satisfy \eqref{addAssump}, when matched with rank-1 lattice data-sites, must satisfy assumptions \eqref{fastcompAssump}.  The cubature, $\hmu$, is just the sample mean.  The \emph{fast Fourier transform} (FFT) can be used to expedite the estimates of $\vtheta$ in \eqref{fastTheta} and the credible interval widths \eqref{fastStoppingCriterions} so that Algorithm \ref{algorithm2} has a computational cost which is the sum of the following:
 \begin{itemize}
@@ -1126,7 +1126,7 @@ Any symmetric, positive definite,  shift-\break invariant covariance kernel of t
 
 Although the third part of the computational cost has the largest dependence on $n$, in practice it need not be the largest contributor to the computational cost.  If function values are the result of an expensive simulation, then the first part may consume most of the computation time.
 
-We have implemented the fast adaptive Bayesian cubature algorithm in MATLAB as part of the Guaranteed Adaptive Integration Library (GAIL) \cite{ChoEtal17b} as \allowbreak \code{cubBayesLattice\_g}. This algorithm uses the covariance kernel defined in  \eqref{the_kernel_eqn_bernoulli} with  $r=1,2$ and the periodizing variable transforms in  \secref{period_var_tx}.  The rank-1 lattice node generator is taken from \cite{Nuy17a} (\code{exod2\_base2\_m20}).
+We have implemented the fast adaptive Bayesian cubature algorithm in MATLAB as part of the Guaranteed Adaptive Integration Library (GAIL) \cite{ChoEtal17b} as \allowbreak \code{cubBayesLattice\_g}. This algorithm uses the covariance kernel defined in  \eqref{the_kernel_eqn_bernoulli} with  $r=1,2$ and the periodizing variable transforms in  \secref{period_var_tx}.  The rank-1 lattice node generator is taken from \cite{Nuy17a} \break (\code{exod2\_base2\_m20}).
 
 \section{Numerical Experiments} \label{sec:NumExp}
 
@@ -1190,7 +1190,7 @@ Figures \ref{fig:mvn-guaranteed-MLE} to \ref{fig:optprice-guaranteed-GCV} can be
 
 \paragraph{Multivariate Normal Probability.}
 
-This example was already introduced in Section \ref{MVN_example}, where we used the Mat\'ern covariance kernel.  Here we apply Sidi's $C^2$  periodization to $ f_{\textup{Genz}}$ \eqref{fGenzdef}, choose $d=3$ and $r=2$. The simulation results for this example function are summarized in Figures \ref{fig:mvn-guaranteed-MLE}, \ref{fig:mvn-guaranteed-FB}, and \ref{fig:mvn-guaranteed-GCV}.  In all cases, the Bayesian cubature returns an approximation within the prescribed error tolerance. We used the same setting as before with generic slow Bayesian cubature in \secref{MVN_example} for comparison. For error threshold $\varepsilon=10^{-5}$ with the empirical Bayes stopping criterion, our fast algorithm takes just under 0.01 second as shown in \figref{fig:mvn-guaranteed-MLE} whereas the basic algorithm takes over 20 seconds as shown in \figref{fig:MVN_Metern_d2b2}. 
+This example was already introduced in Section \ref{MVN_example}, where we used the Mat\'ern covariance kernel.  Here we apply Sidi's $C^2$  periodization to $ f_{\textup{Genz}}$ \eqref{fGenzdef}, choose $d=2$ and $r=2$. The simulation results for this example function are summarized in Figures \ref{fig:mvn-guaranteed-MLE}, \ref{fig:mvn-guaranteed-FB}, and \ref{fig:mvn-guaranteed-GCV}.  In all cases, the Bayesian cubature returns an approximation within the prescribed error tolerance. We used the same setting as before with generic slow Bayesian cubature in \secref{MVN_example} for comparison. For error threshold $\varepsilon=10^{-5}$ with the empirical Bayes stopping criterion, our fast algorithm takes just under 0.01 second as shown in \figref{fig:mvn-guaranteed-MLE} whereas the generic algorithm takes over 20 seconds as shown in \figref{fig:MVN_Metern_d2b2}. 
 
 % breaking it a paragraph here, otherwise it looks big
 Amongst the three stopping criteria, GCV achieves the desired tolerance faster than the others. 
@@ -1267,8 +1267,8 @@ I_s(j) &= \frac{(j-2)I_s(j-2)-I_c(j-1)}{2},
 	\label{fig:keister-guaranteed-GCV}
 \end{figure}
 
-Figures \ref{fig:keister-guaranteed-MLE}, \ref{fig:keister-guaranteed-FB} and \ref{fig:keister-guaranteed-GCV} summarize the numerical tests for this integral.  We used the Sidi's $C^1$ periodization, dimension $d=4$, and $r=2$. 
-As we can see, the GCV stopping criterion achieves faster results than the other stopping criteria, similarly to the multivariate normal case.
+Figures \ref{fig:keister-guaranteed-MLE}, \ref{fig:keister-guaranteed-FB}, and \ref{fig:keister-guaranteed-GCV} summarize the numerical tests for this integral.  We used the Sidi's $C^1$ periodization, dimension $d=4$, and $r=2$. 
+As we can see, the GCV stopping criterion achieves faster results than the other stopping criteria, similarly to the multivariate normal case. The credible intervals are narrower than the multi variate normal case since the kernel is smoother than the periodization transform used.
 
 \paragraph{Option Pricing.}
 
@@ -1279,25 +1279,25 @@ The price of financial derivatives can often be modeled by high dimensional inte
 where {payoff($\cdot$)} defines the discounted payoff of the option,
 \begin{align*}
 \mSigma &= (T/d) \bigl(\min(j,k) \bigr)_{j,k=1}^d = \mL \mL^T,\\
-f(\vx) &= \text{payoff} \left(\mL 
+f(\vx) &= \code{payoff} \left(\mL 
 \begin{pmatrix}
 \Phi^{-1}(x_1) \\ \vdots \\ \Phi^{-1}(x_d)
 \end{pmatrix} \right).
 \end{align*}
 The Asian arithmetic mean call option has a payoff of the form
 \begin{align*}
-\text{payoff}(\vz) &= \max\left( \frac 1d  \sum_{j=1}^d S_j(\vz) - K, 0 \right) \me^{-R T}, \\
+\code{payoff}(\vz) &= \max\left( \frac 1d  \sum_{j=1}^d S_j(\vz) - K, 0 \right) \me^{-R T}, \\
 \text{where}\;
-S_j(\vz) &= S_0 \exp\bigl((R-\sigma^2/2)jT/d + \sigma \sqrt{T/d} z_j \bigr).
+S_j(\vz) &= S_0 \exp\bigl((R-\sigma^2/2)j(T/d) + \sigma \sqrt{(T/d)} z_j \bigr).
 \end{align*}
 Here, $T$ denotes the time to maturity of the option, $d$ the number of time steps, $S_0$ the initial price of the stock, $R$ the interest rate, $\sigma$ the volatility, and $K$ the strike price.  
 
-Figures \ref{fig:optprice-guaranteed-MLE}, \ref{fig:optprice-guaranteed-FB} and 
+Figures \ref{fig:optprice-guaranteed-MLE}, \ref{fig:optprice-guaranteed-FB}, and 
 \ref{fig:optprice-guaranteed-GCV} summarize the numerical results for this example using
 $
 T = 1/4, \ \ d = 13, \ \ S_0 = 100, \ \ R =  0.05, \ \ \sigma = 0.5, \ \ K = 100.
 $
-Moreover, $\mL$ is chosen to be the matrix of eigenvectors of $\mSigma$ times the square root of the diagonal matrix of eigenvalues of $\mSigma$.
+Moreover, $\mL$ is chosen to be the matrix of eigenvectors of $\mSigma$ times the square root of the diagonal matrix of eigenvalues of $\mSigma$. 
 Because the integrand has a kink caused by the $\max$ function, it does not help to use a periodizing transform that is very smooth.  We choose the Baker's transform \eqref{eq:bakerTrans} and $r = 1$.
 
 \begin{figure}
@@ -1320,20 +1320,21 @@ Because the integrand has a kink caused by the $\max$ function, it does not help
 \end{figure}
 
 
-In summary, the Bayesian cubature algorithm computes the integral within the user-specified threshold in nearly all of the test cases.  The rare exceptions occurred in the option pricing example for $\varepsilon=10^{-4}$. Our algorithm used the maximum allowed sample size and still did not reach the stopping criterion $\err_{\textup{CI}} \leq \varepsilon$, due to the complexity and high dimension of the integrand. 
+In summary, the Bayesian cubature algorithm computes the integral within the user-specified threshold in nearly all of the test cases.  The rare exceptions occurred in the option pricing example for $\varepsilon \le 10^{-4}$. Our algorithm used the maximum allowed sample size and still did not reach the stopping criterion $\err_{\textup{CI}} \leq \varepsilon$, due to the complexity and high dimension of the integrand. Those cases are shown as hollow stars in Figures \ref{fig:optprice-guaranteed-MLE}, \ref{fig:optprice-guaranteed-FB}, and 
+\ref{fig:optprice-guaranteed-GCV}.
 %Also notice, our algorithm finished within 10 seconds for Keister and multivariate Normal examples while the option pricing took closer to 70 seconds, again due to the complexity of the integrand.
 %FH it is difficult to compare apples to orances, and the timing depends on the error tolerances as well
 
-One may question whether an integrand with non-negative values is well represented by a Gaussian process.  Since we allow a nonzero mean, this assumption is somewhat more palatable. Bayesian algorithms assuming non-Gaussian processes are more difficult, but this is an ares for further research.
+One may question whether an integrand with non-negative values is well represented by a Gaussian process.  Since we allow a nonzero mean, this assumption is somewhat more palatable. Bayesian algorithms assuming non-Gaussian processes are more difficult, but this is an area for further research.
 
-A noticeable observation from the plots in all three examples is how much the credible interval widths differ from the true error. The credible interval widths are not much smaller than $\varepsilon$.  The ratio of the true error to $\varepsilon$ ranges from around one to as small as $10^{-7}$.  In the latter case, the credible interval widths are quite conservative.  For option pricing example, this less serious of an issue than for the multivariate normal and Keister examples. A possible reason is that the latter integrands are significantly smoother than the covariance kernel assumed.  This is a matter for further investigation.
+A noticeable observation from the plots in all three examples is how much the credible interval widths differ from the true error. The credible interval widths are not much smaller than $\varepsilon$.  The ratio of the true error to $\varepsilon$ ranges from around one to as small as $10^{-7}$.  In the latter case, the credible interval widths are quite conservative.  For option pricing example, this is less serious of an issue than for the multivariate normal and Keister examples. A possible reason is that the latter integrands are significantly smoother than the covariance kernel assumed.  This is a matter for further investigation.
 
 
 
 
 \section{Discussion and Further Work}
 
-We have developed a fast, automatic Bayesian cubature that estimates a multidimensional definite integral within a user defined error tolerance.  The stopping criteria arise from assuming the integrand to be a Gaussian process.  There are three approaches:  empirical Bayes, full Bayes, and generalized cross-validation.  The computational cost of the automatic Bayesian cubature can be dramatically reduced if the covariance kernel matches the nodes.  One such match in practice is rank-1 lattice nodes and shift-invariant kernels.  The matrix-vector multiplications can be accomplished using the fast Fourier Transform.  The performance of our automatic Bayesian cubature are illustrated using three integration problems.  
+We have developed a fast, automatic Bayesian cubature that estimates a multidimensional definite integral within a user defined error tolerance.  The stopping criteria arise from assuming the integrand to be an instance of a Gaussian process. There are three approaches:  empirical Bayes, full Bayes, and generalized cross-validation.  The computational cost of the automatic Bayesian cubature can be dramatically reduced if the covariance kernel matches the nodes.  One such match in practice is rank-1 lattice nodes and shift-invariant kernels.  The matrix-vector multiplications can be accomplished using the fast Fourier Transform.  The performance of our automatic Bayesian cubature is illustrated using three integration problems.  
 
 Digital sequences and digital shift and/or scramble invariant kernels have the potential of being another match that satisfies the conditions in Section \ref{sec:fast_BC}.  The fast transform would correspond to a fast Walsh transform.  
 
