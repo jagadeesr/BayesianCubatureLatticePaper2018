@@ -19,7 +19,7 @@
 \renewcommand{\vec}[1]{\boldsymbol{#1}}
 \newcommand{\vtheta}{\vec{\theta}}
 
-Thanks to the the referees and the editors for their very helpful comments.  We have revised our manuscript substantially in response. \Response{Specific concerns are addressed point-by-point below in blue.}. We hope that all will find the revision satisfactory.
+Thanks to the the referees and the editors for their very helpful comments.  We have revised our manuscript substantially in response. \Response{Specific concerns are addressed point-by-point below in blue.} We hope that all will find the revision satisfactory.
 
 \section*{Reviewer 1: The paper is an interesting read on Bayesian cubature \ldots}
 
@@ -46,7 +46,7 @@ See further. \Response{We believe that it does help, both experientially and the
 unclear what they mean with 'reliable'. \Response{This paragraph has been rewritten for clarity.}
 \item On page 2 they write 'If function evaluation is expensive, then $\$(f)$ might be similar in magnitude to $\log(n)$.': this makes no sense as evaluating $f$
 depends on the dimension $d$. So this depends on how big $n$ is and if we want more
-accuracy then $n$ becomes bigger. \Response{We have added some clarification. If function evaluation from an expensive simulation takes an 5 minutes for one value, then performing the FFT calculations is going to take less time for practical $n$, say up to a million.}
+accuracy then $n$ becomes bigger. \Response{We have added some clarification. If function evaluation from an expensive simulation takes 5 minutes for one value, then performing the FFT calculations is going to take less time for practical $n$, say up to a million.}
 \end{itemize}
 
 \item Section 2
@@ -67,7 +67,7 @@ point. Only at the end the authors say that they assume these things to be
 cheap. I think this should be spelled out immediately. \Response{Done.}
 \item  It think is not a good idea to leave out the dependence on $\vec{\theta}$ for
 $C$. E.g. in (11) the $\vec{\theta}$ is not visible at all in the expression to be
-minimized for it. The $C$ without subscript also clashes that of lemma 1. \Response{$\vec{\theta}$ has been added as much as possible, and particularly into the equations where there is optimization.}
+minimized for it. The $C$ without subscript also clashes that of lemma 1. \Response{$\vec{\theta}$ has been added as much as possible, and particularly into the equations where there is optimization.  However, $\vec{\theta}$ has been omitted in places where it would clutter the derivation.}
 \item  The lead in to lemma 1 makes it feel like this is a field specific lemma but
 in fact it is just the well known conditional Gaussian. Please write something
 like 'We need the following lemma on conditional normal distribution ...'.  \Response{Done.}
@@ -112,7 +112,7 @@ kernel hasn't been used up till this point.  \Response{Done.}
 
 \item Section 3.1. Use $C_{\vec{\theta}}$ in (27) for clarity. \Response{Done.}
 
-\item Section 3.3. Elaborate on what is meant with the second sentence.  \Response{This section re-written and eliminaets this sentence.}
+\item Section 3.3. Elaborate on what is meant with the second sentence.  \Response{This section re-written and eliminates this sentence.}
 
 \item Sections 4.2, 4.3 and 4.4. 
 The definition (35) makes it that the covariance matrix $C$ is a permutation
@@ -125,7 +125,7 @@ covariance functions of the particular product form in Section 4.2 \ldots I thin
 way of calculating Ccirc without doing the -1 at the end.
 However, it is not clear whether this will actually help. \ldots It is not clear to me if operating
 the FFT on the first (permuted) column of $\mathring{C}$ in this form is not going to
-increase the error on $\mathring{\lambda}_1$, so putting the numerical error elsewhere. \Response{A key quantity can lose accuracy due to catastrophic cancellation.  This has been observed by us in practice.  The proposed method avoids this.  We do not see how we are introducing significantly more numerical error elsewhere.  We are basically pulling a large constant matrix one out of the Gram matrix.  Then the FFT of the first column is not essentially $n$.  We want the difference from $n$.}
+increase the error on $\mathring{\lambda}_1$, so putting the numerical error elsewhere. \Response{A key quantity can lose accuracy due to catastrophic cancellation.  This has been observed by us in practice.  The proposed method avoids this.  We do not see how we are introducing significantly more numerical error elsewhere.  We are basically pulling the constant matrix one out of the Gram matrix.  Then the FFT of the first column is not essentially $n$.  We want the difference from $n$.}
 
 \item Please delete the word 'periodic' in proposition 1, this is covered by the
 shift-invariantness. \Response{Done.}
@@ -147,7 +147,7 @@ There is no theory available that covers the whole process (estimation and cubat
 \begin{itemize}
 \item p.\ 3, Sec.\ 2.2 The application of Lemma 1 to automatic Bayesian cubature is not clear to me, since integrand data is accumulated sequentially, which does not correspond to applying a single linear mapping to all integrands (realizations) $f$.  \Response{This is a valid criticism, which we address in Section 2.3.}
 
-\item Sec.\ 2.2.1, 2.2.2 I suggest to include some references for the results that are presented in Sections 2.2.1 and 2.2.2.  \Response{Our knowledge of the literature is limited, but much of what we read assumes a zero mean for the Gaussian process.  We would welcome sources to cite that consider our setting.}
+\item Sec.\ 2.2.1, 2.2.2 I suggest to include some references for the results that are presented in Sections 2.2.1 and 2.2.2.  \Response{Our knowledge of the literature is limited, but much of what we read assumes a zero mean for the Gaussian process, which simplifies the derivations and leads to somewhat different results.  We would welcome sources to cite that consider our setting.}
 
 \item p.\ 5, Sec.\ 2.4 Why are Sobol points chosen for the Matern kernel? Is there some theoretical link?  \Response{Added ``Sobol' points are a typical space-filling design.''}
 
@@ -167,7 +167,7 @@ There is no theory available that covers the whole process (estimation and cubat
 
 \item p.\ 12, center left  \ldots differs depends \ldots ?  \Response{Fixed.}
 
-\item Sec.\ 5.1 Is there some kind of a universal periodization that ‘works’ for every value of $r$?  \Response{One could choose an infinitely smooth periodization, but this would change the integrand to potentially make its covariance $s$ large. This is mentioned at the end of Section 5.1.}
+\item Sec.\ 5.1 Is there some kind of a universal periodization that ‘works’ for every value of $r$?  \Response{One could choose an infinitely smooth periodization, but this would change the integrand to potentially make its implied covariance scaling, $s$, large. This is mentioned at the end of Section 5.1.}
 
 \item Sec. 5.2 You take $r = 2$ or $r = 1$ for the periodization in these examples. Does this mean that $\theta = (2,\gamma)$ is considered for the shift-invariant kernel, or do you still consider $\theta = (r,\gamma)$ with $r \in \mathbb{N}$ as the unknown parameter?  \Response{For technical simplicity we fix $r$.  We mention that in Section 5.2.}
 
@@ -215,7 +215,7 @@ Because the goal is to reach people outside of PN some additional explanations a
 
 \begin{enumerate}
 \renewcommand{\labelenumi}{\arabic{enumi}.}
-    \item The results in Section 2.2.2 were confusing. \ldots \Response{This has been re-written}
+    \item The results in Section 2.2.2 were confusing. \ldots \Response{This has been re-written.}
 
     \item It is weird to use complex numbers for the eigenvectors of a real symmetric matrix \ldots \Response{While it may be strange, it is convenient since we are working with FFT's of real vectors, which are complex vectors.  Some explanation is provided at the beginning of Section 3.1.}
 
