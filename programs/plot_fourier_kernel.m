@@ -1,11 +1,13 @@
 % plots the shift invariant fourier kernel for demo purposes
 function plot_fourier_kernel()
+gail.InitializeDisplay
 
 n = 512;
 shape_param = [0.2 0.8];
 order = [1 2];
 bvec = [0.2 0.8];
 dim = 1;
+yVal = 0.3;
 
 % using uniform points
 l = linspace(0,1,n);
@@ -20,7 +22,7 @@ if dim==1
   leg_text = cell(4,1);
   for r = order
     for sh = shape_param
-      Z(:,i) = kernel(xpts, 2*r, sh);
+      Z(:,i) = kernel(xpts, 2*r, sh, yVal);
       leg_text{i} = sprintf('$r=%d,\\gamma=%1.1f$', r, sh);
       i=i+1;
     end
@@ -28,12 +30,12 @@ if dim==1
 
   plot(xpts,Z)
   xlabel('\(x\)')
-  ylabel('\(C_{\theta}(x,0.3)\)')
+  ylabel(['\(C_{\theta}(x,' num2str(yVal) ')\)'])
   legend(leg_text, 'Interpreter','latex','location','best')
   legend boxoff
   axis tight
 
-  figSavePathName = sprintf('fourier_kernel dim_1.png');
+  figSavePathName = sprintf('fourier_kernel_dim_1.png');
   saveas(hFig, figSavePathName)
 end
 
@@ -44,7 +46,7 @@ if dim==2
     for r = order
       hFig = figure('visible','on');
       set(hFig, 'units', 'inches', 'Position', [4 4 6.5 5.5])
-      Z = kernel([X(:) Y(:)], 2*r, sh);
+      Z = kernel([X(:) Y(:)], 2*r, sh, yVal);
       meshc(X, Y, reshape(Z, [n, n]));
       
       title(sprintf('$r=%d, \\theta$=%0.2f', r, sh), 'Interpreter','latex')
@@ -76,7 +78,7 @@ end
 
 
 % bernoulli polynomial based kernel
-function [K] = kernel(xun,order,a)
+function [K] = kernel(xun,order,a, shift)
 
 constMult = -(-1)^(order/2)*((2*pi)^order)/factorial(order);
 if order == 2
@@ -87,7 +89,7 @@ else
   error('Bernoulli order not implemented !');
 end
 
-xun = mod(xun+0.3, 1);
+xun = mod(xun - shift, 1);
 K = prod(1 + (a)*constMult*bernPloy(xun),2);
 
 end
