@@ -19,6 +19,7 @@
 %
 \usepackage{graphicx}
 \usepackage{amssymb}
+\usepackage{cite}
 %
 % insert here the call for the packages your document requires
 %\usepackage{mathptmx}      % use Times fonts if available on your TeX system
@@ -235,15 +236,16 @@
 \institute{R. Jagadeeswaran \at
               Department of Applied Mathematics, \\
               Illinois Institute of Technology \\
-              10 W. 32nd St., Room 208\\
+              10 W. 32nd St., Room 208,
               Chicago IL 60616\\
               \email{jrathin1@iit.edu}           %  \\
 %             \emph{Present address:} of F. Author  %  if needed
            \and
            Fred J. Hickernell \at
-           Center for Computational Science and Department of Applied Mathematics, 
+           Center for Interdisciplinary Scientific Computation and \\
+           Department of Applied Mathematics \\
            Illinois Institute of Technology \\
-           PS 106, 3105 S. Dearborn St., 
+           10 W. 32nd St., Room 208, 
            Chicago IL 60616
            \\
            \email{hickernell@iit.edu} 
@@ -256,10 +258,10 @@
 
 \begin{abstract}
 Automatic cubatures approximate multidimensional integrals to user-specified error tolerances.  For high dimensional problems, it is difficult to adaptively change the sampling pattern, but one can automatically determine the
-sample size, $n$, given a fixed and reasonable sampling pattern. We take this approach here using a Bayesian perspective.  We postulate that the integrand is an instance of a Gaussian stochastic process parameterized by a constant mean and a covariance function defined by a scale parameter times a parameterized function specifying how the integrand values at two different points in the domain are related.
-These hyperparameters are inferred integrated out using integrand values via one of three techniques:  empirical Bayes, full Bayes, or generalized cross-validation. The sample size, $n$, is chosen to make the half-width of the credible interval for the Bayesian posterior mean no greater than the error tolerance. 
+sample size, $n$, given a reasonable, fixed sampling pattern. We take this approach here using a Bayesian perspective.  We postulate that the integrand is an instance of a Gaussian stochastic process parameterized by a constant mean and a covariance function defined by a scale parameter times a parameterized function specifying how the integrand values at two different points in the domain are related.
+These hyperparameters are inferred or integrated out using integrand values via one of three techniques:  empirical Bayes, full Bayes, or generalized cross-validation. The sample size, $n$, is increased until the half-width of the credible interval for the Bayesian posterior mean is no greater than the error tolerance. 
 
-The process outlined above typically requires a computational cost of $O(N_{\text{opt}}n^3)$, where $N_{\text{opt}}$ is the number of optimization steps required to identify the hyperparameters. Our innovation is to pair low discrepancy nodes with matching covariance kernels that lower the  computational cost to $O(N_{\text{opt}} n \log n)$.   This approach is demonstrated using rank-1 lattice sequences and shift-invariant kernels.  Our algorithm is  implemented in the Guaranteed Automatic Integration Library (GAIL).
+The process outlined above typically requires a computational cost of $O(N_{\text{opt}}n^3)$, where $N_{\text{opt}}$ is the number of optimization steps required to identify the hyperparameters. Our innovation is to pair low discrepancy nodes with matching covariance kernels to lower the  computational cost to $O(N_{\text{opt}} n \log n)$.   This approach is demonstrated explicitly with rank-1 lattice sequences and shift-invariant kernels.  Our algorithm is  implemented in the Guaranteed Automatic Integration Library (GAIL).
 
 
 \keywords{Bayesian cubature \and Fast automatic cubature \and GAIL \and Probabilistic numeric methods }
@@ -286,24 +288,24 @@ for a discussion of variable transformations. The cubature may be an affine func
 \end{align}
 where the weights, $w_0$, and  $\vw = (w_i)_{i=1}^n \in \reals^n$, and the nodes, $\{\vx_i\}_{i=1}^n \subset [0,1]^d$, are chosen to make the error, $\abs{\mu - \hmu}$, small. The integration domain $[0,1]^d$ is convenient for the low discrepancy node sets \cite{DicEtal14a,SloJoe94} that we use.  The nodes are assumed to be deterministic.
 
-Users of cubature algorithms typically want the error to be no greater than their error tolerance, denoted by $\varepsilon$, i.e., 
+Users of cubature algorithms typically want the error to be no greater than their specified error tolerance, denoted by $\varepsilon$.  That is, they want
 \begin{align}
 \label{eqn:err_crit} 
 \abs{\mu - \hmu} \leq \errtol .
 \end{align}
-Some stopping criteria used in practice are heuristic.  Other rigorous algorithms require rather strong assumptions about the integrand, such as an upper bound on its variance (for simple Monte Carlo) or total variation (for quasi-Monte Carlo).  We take a Bayesian approach by constructing a stopping criterion that is based on a credible interval.  We build upon the work of Briol et al.~\cite{BriEtal18a}, Diaconis~\cite{Dia88a}, O'Hagan~\cite{OHa91a}, Ritter~\cite{Rit00a}, Rasmussen and Ghahramani~\cite{RasGha03a}, and others.  Our algorithm is an example of \emph{probabilistic numerics}.
+Some stopping criteria for choosing $n$ are heuristic.  Other rigorous algorithms satisfying \eqref{eqn:err_crit}  require strong a priori assumptions about the integrand, such as an upper bound on its variance (for simple Monte Carlo) or total variation (for quasi-Monte Carlo).  We take a Bayesian approach by constructing a stopping criterion that is based on a credible interval.  We build upon the work of Briol et al.~\cite{BriEtal18a}, Diaconis~\cite{Dia88a}, O'Hagan~\cite{OHa91a}, Ritter~\cite{Rit00a}, Rasmussen and Ghahramani~\cite{RasGha03a}, and others.  Our algorithm is an example of \emph{probabilistic numerics}.
 
-The primary contribution of this article is to demonstrate how the choice of a family of covariance kernels that match the low discrepancy sampling nodes facilitates fast computation of the cubature and the data-driven stopping criterion.  Our Bayesian cubature requires a computational cost of
+Our primary contribution is to demonstrate how the choice of a family of covariance kernels that match the low discrepancy sampling nodes facilitates fast computation of the cubature and the data-driven stopping criterion.  Our Bayesian cubature requires a computational cost of
 \begin{equation} \label{eqn:OuralgoCost}
     \Order\bigl(n \$(f) + N_{\opt}[n\$(C) + n \log(n)] \bigr),
 \end{equation} 
-where $\$(f)$ is the cost of one integrand value, $\$(C)$ is the cost of a single covariance kernel value,  $\Order(n \log(n))$ is the cost of a fast Fourier transform, and $N_{\opt}$ is an upper bound on the number of optimization steps required to choose the hyperparameters. If function evaluation is expensive, such as the output of a computationally intensive simulation, or $\$(f) = \Order(d)$ for large $d$, then $\$(f)$ might be similar in magnitude to $N_{\opt} \log(n)$ in practice.  Typically, $\$(C) = \Order(d)$.  Note that the $\Order(n \log(n))$ contribution is $d$ independent.
+where $\$(f)$ is the cost of one integrand value, $\$(C)$ is the cost of a single covariance kernel value,  $\Order(n \log(n))$ is the cost of a fast Fourier transform, and $N_{\opt}$ is an upper bound on the number of optimization steps required to choose the hyperparameters. If function evaluation is expensive, e.g., the output of a computationally intensive simulation, or if $\$(f) = \Order(d)$ for large $d$, then $\$(f)$ might be similar in magnitude to $N_{\opt} \log(n)$ in practice.  Typically, $\$(C) = \Order(d)$.  Note that the $\Order(n \log(n))$ contribution is $d$ independent.
 
 By contrast to our fast algorithm, the typical computational cost for Bayesian cubature is
 \begin{equation} \label{eqn:TheiralgoCost}
     \Order\bigl(n \$(f) + N_{\opt}[n^2\$(C) + n^3] \bigr),
 \end{equation} 
-which is explained in Section \ref{sec:bayes_cubature_algo}. Note that beyond evaluating the integrand, the computational cost in \eqref{eqn:TheiralgoCost} is much larger than that in \eqref{eqn:OuralgoCost}.  
+which is explained in Section \ref{sec:bayes_cubature_algo}. Note that aside from evaluating the integrand, the computational cost in \eqref{eqn:TheiralgoCost} is much larger than that in \eqref{eqn:OuralgoCost}.  
 
 Hickernell~\cite{Hic17a} compares different approaches to cubature error analysis depending on whether the rule is deterministic or random and whether the integrand is assumed to be deterministic or random.  Error analysis that assumes a deterministic integrand lying in a Banach space leads to an error bound that is typically impractical for deciding how large $n$ must be to satisfy \eqref{eqn:err_crit}.  The deterministic error bound includes a (semi-) norm of the integrand, often called the variation, which is often more complex to compute than the original integral.
 
@@ -321,7 +323,7 @@ Section \ref{sec:shift_invariant_kernel} implements this concept for shift-invar
 \subsection{Bayesian posterior cubature error}
 \label{sec:BayesPostErr}
 
-We assume that the integrand, $f$, is an instance of a Gaussian stochastic process \cite{BriEtal18a}, \cite{Dia88a}, \cite{OHa91a}, \cite{Rit00a}, \cite{RasGha03a}, i.e., $f \sim \mathcal{GP}(m,s^2 C_\vtheta)$.  Specifically, $f$ is a real-valued random function with constant mean $m$ and covariance function $s^2C_\vtheta$:
+We assume that the integrand, $f$, is an instance of a Gaussian stochastic process  i.e., $f \sim \mathcal{GP}(m,s^2 C_\vtheta)$  \cite{BriEtal18a, Dia88a, OHa91a, Rit00a, RasGha03a}.  Specifically, $f$ is a real-valued random function with constant mean $m$ and covariance function $s^2C_\vtheta$:
 \begin{gather*}
         m = \Ex[f(\vx)] \qquad \forall \vx \in \reals^d, \\
         \Ex\{[f(\vt) - m][f(\vx) -m]\} = s^2 C_\vtheta(\vt,\vx) \qquad \forall \vt, \vx \in \reals^d.
@@ -346,7 +348,7 @@ c_{0\vtheta} &:= \int_{[0,1]^{d}\times [0,1]^{d}} C_\vtheta(\vt,\vx) \, \dif{\vt
 \cov(\vf, \mu) &= \left(  \int_{[0,1]^d} C_\vtheta(\vt,\vx_i) \, \D \vt \right)_{i=1}^n  =: \vc_\vtheta.
 \end{align}
 \end{subequations}
-Here, $c_{0\vtheta}$ and $\vc_\vtheta$ depend explicitly on $\vtheta$.  We assume that the integrals in these definitions can be computed analytically.  We need the following lemma pertaining to a conditional Gaussian distribution to derive the distribution of the posterior error of our cubature. 
+Here, $c_{0\vtheta}$ and $\vc_\vtheta$ depend explicitly on $\vtheta$.  We assume that $C_\vtheta$ is simple enough that the integrals in these definitions can be computed analytically.  We need the following lemma pertaining to a conditional Gaussian distribution to derive the distribution of the posterior error of our cubature. 
 
 \begin{lemma} \cite[(A.6), (A.11--13)]{RasWil06a} \label{thrm:condDist} If $\vY = (\vY_1, \vY_2)^T \sim \calN (\vm,\mSigma)$, where $\vY_1$ and $\vY_2$ are random vectors of arbitrary length, and 
 	\begin{gather*}
@@ -403,22 +405,21 @@ A credible interval for the integral is given given by
 \mathbb{P}_f \left[
 |\mu-\hmu| \leq \err_{\textup{CI}}
 \right] = 99\%, \\
-\err_{\textup{CI}} = 2.58 s \sqrt{c_{0\vtheta} - \vc_\vtheta^T\mCtheta^{-1}\vc_\vtheta}
+\err_{\textup{CI}} = 2.58 s \sqrt{c_{0\vtheta} - \vc_\vtheta^T\mCtheta^{-1}\vc_\vtheta}.
 \end{gather}
 \end{subequations}
 Naturally, $2.58$ and $99\%$ can be replaced by other quantiles and credible levels.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Parameter estimation}
+\subsection{Hyperparameter estimation}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-The credible interval in \eqref{eqn_prob_confidence_interval} suggests how our automatic Bayesian cubature proceeds.  Integrand data is accumulated until the width of the credible interval, $\err_{\textup{CI}}$, is no greater than the error tolerance.  As $n$ increases, one expects $\sqrt{c_{0\vtheta} - \vc_\vtheta^T\mCtheta^{-1}\vc_\vtheta}$ to decrease for well-chosen nodes, $\{\vx_i\}_{i=1}^n$.
+The credible interval in \eqref{eqn_prob_confidence_interval} suggests how our automatic Bayesian cubature proceeds.  Integrand data is accumulated until the width of the credible interval, $\err_{\textup{CI}}$, is no greater than the error tolerance.  As $n$ increases, one expects $c_{0\vtheta} - \vc_\vtheta^T\mCtheta^{-1}\vc_\vtheta$ to decrease for well-chosen nodes, $\{\vx_i\}_{i=1}^n$.
 
-Note that $\err_{\textup{CI}}$ has no explicit dependence on the integrand values, even though one would intuitively expect that larger integrand should imply a  larger $\err_{\textup{CI}}$.  This is because parameters, $m, s$, and $\vtheta$, have not yet been inferred from integrand data.  After inferring the parameters, $\err_{\textup{CI}}$ does reflect the size of the integrand values. This section describes three approaches to parameter estimation.
+Note that $\err_{\textup{CI}}$ has no explicit dependence on the integrand values, even though one would intuitively expect that a larger integrand should imply a  larger $\err_{\textup{CI}}$.  This is because the hyperparameters, $m, s$, and $\vtheta$, have not yet been inferred from integrand data.  After inferring the hyperparameters, $\err_{\textup{CI}}$ does reflect the size of the integrand values. This section describes three approaches to hyperparameter estimation.
 
-\begin{theorem} \label{thm:param} There are at least three approaches to estimating or integrating out the hyperparameters defining the Gaussian process from which the integrand is drawn: empirical Bayes, full Bayes, and generalized cross-validation.  Under these three approaches, we have the following:
-%\begin{allowdisplaybreaks}
+\begin{theorem} \label{thm:param} There are at least three approaches to estimating or integrating out the hyperparameters defining the Gaussian process from which the integrand is drawn: empirical Bayes, full Bayes, and generalized cross-\linebreak[4]validation.  Under these three approaches, we have the following:
 \begin{align}
     \label{eqn_m_MLE}
 m_\MLE &= \frac{\vone^T \mCInv_\vtheta \vy }{ \vone^T \mCInv_\vtheta \vone}, \qquad
@@ -450,12 +451,12 @@ s^2_{\MLE}
 \right] \vy 
 \right)  \\
 \label{eqn:thetaMLE}
- & \qquad +  \frac{1}{n} \log(\det(\mC_\vtheta))
+ & \qquad \qquad +  \frac{1}{n} \log(\det(\mC_\vtheta))
 \biggr \}, \\
 \nonumber
 \vtheta_{\GCV} &= \argmin_\vtheta \biggl\{\log \left(  \vy^T \left[\mC^{-2}_\vtheta - \frac{\mC^{-2}_\vtheta \vone \vone^T \mC^{-2}_\vtheta}{\vone^T \mC^{-2}_\vtheta \vone}  \right] \vy \right)  \\
 \label{vthetaGCV}
-& - \log \left ( \trace(\mC^{-2}_\vtheta) \right ) \biggr\}, \\
+& \qquad \qquad - \log \left ( \trace(\mC^{-2}_\vtheta) \right ) \biggr\}, \\
 \label{eqn:cubMLE}
 \hmu_\MLE  &= \hmu_\full =
 \left(
@@ -469,9 +470,9 @@ s^2_{\MLE}
 \err_{\mathsf{x}} & = 2.58 s_{\mathsf{x}} \sqrt{c_{0\vtheta} - \vc_{\vtheta}^T\mC_\vtheta^{-1}\vc_{\vtheta} }, \\
 & \hspace{3.5cm} \mathsf{x} \in \{\MLE, \GCV\},  \label{eqn:err_MLEGCV}\\ 
 \err_{\textup{full}} 
-& = t_{n-1,0.995} \hsigma_{\textup{full}} > \err_\MLE, \label{FJH:eq:errFull}
+& = t_{n-1,0.995} \hsigma_{\textup{full}} > \err_\MLE. \label{FJH:eq:errFull}
 \end{align}
-%\end{allowdisplaybreaks}
+The resulting credible intervals are then
 \begin{multline}
 \label{eqn_prob_CI}
 \mathbb{P}_f \left[
@@ -480,7 +481,7 @@ s^2_{\MLE}
 Here $t_{n-1,0.995}$ denotes the $99.5$ percentile of a standard Student's $t$-distribution with $n-1$ degrees of freedom.  In the formulas above, $\vtheta$ is assumed to take on the values $\vtheta_{\MLE}$ or $\vtheta_{\GCV}$ as appropriate.
 \end{theorem}
 
-For the results summarized in the theorem above, note that if the original covariance function, $C_\vtheta$, is replaced by $b C_\vtheta$ for some positive constant $b$, the cubature, $\hmu$, the estimates of $\vtheta$, and the credible interval widths, $\err_{\mathsf{x}}$ for $\mathsf{x} \in \{\MLE, \full, \GCV\}$, all remain unchanged.  The estimates of $s^2$ are multiplied by $b^{-1}$, as would be expected. 
+In the theorem above, note that if the original covariance function, $C_\vtheta$, is replaced by $b C_\vtheta$ for some positive constant $b$, the cubature, $\hmu$, the estimates of $\vtheta$, and the credible interval widths, $\err_{\mathsf{x}}$ for $\mathsf{x} \in \{\MLE, \full, \GCV\}$, all remain unchanged.  The estimates of $s^2$ are multiplied by $b^{-1}$, as would be expected. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -565,7 +566,7 @@ The \emph{generalized cross-validation} criterion (GCV) replaces the $i^{\text{t
 & = \frac{(\vy - m\vone)^T \mC^{-2}_\vtheta (\vy - m \vone)}{\left(\frac 1n \trace(\mC_\vtheta^{-1}) \right)^2}.
 \end{align*}
 
-The loss function $\textup{GCV}$ depends on $m$ and $\vtheta$, but not on $s$.  Minimizing the GCV  yields the formulae in Theorem \ref{thm:param} for $\widehat{\mu}_{\textup{GCV}}$ and $\vtheta_{\textup{GCV}}$.  
+The loss function $\textup{GCV}$ depends on $m$ and $\vtheta$, but not on $s$.  Minimizing the GCV  yields the formulae in Theorem \ref{thm:param} for $m_{\textup{GCV}}$ and $\vtheta_{\textup{GCV}}$.  
 Plugging the value of $m_\GCV$ into \eqref{eqn:BayesCub} yields the formulae in Theorem \ref{thm:param} for $\widehat{\mu}_{\textup{GCV}}$.
 
 An estimate for $s$ may be obtained by noting that by Lemma \ref{thrm:condDist},
@@ -580,7 +581,7 @@ s^2 &= \var[f(\vx_i ) | \vf_{-i} = \vy_{-i}] a_{ii} \\
  & \approx \frac{ \frac 1n \sum_{i=1}^n \zeta_i^2}{\frac 1n \sum_{i=1}^n a_{ii} } = \frac{(\vy - m\vone)^T \mC_\vtheta^{-2} (\vy - m \vone)}{ \trace(\mC_\vtheta^{-1}) } \\ 
  & \approx  \frac{(\vy - m_\GCV\vone)^T \mC_{\vtheta_\GCV}^{-2} (\vy - m_\GCV \vone)}{ \trace(\mC_{\vtheta_\GCV}^{-1}) } =: s^2_{\textup{GCV}}.
 \end{align*}
-Here, $s^2_{\textup{GCV}}$ is given by the formula in Theorem \ref{thm:param}.
+After simplification, $s^2_{\textup{GCV}}$ defined above becomes the formula in Theorem \ref{thm:param}.
 
 The credible interval based on GCV corresponds to \eqref{eqn_prob_confidence_interval} with the estimated $m$, $s$, and $\vtheta$.  This completes the proof of Theorem \ref{thm:param}.
 
@@ -595,7 +596,7 @@ The previous section presents three credible intervals, \eqref{eqn_prob_CI}, for
 
 Our  Bayesian cubature algorithm increases the sample size until the width of the credible interval is small enough.  This is accomplished through successively doubling the sample size.  The steps are detailed in Algorithm \ref{algorithm1}.
 
-We recognize that multiple applications of our credible intervals in one run of our algorithm is not strictly justified.  However, if our integrand comes from the middle of the sample space and not the extremes, we expect our automatic Bayesian cubature to approximate the integral within the desired error tolerance with high probability.  The example in the next subsection and the examples in Section \ref{sec:NumExp} support that expectation. We also believe that an important factor contributing to the occasional failure of our algorithm is unreasonable parameterizations of the stochastic process from which the integrand is hypothesized to be drawn.  Overcoming this latter challenge is a topic for future research.
+We recognize that multiple applications of our credible intervals in one run of the algorithm is not strictly justified.  However, if our integrand comes from the middle of the sample space and not the extremes, we expect our automatic Bayesian cubature to approximate the integral within the desired error tolerance with high probability.  The example in the next subsection and the examples in Section \ref{sec:NumExp} support that expectation. We also believe that an important factor contributing to the occasional failure of our algorithm is unreasonable parameterizations of the stochastic process from which the integrand is hypothesized to be drawn.  Overcoming this latter challenge is a topic for future research.
 
 \algnewcommand{\IIf}[1]{\State\algorithmicif\ #1\ \algorithmicthen\ }
 \algnewcommand{\IElse}{\unskip\ \algorithmicelse\ }
@@ -913,6 +914,8 @@ Under the further assumption \eqref{addAssump}, it follows that
 \frac{\widetilde{y}_1}{n} = \frac 1n \sum_{i=1}^n y_i,
 \end{equation}
 and so $\hmu$ is simply the sample mean.  Also, under assumption \eqref{addAssump}, the credible interval widths simplify to
+\begin{subequations}
+\label{errSimple}
 \begin{align}
 \label{eq:errMLEAllAsump}
 \err_\MLE  &
@@ -930,10 +933,11 @@ t_{n-1,0.995}
 \nonumber
 \err_{\textup{GCV}} & =
 \frac{2.58}{n}\left\{\sum_{i=2}^n \frac{\abs{\widetilde{y}_i}^2}{\lambda_i^2}  \left [ \frac 1n \sum_{i=1}^n \frac{1}{\lambda_i} \right]^{-1} 
-\right. \\ &\qquad \qquad \left . \times
+\right. \\ &\hspace{3cm} \left . \times
 \left( 1 -  \frac{n}{\lambda_1} \right)  
 \right\}^{1/2}. \label{errGCVSimple}
 \end{align}
+\end{subequations}
 In the formulas for the credible interval widths, $\vlambda$ depends on $\vtheta$, and  $\vtheta$ is assumed to take on the values $\vtheta_{\MLE}$ or $\vtheta_{\GCV}$ as appropriate.
 \end{theorem}
 
@@ -1069,7 +1073,7 @@ Direct computation of $\rC_\vtheta(\vt,\vx) = C_\vtheta(\vt,\vx) -1$ introduces 
 \end{align*}
 In this way, the Gram matrix $\rmC_\vtheta$, whose $i,j$-element is $\rC_\vtheta(\vx_i,\vx_j)$ can be constructed with minimal round-off error.
 
-Computing the eigenvalues of $\rmC$ via the procedure given in \eqref{eqn:fast_transform_to_eigvalues} yields $\rlambda_1 = \lambda_1 - n, \lambda_2, \ldots, \lambda_n$. The widths of the credible intervals in \eqref{eq:errMLEAllAsump}, \eqref{FJH:eq:errFullSimple}, and   \eqref{errGCVSimple} become
+Computing the eigenvalues of $\rmC$ via the procedure given in \eqref{eqn:fast_transform_to_eigvalues} yields $\rlambda_1 = \lambda_1 - n, \lambda_2, \ldots, \lambda_n$. The widths of the credible intervals in \eqref{errSimple} become
 \begin{subequations}
 \label{fastStoppingCriterions}
 	\begin{align}
