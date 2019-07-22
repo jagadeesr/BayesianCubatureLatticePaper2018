@@ -94,7 +94,7 @@ for $s^2$. \Response{No, the optimization problem for $\vec{\theta}$ already has
 Why then list it? Maybe the final paragraph needs to be rewritten.  \Response{We only cast doubt on the full Bayes approach for estimating $\vec{\theta}$, not for dealing with the other hyperparameters.}
 \end{itemize}
 
-\item Section 2.3. The authors stress here that the integrand must be a 'typical' draw from the assumed Gaussian process and not an outlier. That sounds scary. \Response{It may sound scary, but that is the common implicit assumption of probabilistic approaches, such as this one.  Other traditional methods for estimating the error of a cubature rule either assume that the integrand lies in the ball of some function space (how do you know the radius of that ball?) or estimate the error heuristically.}
+\item Section 2.3. The authors stress here that the integrand must be a 'typical' draw from the assumed Gaussian process and not an outlier. That sounds scary. \Response{It may sound scary, but that is the common implicit assumption of probabilistic numerics approaches, such as this one.  Other traditional methods for estimating the error of a cubature rule either assume that the integrand lies in the ball of some function space (how do you know the radius of that ball?) or estimate the error heuristically.}
 
 \item Section 2.4. Please use $d'$ for the dimension of the original integral in (22) and
 immediately say that the dimension for the computation is $d = d' - 1$, 'as will
@@ -151,7 +151,7 @@ There is no theory available that covers the whole process (estimation and cubat
 
 \item p.\ 5, Sec.\ 2.4 Why are Sobol points chosen for the Matern kernel? Is there some theoretical link?  \Response{Added ``Sobol' points are a typical space-filling design.''}
 
-In the example the integral (22) is considered over a compact set. What is the benefit of Genz’s transformation, compared to a simple affine linear transformation, in this case?
+\item In the example the integral (22) is considered over a compact set. What is the benefit of Genz's transformation, compared to a simple affine linear transformation, in this case? \Response{A sentence has been added.  Genz's transformation is state-of-the-art.}
 
 \item p.\ 6 Why Hermitian? Are you considering complex-valued kernels? \Response{It is convenient since we are working with FFT's of real vectors, which are complex vectors.  Some explanation is provided at the beginning of Section 3.1.}
 
