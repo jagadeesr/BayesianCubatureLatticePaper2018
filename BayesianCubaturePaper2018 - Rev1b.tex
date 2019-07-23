@@ -19,7 +19,7 @@
 %
 \usepackage{graphicx}
 \usepackage{amssymb}
-\usepackage{cite}
+%\usepackage{cite}
 %
 % insert here the call for the packages your document requires
 %\usepackage{mathptmx}      % use Times fonts if available on your TeX system
@@ -257,7 +257,7 @@
 \maketitle
 
 \begin{abstract}
-Automatic cubatures approximate multidimensional integrals to user-specified error tolerances.  For high dimensional problems, it is difficult to adaptively change the sampling pattern, but one can automatically determine the
+Automatic cubatures approximate integrals to user-specified error tolerances.  For high dimensional problems, it is difficult to adaptively change the sampling pattern, but one can automatically determine the
 sample size, $n$, given a reasonable, fixed sampling pattern. We take this approach here using a Bayesian perspective.  We postulate that the integrand is an instance of a Gaussian stochastic process parameterized by a constant mean and a covariance kernel defined by a scale parameter times a parameterized function specifying how the integrand values at two different points in the domain are related.
 These hyperparameters are inferred or integrated out using integrand values via one of three techniques:  empirical Bayes, full Bayes, or generalized cross-validation. The sample size, $n$, is increased until the half-width of the credible interval for the Bayesian posterior mean is no greater than the error tolerance. 
 
@@ -293,7 +293,7 @@ Users of cubature algorithms typically want the error to be no greater than thei
 \label{eqn:err_crit} 
 \abs{\mu - \hmu} \leq \errtol .
 \end{align}
-Some stopping criteria for choosing $n$ are heuristic.  Other rigorous algorithms satisfying \eqref{eqn:err_crit}  require strong a priori assumptions about the integrand, such as an upper bound on its variance (for simple Monte Carlo) or total variation (for quasi-Monte Carlo).  We take a Bayesian approach by constructing a stopping criterion that is based on a credible interval.  We build upon the work of Briol et al.~\cite{BriEtal18a}, Diaconis~\cite{Dia88a}, O'Hagan~\cite{OHa91a}, Ritter~\cite{Rit00a}, Rasmussen and Ghahramani~\cite{RasGha03a}, and others.  Our algorithm is an example of \emph{probabilistic numerics}.
+Some stopping criteria for choosing $n$ are heuristic.  Rigorous algorithms satisfying \eqref{eqn:err_crit}  typically require strong a priori assumptions about the integrand, such as an upper bound on its variance (for simple Monte Carlo) or total variation (for quasi-Monte Carlo).  We take a Bayesian approach by constructing a stopping criterion that is based on a credible interval.  We build upon the work of Briol et al.~\cite{BriEtal18a}, Diaconis~\cite{Dia88a}, O'Hagan~\cite{OHa91a}, Ritter~\cite{Rit00a}, Rasmussen and Ghahramani~\cite{RasGha03a}, and others.  Our algorithm is an example of \emph{probabilistic numerics}.
 
 Our primary contribution is to demonstrate how the choice of a family of covariance kernels that match the low discrepancy sampling nodes facilitates fast computation of the cubature and the data-driven stopping criterion.  Our Bayesian cubature requires a computational cost of
 \begin{equation} \label{eqn:OuralgoCost}
@@ -323,7 +323,7 @@ Section \ref{sec:shift_invariant_kernel} implements this concept for shift-invar
 \subsection{Bayesian posterior cubature error}
 \label{sec:BayesPostErr}
 
-We assume that the integrand, $f$, is an instance of a Gaussian stochastic process  i.e., $f \sim \mathcal{GP}(m,s^2 C_\vtheta)$  \cite{BriEtal18a, Dia88a, OHa91a, Rit00a, RasGha03a}.  Specifically, $f$ is a real-valued random function with constant mean $m$ and covariance kernel $s^2C_\vtheta$:
+We assume that the integrand, $f$, is an instance of a Gaussian stochastic process  i.e., $f \sim \mathcal{GP}(m,s^2 C_\vtheta)$  \cite{BriEtal18a,Dia88a,OHa91a,Rit00a,RasGha03a}.  Specifically, $f$ is a real-valued random function with constant mean $m$ and covariance kernel $s^2C_\vtheta$:
 \begin{gather*}
         m = \Ex[f(\vx)] \qquad \forall \vx \in \reals^d, \\
         \Ex\{[f(\vt) - m][f(\vx) -m]\} = s^2 C_\vtheta(\vt,\vx) \qquad \forall \vt, \vx \in \reals^d.
@@ -488,7 +488,7 @@ In the theorem above, note that if the original covariance kernel, $C_\vtheta$, 
 \subsubsection{Proof for Empirical Bayes}  \label{sec:MLE}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-The empirical Bayes approach estimates the parameters, $m$, $s$, and $\vtheta$ via maximum likelihood estimation.  The log-likelihood function of the parameters given the function data $\vy$ is:
+The empirical Bayes approach estimates the parameters, $m$, $s$, and $\vtheta$ via maximum likelihood estimation.  The log-likelihood function of the parameters given the integrand data $\vy$ is:
 \begin{multline*}
 l(s,m,\vtheta | \vy)
 = -\frac{1}{2} s^{-2} (\vy-m\vone)^T\mCInv_\vtheta(\vy-m\vone) 
@@ -515,7 +515,7 @@ Rather than use maximum likelihood to determine $m$ and $s$,  one can treat them
 \rho_{\mu | m, s^2, \vf}(z | \xi, \lambda , \vy) \\
 \times  \rho_{m, s^2 | \vf}(\xi, \lambda | \vy)  \, \D \xi \D \lambda, 
 \end{multline*}
-where $\rho_{m, s^2 | \vf}$ is the posterior density of the hyperparameters given the function data. Bayes Theorem tells us that $\rho_{m, s^2 | \vf} \propto \rho_{\vf | m, s^2} \, \vrho_{m,s^2}$, so 
+where $\rho_{m, s^2 | \vf}$ is the posterior density of the hyperparameters given the integrand data. Bayes Theorem tells us that $\rho_{m, s^2 | \vf} \propto \rho_{\vf | m, s^2} \, \vrho_{m,s^2}$, so 
 \begin{align}
 \nonumber 
     \rho_{\mu|\vf}(z | \vy) 
@@ -633,7 +633,7 @@ We recognize that multiple applications of our credible intervals in one run of 
 
 As described above, the computational cost of Algorithm \ref{algorithm1} is the sum of the following:
 \begin{itemize}
-	\item $\Order\bigl(n\$(f) \bigr)$ for the function data, where $\$(f)$ is the computational cost of a single $f(\vx)$; $\$(f)$ may be large if it is the result of an expensive simulation; $\$(f)$ is typically proportional to $d$;
+	\item $\Order\bigl(n\$(f) \bigr)$ for the integrand data, where $\$(f)$ is the computational cost of a single $f(\vx)$; $\$(f)$ may be large if it is the result of an expensive simulation; $\$(f)$ is typically proportional to $d$;
 	
 	\item $\Order\bigl(N_{\opt} n^2 \$(C_\vtheta) \bigr)$ for the evaluation of the Gram matrix $\mC_{\vtheta}$, $N_\opt$ is the number of optimization steps required, and  $\$(C_\vtheta)$ is the computational cost of a single $C_\vtheta(\vt,\vx)$; $\$(C_\vtheta)$ is typically proportional to $d$; and
 	
@@ -838,7 +838,7 @@ which implies that $c_{0\vtheta} = 1$ and $\vc_\vtheta = \vone$.  Under \eqref{a
 The assumptions and derivations above lead to the following theorem.
 
 \begin{theorem} \label{thm:fastparam}
-Under assumptions \eqref{fastcompAssump}, the parameters and credible interval half-widths in Theorem \ref{thm:param} may be expressed in terms of the fast transforms of the function data, the first column of the Gram matrix, and $\vc_\vtheta$ as follows:
+Under assumptions \eqref{fastcompAssump}, the parameters and credible interval half-widths in Theorem \ref{thm:param} may be expressed in terms of the fast transforms of the integrand data, the first column of the Gram matrix, and $\vc_\vtheta$ as follows:
 \begin{align}
 \nonumber
 m_\MLE &=  m_{\full} = m_{\GCV} =  \frac{\widetilde{y}_1}{n} = \frac 1n \sum_{i=1}^n y_i,
@@ -1131,7 +1131,7 @@ We summarize the results of this section and the previous one in the theorem bel
 \begin{theorem}
 Let $C_\vtheta$ be any symmetric, positive definite,  shift-invariant covariance kernel of the form \eqref{eq:shInv}, where $K_\vtheta$ has period one in every variable.  Furthermore, let $K_\vtheta$ be scaled to satisfy \eqref{addAssump}.  When matched with rank-1 lattice data sites, $C_\vtheta$ must satisfy assumptions \eqref{fastcompAssump}.  The cubature, $\hmu$, is just the sample mean.  The \emph{fast Fourier transform} (FFT) can be used to expedite the estimates of $\vtheta$ in \eqref{fastTheta} and the credible interval half-widths \eqref{fastStoppingCriterions} so that Algorithm \ref{algorithm2} has a computational cost which is the sum of the following:
 \begin{itemize}
-	\item $\Order\bigl(n\$(f) \bigr)$ for the function data, where $\$(f)$ is the computational cost of a single $f(\vx)$;
+	\item $\Order\bigl(n\$(f) \bigr)$ for the integrand data, where $\$(f)$ is the computational cost of a single $f(\vx)$;
 	
 	\item $\Order\bigl(N_{\opt} n \$(C_\vtheta) \bigr)$ for the evaluations of the vector $\vC_{1}$, where $N_\opt$ is the number of optimization steps required, and  $\$(C_\vtheta)$ is the computational cost of a single $C_\vtheta(\vt,\vx)$; and
 	
@@ -1350,7 +1350,7 @@ In summary, the Bayesian cubature algorithm computes the integral within the use
 
 One may question whether an integrand with non-negative values is well represented by a Gaussian process.  Since we allow a nonzero mean, this assumption is somewhat more palatable. Bayesian algorithms assuming non-Gaussian processes are more difficult to execute, but this is an area for further research.
 
-A noticeable observation from the plots in all three examples is how much the credible interval half-widths differ from the true error. The credible interval half-widths are not much smaller than $\varepsilon$.  The ratio of the true error to $\varepsilon$ ranges from around one to as small as $10^{-7}$.  In the latter case, the credible interval half-widths are quite conservative.  For option pricing example, this is less serious of an issue than for the multivariate Gaussian and Keister examples. A possible reason is that the latter integrands are significantly smoother than the covariance kernel assumed.  This is a matter for further investigation.
+A noticeable observation from the plots in all three examples is how the ratio of the true error to the error tolerance varies from nearly one all the way down to $10^{-7}$.  Since the credible interval half-widths are not much smaller than $\varepsilon$, this means that the credible intervals are quite conservative in many cases.  For option pricing example, this is less of an issue than for the multivariate Gaussian and Keister examples. The reason that the credible intervals wildy overestimate the true error for the multivariate Gaussian and Keister examples may be that these integrands are significantly smoother than the assumed covariance kernel.  This is a matter for further investigation.
 
 
 
