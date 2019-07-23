@@ -1291,15 +1291,15 @@ I_s(j) &= \frac{(j-2)I_s(j-2)-I_c(j-1)}{2},
 \end{figure}
 
 Figures \ref{fig:keister-guaranteed-MLE}, \ref{fig:keister-guaranteed-FB}, and \ref{fig:keister-guaranteed-GCV} summarize the numerical tests for this integral.  We used the Sidi's $C^1$ periodization, dimension $d=4$, and $r=2$. 
-As we can see, the GCV stopping criterion achieves faster results than the other stopping criteria, similarly to the multivariate Gaussian case. The credible intervals are narrower than the multivariate Gaussian case since the covariance kernel is smoother than the periodization transform used.
+As we can see, the GCV stopping criterion achieves results faster than the other stopping criteria, similar to the multivariate Gaussian case. The credible intervals are narrower than the multivariate Gaussian case since the covariance kernel is smoother than the periodization transform used.
 
 \paragraph{Option Pricing.}
 
 The price of financial derivatives can often be modeled by high dimensional integrals. If the underlying asset is described in terms of a discretized geometric Brownian motion, then the fair price of the option is:
 \begin{equation*}
-\mu = \int_{\reals^d} \text{payoff}(\vz) \frac{\exp(\frac 12 \vz^T\mSigma^{-1}\vz)}{\sqrt{(2\pi)^d \det(\mSigma)}} \, \dvz = \int_{[0,1]^d} f(\vx) \, \dvx,
+\mu = \int_{\reals^d} \code{payoff}(\vz) \frac{\exp(\frac 12 \vz^T\mSigma^{-1}\vz)}{\sqrt{(2\pi)^d \det(\mSigma)}} \, \dvz = \int_{[0,1]^d} f(\vx) \, \dvx,
 \end{equation*} 
-where {payoff($\cdot$)} defines the discounted payoff of the option,
+where \code{payoff($\cdot$)} defines the discounted payoff of the option,
 \begin{align*}
 \mSigma &= (T/d) \bigl(\min(j,k) \bigr)_{j,k=1}^d = \mL \mL^T,\\
 f(\vx) &= \code{payoff} \left(\mL 
