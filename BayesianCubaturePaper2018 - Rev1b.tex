@@ -705,7 +705,7 @@ where $\Phi$ is the univariate cumulative standard Gaussian distribution functio
 	%\begin{subfigure}[h]{0.48\linewidth}
 		\includegraphics[width=0.7\linewidth]{GenzFunc_varTx_none}
 	%\end{subfigure}
-	\caption{The $d'=3$ multivariate Gaussian probability transformed to an integral of $f_{\text{Genz}}$ of $d=2$. This plot can be reproduced using \code{IntegrandPlots.m} in GAIL}
+	\caption{The $d'=3$ multivariate Gaussian probability transformed to an integral of $f_{\text{Genz}}$ of $d=2$. This plot can be reproduced using \code{IntegrandPlots.m} in GAIL.}
 	\label{fig:MVN_Genz}
 \end{figure}
 
@@ -745,11 +745,11 @@ So, Algorithm \ref{algorithm1}  in its current form is impractical when $n$ must
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The generic automatic Bayesian cubature algorithm described in the previous section requires $\Order\bigl(n \$(f) + \linebreak[4] N_{\opt} [n^2 \$(C_\vtheta)  + n^3]\bigr)$ operations to compute the cubature. Now we explain how to speed up the calculations. A key is to choose covariance kernels that match the nodes, $\{\vx_i\}_{i=1}^n$, so that the vector-matrix operations required by Bayesian cubature can be accomplished using fast transforms at a computational cost of $\Order\bigl(n \$(f) + N_{\opt} [n \$(C_\vtheta)  + n \log(n)] \bigr)$.
+The generic automatic Bayesian cubature algorithm described in the previous section requires $\Order\bigl(n \$(f) + \linebreak[4] N_{\opt} [n^2 \$(C_\vtheta)  + n^3]\bigr)$ operations to compute the cubature. Now we explain how to speed up the calculations. A key is to choose covariance kernels that match the nodes, $\{\vx_i\}_{i=1}^n$, so that the vector-matrix operations required by Bayesian cubature can be accomplished using fast Bayesian transforms at a computational cost of $\Order\bigl(n \$(f) + N_{\opt} [n \$(C_\vtheta)  + n \log(n)] \bigr)$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Fast Transform Kernel}
+\subsection{Fast Bayesian Transform Kernel}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 We make some assumptions about the relationship between the covariance kernel and the nodes.  In Section \ref{sec:shift_invariant_kernel} these assumptions are shown to hold  for rank-1 lattices and shift-invariant kernels.  Although the integrands and covariance kernels are real, it is convenient to allow related vectors and matrices to be complex.  A relevant example is the fast Fourier transform (FFT) of a real-valued vector, which is a complex-valued vector. 
@@ -781,9 +781,9 @@ We make three assumptions that facilitate  fast computation:
 	\mV^H \vb  \text{ requires only $\Order(n \log(n))$ operations } \forall \vb.
 	\end{gather}
 \end{subequations}
-We call the transformation $\vb \mapsto \mV^H \vb$ a \emph{fast transform} and $C_\vtheta$ a \emph{fast transform kernel}.  
+We call the transformation $\vb \mapsto \mV^H \vb$ a \emph{fast Bayesian transform} and $C_\vtheta$ a \emph{fast Bayesian transform kernel}.  
 
-Under assumptions \eqref{fastcompAssump} the eigenvalues may be identified as the fast transform of the first column of $\mC$:
+Under assumptions \eqref{fastcompAssump} the eigenvalues may be identified as the fast Bayesian transform of the first column of $\mC$:
 \begin{align}
 \nonumber
 \vlambda 
@@ -796,7 +796,7 @@ Under assumptions \eqref{fastcompAssump} the eigenvalues may be identified as th
 \label{eqn:fast_transform_to_eigvalues}
 \end{align}
 where $\mathsf{I}$ is the identity matrix and $\vv_1^*$ is the complex conjugate of the first row of $\mV$.
-Also note that the fast transform of $\vone$ has a simple form
+Also note that the fast Bayesian transform of $\vone$ has a simple form
 \begin{align*} 
 \widetilde{\vone}
 & = \mV^H \vone = \mV^H \vV_1 = 
@@ -838,7 +838,7 @@ which implies that $c_{0\vtheta} = 1$ and $\vc_\vtheta = \vone$.  Under \eqref{a
 The assumptions and derivations above lead to the following theorem.
 
 \begin{theorem} \label{thm:fastparam}
-Under assumptions \eqref{fastcompAssump}, the parameters and credible interval half-widths in Theorem \ref{thm:param} may be expressed in terms of the fast transforms of the integrand data, the first column of the Gram matrix, and $\vc_\vtheta$ as follows:
+Under assumptions \eqref{fastcompAssump}, the parameters and credible interval half-widths in Theorem \ref{thm:param} may be expressed in terms of the fast Bayesian transforms of the integrand data, the first column of the Gram matrix, and $\vc_\vtheta$ as follows:
 \begin{align}
 \nonumber
 m_\MLE &=  m_{\full} = m_{\GCV} =  \frac{\widetilde{y}_1}{n} = \frac 1n \sum_{i=1}^n y_i,
@@ -948,8 +948,8 @@ In the formulas for the credible interval half-widths, $\vlambda$ depends on $\v
 \label{sec:shift_invariant_kernel}
 
 The preceding sections lay out an automatic Bayesian cubature algorithm whose computational cost is drastically reduced.  However, this algorithm relies on covariance kernel functions, $C_\vtheta$ and node sets, $\{\vx_i\}_{i=1}^n$ that satisfy assumptions \eqref{fastcompAssump}.  We  also want to satisfy assumption \eqref{addAssump}.  
-To conveniently facilitate the fast transform, it is assumed in this section and the next that $n$ is power of $2$.  
-%To facilitate the fast transform, $n$ must be power of $2$.  
+To conveniently facilitate the fast Bayesian transform, it is assumed in this section and the next that $n$ is power of $2$.  
+%To facilitate the fast Bayesian transform, $n$ must be power of $2$.  
 
 \subsection{Extensible Integration Lattice Node Sets}
 
@@ -1047,7 +1047,7 @@ By \eqref{shInvKernGramMatrix} we then have the eigenvector-eigenvalue decomposi
 \end{equation}
 where the eigenvalues of  $\mC_{\vtheta}$ and $\mK_{\vtheta}$ are identical.
 
-Assumptions \eqref{fastcompAssumpA} and \eqref{fastcompAssumpB} can be verified by \eqref{PermMat}, \eqref{Keig}, and \eqref{Clateig}.  Assumption \eqref{fastcompAssumpC} is satisfied because $\mV^H \vb = \mW^H \mP^T \vb$ is just the discrete Fourier transform of a vector whose rows have been permuted.  This can be performed in $\Order(n \log(n))$ operations by the FFT. A proper scaling of the kernel $K_\vtheta$, such as the one given by \eqref{the_kernel_eqn_bernoulli},  ensures that assumption \eqref{addAssump} is satisfied. 
+Fast Bayesian transform assumptions \eqref{fastcompAssumpA} and \eqref{fastcompAssumpB} can be verified by \eqref{PermMat}, \eqref{Keig}, and \eqref{Clateig}.  Assumption \eqref{fastcompAssumpC} is satisfied because $\mV^H \vb = \mW^H \mP^T \vb$ is just the discrete Fourier transform of a vector whose rows have been permuted.  This can be performed in $\Order(n \log(n))$ operations by the FFT. A proper scaling of the kernel $K_\vtheta$, such as the one given by \eqref{the_kernel_eqn_bernoulli},  ensures that assumption \eqref{addAssump} is satisfied. 
 
 
 
@@ -1129,7 +1129,7 @@ The computational steps for the improved, faster, automatic Bayesian cubature ar
 
 We summarize the results of this section and the previous one in the theorem below.  In comparison to Algorithm \ref{algorithm1}, the second and third components of the computational cost of Algorithm  \ref{algorithm2} are substantially reduced.
 \begin{theorem}
-Let $C_\vtheta$ be any symmetric, positive definite,  shift-invariant covariance kernel of the form \eqref{eq:shInv}, where $K_\vtheta$ has period one in every variable.  Furthermore, let $K_\vtheta$ be scaled to satisfy \eqref{addAssump}.  When matched with rank-1 lattice data sites, $C_\vtheta$ must satisfy assumptions \eqref{fastcompAssump}.  The cubature, $\hmu$, is just the sample mean.  The \emph{fast Fourier transform} (FFT) can be used to expedite the estimates of $\vtheta$ in \eqref{fastTheta} and the credible interval half-widths \eqref{fastStoppingCriterions} so that Algorithm \ref{algorithm2} has a computational cost which is the sum of the following:
+Let $C_\vtheta$ be any symmetric, positive definite,  shift-invariant covariance kernel of the form \eqref{eq:shInv}, where $K_\vtheta$ has period one in every variable.  Furthermore, let $K_\vtheta$ be scaled to satisfy \eqref{addAssump}.  When matched with rank-1 lattice data sites, $C_\vtheta$ must satisfy fast Bayesian transform assumptions \eqref{fastcompAssump}.  The cubature, $\hmu$, is just the sample mean.  The \emph{fast Fourier transform} (FFT) can be used to expedite the estimates of $\vtheta$ in \eqref{fastTheta} and the credible interval half-widths \eqref{fastStoppingCriterions} so that Algorithm \ref{algorithm2} has a computational cost which is the sum of the following:
 \begin{itemize}
 	\item $\Order\bigl(n\$(f) \bigr)$ for the integrand data, where $\$(f)$ is the computational cost of a single $f(\vx)$;
 	
@@ -1158,7 +1158,7 @@ Suppose that the original integral has been expressed as
 where $g$ has sufficient smoothness, but lacks periodicity.  
 The goal is to transform the integral above to the form of \eqref{eqn:defn_mu}, where the integrand $f$---and perhaps its derivatives---are  periodic.  
 
-The Baker's transform, also called tent transform,
+The baker's transform, also called tent transform,
 \begin{multline} \label{eq:bakerTrans}
 \vPsi: \vx \mapsto (\Psi(x_1),  \ldots, \Psi(x_d)), \\ \Psi(x)  =1 - 2 \abs{x - 1/2},
 \end{multline}
@@ -1201,7 +1201,8 @@ However, there is a trade-off.  Smoother periodizing transformations tend to giv
 \subsection{Test Results and Observations}
 %\label{sec:numerical_experiments}
 
-Three integrals were evaluated using the GAIL algorithm \code{cubBayesLattice\_g}:  a multivariate Gaussian \linebreak[4] probability, the Keister's example, and an option pricing example.  
+Three integrals were evaluated using the GAIL algorithm \code{cubBayesLattice\_g}:  a multivariate Gaussian \linebreak[4] probability, Keister's example, and an option pricing example. 
+These three integrands are defined below.
 The sequences $\{\vx_i\}_{i=1}^\infty$ are the randomly shifted lattice node sequences supplied by GAIL. 
 For each integral and each of our stopping criteria---empirical Bayes, full Bayes, and generalized cross-validation---our algorithm was run for $400$ different randomly chosen error tolerances. The error tolerances were chosen randomly in an interval depending on the difficulty of the problem. In each run, the nodes were also randomly shifted with $\mathcal{U}[0,1]$ shifts independent of each other and the error tolerances. The accuracy of the algorithm depends mildly on the shift; there is no universally optimal shift.
 For each test, the execution times are plotted against $\abs{\mu - \hmu}/\varepsilon$.  We expect $\abs{\mu - \hmu}/\varepsilon$ to be no greater than one, but hopefully not too much smaller than one, which would indicate a stopping criterion that is too conservative. 
@@ -1290,7 +1291,7 @@ I_s(j) &= \frac{(j-2)I_s(j-2)-I_c(j-1)}{2},
 	\label{fig:keister-guaranteed-GCV}
 \end{figure}
 
-Figures \ref{fig:keister-guaranteed-MLE}, \ref{fig:keister-guaranteed-FB}, and \ref{fig:keister-guaranteed-GCV} summarize the numerical tests for this integral.  We used the Sidi's $C^1$ periodization, dimension $d=4$, and $r=2$. 
+Figures \ref{fig:keister-guaranteed-MLE}, \ref{fig:keister-guaranteed-FB}, and \ref{fig:keister-guaranteed-GCV} summarize the numerical tests for this integral.  We used Sidi's $C^1$ periodization, dimension $d=4$, and $r=2$. 
 As we can see, the GCV stopping criterion achieves results faster than the other stopping criteria, similar to the multivariate Gaussian case. The credible intervals are narrower than the multivariate Gaussian case since the covariance kernel is smoother than the periodization transform used.
 
 \paragraph{Option Pricing.}
@@ -1321,7 +1322,7 @@ $
 T = 1/4, \ \ d = 13, \ \ S_0 = 100, \ \ R =  0.05, \ \ \sigma = 0.5, \ \ K = 100.
 $
 Moreover, $\mL$ is chosen to be the matrix of eigenvectors of $\mSigma$ times the square root of the diagonal matrix of eigenvalues of $\mSigma$. 
-Because the integrand has a kink caused by the $\max$ function, it does not help to use a periodizing transform that is very smooth.  We choose the Baker's transform \eqref{eq:bakerTrans} and $r = 1$.
+Because the integrand has a kink caused by the $\max$ function, it does not help to use a periodizing transform that is very smooth.  We choose the baker's transform \eqref{eq:bakerTrans} and $r = 1$.
 
 \begin{figure}
 	\centering
@@ -1359,7 +1360,7 @@ A noticeable observation from the plots in all three examples is how the ratio o
 
 We have developed a fast, automatic Bayesian cubature that estimates a multidimensional definite integral within a user defined error tolerance.  The stopping criteria arise from assuming the integrand to be an instance of a Gaussian process. There are three approaches:  empirical Bayes, full Bayes, and generalized cross-validation.  The computational cost of the automatic Bayesian cubature can be dramatically reduced if the covariance kernel matches the nodes.  One such match in practice is rank-1 lattice nodes and shift-\linebreak[4]invariant kernels.  The matrix-vector multiplications can be accomplished using the fast Fourier Transform.  The performance of our automatic Bayesian cubature is illustrated using three integration problems.  
 
-Digital sequences and digital shift and/or scramble invariant kernels have the potential of being another match that satisfies the conditions in Section \ref{sec:fast_BC}.  The fast transform would correspond to a fast Walsh transform.  
+Digital sequences and digital shift and/or scramble invariant kernels have the potential of being another match that satisfies the conditions in Section \ref{sec:fast_BC}.  The fast Bayesian transform would correspond to a fast Walsh transform.  
 
 %For such kernels, periodicity is not assumed; however, special structure of both the sequences and the kernels are required to take advantage of integrand smoothness.
 
