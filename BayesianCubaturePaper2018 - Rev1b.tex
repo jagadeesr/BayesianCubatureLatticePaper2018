@@ -10,10 +10,10 @@
 \RequirePackage{amsmath}
 \RequirePackage{fix-cm}
 %
-%\documentclass{svjour3}                     % onecolumn (standard format)
+\documentclass{svjour3}                     % onecolumn (standard format)
 %\documentclass[smallcondensed]{svjour3}     % onecolumn (ditto)
 %\documentclass[smallextended]{svjour3}       % onecolumn (second format)
-\documentclass[twocolumn]{svjour3}          % twocolumn
+%\documentclass[twocolumn]{svjour3}          % twocolumn
 %
 \smartqed  % flush right qed marks, e.g. at end of proof
 %
@@ -361,9 +361,9 @@ Here, $c_{0\vtheta}$ and $\vc_\vtheta$ depend explicitly on $\vtheta$.  We assum
 	\end{pmatrix} 
 	\end{gather*}
 	then 
-	\begin{multline*}
-	\vY_1 \vert \vY_2 \; \sim \; \calN \bigl(\vm_1 + \mSigma_{21}^T \mSigma_{22}^{-1}(\vY_2 - \vm_2), \\ \mSigma_{11} - \mSigma_{21}^T \mSigma_{22}^{-1} \mSigma_{21} \bigr).
-	\end{multline*}
+	\begin{align*}
+	\vY_1 \vert \vY_2 \; \sim \; \calN \bigl(\vm_1 + \mSigma_{21}^T \mSigma_{22}^{-1}(\vY_2 - \vm_2),  \; \mSigma_{11} - \mSigma_{21}^T \mSigma_{22}^{-1} \mSigma_{21} \bigr).
+	\end{align*}
 Moreover, the inverse of the matrix $\mSigma$ may be partitioned as
 \begin{gather*}
 \mSigma^{-1} = \begin{pmatrix} \mA_{11} & \mA_{21}^T \\ \mA_{21} & \mA_{22} \end{pmatrix}, \\
@@ -376,11 +376,11 @@ Moreover, the inverse of the matrix $\mSigma$ may be partitioned as
 
 
 It follows from Lemma \ref{thrm:condDist} that the \emph{conditional} distribution of the integral given observed function values, $\vf = \vy$ is also Gaussian:
-\begin{multline} \label{eqn:condInteg}
+\begin{align} \label{eqn:condInteg}
 \mu | (\vf = \vy) \sim \calN \bigl(m (1 - \vc_\vtheta^T \mCtheta^{-1} \vone)  + \vc_\vtheta^T \mCtheta^{-1} \vy, 
-\\
+\;
 s^2(c_{0\vtheta}  -\vc_\vtheta ^T \mCtheta^{-1} \vc_\vtheta) \bigr).
-\end{multline}
+\end{align}
 The natural choice for  the cubature is the posterior mean of the integral, namely, 
 \begin{align}
 \label{eqn:BayesCub}
@@ -442,21 +442,19 @@ s^2_{\MLE}
 & \times  \left[\frac{(1 - \vc_{\vtheta}^T \mC_\vtheta^{-1} \vone)^2}{\vone^T \mC_\vtheta^{-1} \vone} + (c_{0\vtheta}  -\vc_{\vtheta} ^T \mC_\vtheta^{-1} \vc_{\vtheta}) \right], \\
 \nonumber
  s^2_{\textup{GCV}} & = \vy^T \left[\mC_\vtheta^{-2} - \frac{\mC_\vtheta^{-2} \vone \vone^T \mC_\vtheta^{-2}}{\vone^T \mC_\vtheta^{-2} \vone}  \right] \vy  \left[ \trace(\mC_\vtheta^{-1}) \right]^{-1}, \\
-\nonumber
+\label{eqn:thetaMLE}
 \vtheta_\MLE
 &= \argmin_{\vtheta} \biggl \{
 \log\left(\vy^T 
 \left[ \mC_\vtheta^{-1} - 
 \frac{ \mCInv_\vtheta \vone \vone^T \mCInv_\vtheta }{\vone^T\mCInv_\vtheta \vone}
 \right] \vy 
-\right)  \\
-\label{eqn:thetaMLE}
- & \qquad \qquad +  \frac{1}{n} \log(\det(\mC_\vtheta))
+\right)  
+ +  \frac{1}{n} \log(\det(\mC_\vtheta))
 \biggr \}, \\
-\nonumber
-\vtheta_{\GCV} &= \argmin_\vtheta \biggl\{\log \left(  \vy^T \left[\mC^{-2}_\vtheta - \frac{\mC^{-2}_\vtheta \vone \vone^T \mC^{-2}_\vtheta}{\vone^T \mC^{-2}_\vtheta \vone}  \right] \vy \right)  \\
 \label{vthetaGCV}
-& \qquad \qquad - \log \left ( \trace(\mC^{-2}_\vtheta) \right ) \biggr\}, \\
+\vtheta_{\GCV} &= \argmin_\vtheta \biggl\{\log \left(  \vy^T \left[\mC^{-2}_\vtheta - \frac{\mC^{-2}_\vtheta \vone \vone^T \mC^{-2}_\vtheta}{\vone^T \mC^{-2}_\vtheta \vone}  \right] \vy \right)  
+ - \log \left ( \trace(\mC^{-2}_\vtheta) \right ) \biggr\}, \\
 \label{eqn:cubMLE}
 \hmu_\MLE  &= \hmu_\full =
 \left(
@@ -466,18 +464,17 @@ s^2_{\MLE}
 \hmu_{\GCV}
 & = \left(\frac{(1 - \vone^T  \mC_\vtheta^{-1}\vc_{\vtheta}) \mC_\vtheta^{-1} \vone}{\vone^T \mC_\vtheta^{-2} \vone} + \vc_{\vtheta} \right)^T \mC_\vtheta^{-1} \vy.
 \intertext{The credible intervals widths, $\err_{\textup{CI}}$, are given by}
-\nonumber
-\err_{\mathsf{x}} & = 2.58 s_{\mathsf{x}} \sqrt{c_{0\vtheta} - \vc_{\vtheta}^T\mC_\vtheta^{-1}\vc_{\vtheta} }, \\
-& \hspace{3.5cm} \mathsf{x} \in \{\MLE, \GCV\},  \label{eqn:err_MLEGCV}\\ 
+\label{eqn:err_MLEGCV}
+\err_{\mathsf{x}} & = 2.58 s_{\mathsf{x}} \sqrt{c_{0\vtheta} - \vc_{\vtheta}^T\mC_\vtheta^{-1}\vc_{\vtheta} }, \qquad \mathsf{x} \in \{\MLE, \GCV\},  \\ 
 \err_{\textup{full}} 
 & = t_{n-1,0.995} \hsigma_{\textup{full}} > \err_\MLE. \label{FJH:eq:errFull}
 \end{align}
 The resulting credible intervals are then
-\begin{multline}
+\begin{align}
 \label{eqn_prob_CI}
 \mathbb{P}_f \left[
-|\mu-\hmu_{\mathsf{x}}| \leq \err_{\mathsf{x}} \right]  = 99\%, \\ \mathsf{x} \in \{\MLE, \full, \GCV\}.
-\end{multline}
+|\mu-\hmu_{\mathsf{x}}| \leq \err_{\mathsf{x}} \right]  = 99\%, \qquad \mathsf{x} \in \{\MLE, \full, \GCV\}.
+\end{align}
 Here $t_{n-1,0.995}$ denotes the $99.5$ percentile of a standard Student's $t$-distribution with $n-1$ degrees of freedom.  In the formulas above, $\vtheta$ is assumed to take on the values $\vtheta_{\MLE}$ or $\vtheta_{\GCV}$ as appropriate.
 \end{theorem}
 
@@ -509,23 +506,22 @@ The quantities $c_{0\vtheta}$, $\vc_\vtheta$, and $\mC_\vtheta$ are assumed impl
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Rather than use maximum likelihood to determine $m$ and $s$,  one can treat them as hyperparameters with a non-informative, conjugate prior, namely $\vrho_{m,s^2}(\xi, \lambda) \propto 1/\lambda$. We want to compute $\rho_{\mu|\vf}(z | \vy)$, the conditional posterior density of $\mu$ given the data $\vf = \vy$.  This may be expressed as 
-\begin{multline*}
+\begin{align*}
     \rho_{\mu|\vf}(z | \vy) 
 = \int_{0}^\infty \int_{-\infty}^\infty 
-\rho_{\mu | m, s^2, \vf}(z | \xi, \lambda , \vy) \\
-\times  \rho_{m, s^2 | \vf}(\xi, \lambda | \vy)  \, \D \xi \D \lambda, 
-\end{multline*}
+\rho_{\mu | m, s^2, \vf}(z | \xi, \lambda , \vy)  
+\rho_{m, s^2 | \vf}(\xi, \lambda | \vy)  \, \D \xi \D \lambda, 
+\end{align*}
 where $\rho_{m, s^2 | \vf}$ is the posterior density of the hyperparameters given the integrand data. Bayes Theorem tells us that $\rho_{m, s^2 | \vf} \propto \rho_{\vf | m, s^2} \, \vrho_{m,s^2}$, so 
-\begin{align}
+\begin{align*}
 \nonumber 
     \rho_{\mu|\vf}(z | \vy) 
 & = \int_{0}^\infty \int_{-\infty}^\infty 
-\rho_{\mu | m, s^2, \vf}(z | \xi, \lambda , \vy) \\
-\nonumber
-& \qquad \times  \rho_{\vf | m, s^2} (\vy | \xi, \lambda) \, \vrho_{m,s^2}(\xi,\lambda)  \, \D \xi \D \lambda \\
+\rho_{\mu | m, s^2, \vf}(z | \xi, \lambda , \vy) 
+\rho_{\vf | m, s^2} (\vy | \xi, \lambda) \, \vrho_{m,s^2}(\xi,\lambda)  \, \D \xi \D \lambda \\
 \nonumber
 & \propto \left( 1 +  \frac{(z - \hmu_{\MLE})^2}{(n-1) \hsigma_{\textup{full}}^2} \right)^{-n/2},
-\end{align}
+\end{align*}
 where $\hsigma_{\textup{full}}^2$ is given in Theorem \ref{thm:param}, and the result above is derived in Appendix \ref{appendix:full_bayes}.
 
 This means that $\mu \vert (\vf = \vy )$, properly centered and scaled, has a Student's $t$-distribution with $n-1$ degrees of freedom.   The estimated integral is the same as in the empirical Bayes case, $\hmu_{\textup{full}} = \hmu_{\MLE}$, but the credible interval is wider, as stated in the Theorem \ref{thm:param}.
@@ -745,7 +741,7 @@ So, Algorithm \ref{algorithm1}  in its current form is impractical when $n$ must
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The generic automatic Bayesian cubature algorithm described in the previous section requires $\Order\bigl(n \$(f) + \linebreak[4] N_{\opt} [n^2 \$(C_\vtheta)  + n^3]\bigr)$ operations to compute the cubature. Now we explain how to speed up the calculations. A key is to choose covariance kernels that match the nodes, $\{\vx_i\}_{i=1}^n$, so that the vector-matrix operations required by Bayesian cubature can be accomplished using fast Bayesian transforms at a computational cost of $\Order\bigl(n \$(f) + N_{\opt} [n \$(C_\vtheta)  + n \log(n)] \bigr)$.
+The generic automatic Bayesian cubature algorithm described in the previous section requires $\Order\bigl(n \$(f) + \linebreak[4] N_{\opt} [n^2 \$(C_\vtheta) + n^3]\bigr)$ operations to compute the cubature. Now we explain how to speed up the calculations. A key is to choose covariance kernels that match the nodes, $\{\vx_i\}_{i=1}^n$, so that the vector-matrix operations required by Bayesian cubature can be accomplished using fast Bayesian transforms at a computational cost of $\Order\bigl(n \$(f) + N_{\opt} [n \$(C_\vtheta)  + n \log(n)] \bigr)$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -860,26 +856,23 @@ s^2_\MLE
 s^2_{\textup{GCV}} & =  \frac 1{n} \sum_{i=2}^n \frac{\abs{\widetilde{y}_i}^2}{\lambda_i^2}  \left [ \sum_{i=1}^n \frac{1}{\lambda_i} \right]^{-1},
 \end{align}
 \begin{subequations}
-	\label{fastTheta}
-	\begin{align}
-\nonumber
+\label{fastTheta}
+\begin{align}
+\label{eqn_MLE_loss_func_optimized_2}
 \vtheta_\MLE
 &= 
 \argmin_{\vtheta}
 \left[
 \log\left(
 \sum_{i=2}^n \frac{\abs{\widetilde{y}_i}^2}{\lambda_{\vtheta, i}}
-\right) \right .\\ 
-\label{eqn_MLE_loss_func_optimized_2} %
-& \hspace{3cm} \left .
+\right) 
  + \frac{1}{n}\sum_{i=1}^n \log(\lambda_{\vtheta,i})
 \right],\\
-\nonumber 
+\label{thetaGCV} 
 \vtheta_{\GCV} 
 &= \argmin_\vtheta \left[ \log \left ( \sum_{i=2}^n \frac{\abs{\widetilde{y}_i}^2}{\lambda_{\vtheta, i}^2} 
-\right) \right .\\
-\label{thetaGCV}
-& \qquad \qquad \qquad \qquad  \left . -2\log\left( \sum_{i=1}^n \frac{1}{\lambda_{\vtheta, i}} \right)
+\right)  
+-2\log\left( \sum_{i=1}^n \frac{1}{\lambda_{\vtheta, i}} \right)
 \right], 
 \end{align}
 \end{subequations}
@@ -900,10 +893,7 @@ s^2_{\textup{GCV}} & =  \frac 1{n} \sum_{i=2}^n \frac{\abs{\widetilde{y}_i}^2}{\
 \err_{\full} & = t_{n-1,0.995} \hsigma_{\textup{full}}, \\
 \nonumber
 \err_{\textup{GCV}} & =
-\frac{2.58}{n}\left\{\sum_{i=2}^n \frac{\abs{\widetilde{y}_i}^2}{\lambda_i^2}  \left [ \frac 1n \sum_{i=1}^n \frac{1}{\lambda_i} \right]^{-1} \right.
-\\ 
-\nonumber
-&\qquad \qquad \left . \times
+\frac{2.58}{n}\left\{\sum_{i=2}^n \frac{\abs{\widetilde{y}_i}^2}{\lambda_i^2}  \left [ \frac 1n \sum_{i=1}^n \frac{1}{\lambda_i} \right]^{-1} 
 \left( c_0 - \frac 1n \sum_{i=1}^n \frac{\abs{\widetilde{c}_i}^2}{\lambda_i} \right) 
 \right\}^{1/2}.
 \end{align}
@@ -933,7 +923,6 @@ t_{n-1,0.995}
 \nonumber
 \err_{\textup{GCV}} & =
 \frac{2.58}{n}\left\{\sum_{i=2}^n \frac{\abs{\widetilde{y}_i}^2}{\lambda_i^2}  \left [ \frac 1n \sum_{i=1}^n \frac{1}{\lambda_i} \right]^{-1} 
-\right. \\ &\hspace{3cm} \left . \times
 \left( 1 -  \frac{n}{\lambda_1} \right)  
 \right\}^{1/2}. \label{errGCVSimple}
 \end{align}
@@ -968,10 +957,10 @@ i & 0_2 & 1_2 & 10_2 & 11_2 & 100_2 & 101_2 & 110_2 & 111_2  & \cdots\\
 \end{array}
 \end{align}
 Note that 
-\begin{multline} \label{phiprop}
-n\phi:\{0, \ldots, n-1 \} \to \{0, \ldots, n-1\} \\
+\begin{align} \label{phiprop}
+n\phi:\{0, \ldots, n-1 \} \to \{0, \ldots, n-1\} \quad
 \text{is one-to-one},
-\end{multline}
+\end{align}
 assuming $n$ is a power of $2$.
 
 An example of $64$ nodes is given in \figref{latticefig}.  The even coverage of the unit cube is ensured by a well chosen generating vector, $\vh$.  The choice of generating vector is typically done offline by computer search.  See \cite{DicEtal14a,HicNie03a} for more on extensible integration lattices.
@@ -1022,15 +1011,13 @@ is a permutation matrix, where $\delta_{\cdot,\cdot}$ is the Kronecker delta fun
 \nonumber
 \mC_\vtheta &= \bigl ( C_\vtheta(\vx_i, \vx_j) \bigr)_{i, j = 1}^n \\
 \nonumber
-& = \Bigl ( K_\vtheta \bigl(\vh(\phi(i-1) - \phi(j-1) \bigr) \bmod \vone ) \Bigr)_{i, j = 1}^n \\
-\nonumber
-& \qquad \qquad  \text{by \eqref{eqn:lattice_def} and \eqref{eq:shInv}}  \\
+& = \Bigl ( K_\vtheta \bigl(\vh(\phi(i-1) - \phi(j-1) \bigr) \bmod \vone ) \Bigr)_{i, j = 1}^n 
+\qquad  \text{by \eqref{eqn:lattice_def} and \eqref{eq:shInv}}  \\
 \nonumber
 & = \biggl( 
 \sum_{i',j'=1}^n \delta_{n\phi(i-1), i'-1}  \,
-K_\vtheta \bigl (\vh (i'-j')/n \bmod \vone \bigr )\\
-\nonumber
-& \qquad \qquad \times \delta_{j'-1,n\phi(j-1)} 
+K_\vtheta \bigl (\vh (i'-j')/n \bmod \vone \bigr )
+\delta_{j'-1,n\phi(j-1)} 
 \biggr)_{i,j=1}^n \\
 & = \mP \mK_{\vtheta}  \mP^T,  \label{shInvKernGramMatrix} 
 \intertext{where } 
@@ -1159,9 +1146,9 @@ where $g$ has sufficient smoothness, but lacks periodicity.
 The goal is to transform the integral above to the form of \eqref{eqn:defn_mu}, where the integrand $f$---and perhaps its derivatives---are  periodic.  
 
 The baker's transform, also called tent transform,
-\begin{multline} \label{eq:bakerTrans}
-\vPsi: \vx \mapsto (\Psi(x_1),  \ldots, \Psi(x_d)), \\ \Psi(x)  =1 - 2 \abs{x - 1/2},
-\end{multline}
+\begin{align} \label{eq:bakerTrans}
+\vPsi: \vx \mapsto (\Psi(x_1),  \ldots, \Psi(x_d)),  \Psi(x)  =1 - 2 \abs{x - 1/2},
+\end{align}
 allows us to write $\mu$ in the form of \eqref{eqn:defn_mu}, where $f(\vx) = g(\vPsi(\vx))$.  Since  $\Psi'(x)$ is not continuous, $f$ does not have continuous derivatives. 
 
 A family of variable transforms that can also preserve continuity of the derivatives from the original integrand $g$ takes the form
@@ -1201,7 +1188,7 @@ However, there is a trade-off.  Smoother periodizing transformations tend to giv
 \subsection{Test Results and Observations}
 %\label{sec:numerical_experiments}
 
-Three integrals were evaluated using the GAIL algorithm \code{cubBayesLattice\_g}:  a multivariate Gaussian \linebreak[4] probability, Keister's example, and an option pricing example. 
+Three integrals were evaluated using the GAIL algorithm \code{cubBayesLattice\_g}:  a multivariate Gaussian  probability, Keister's example, and an option pricing example. 
 These three integrands are defined below.
 The sequences $\{\vx_i\}_{i=1}^\infty$ are the randomly shifted lattice node sequences supplied by GAIL. 
 For each integral and each of our stopping criteria---empirical Bayes, full Bayes, and generalized cross-validation---our algorithm was run for $400$ different randomly chosen error tolerances. The error tolerances were chosen randomly in an interval depending on the difficulty of the problem. In each run, the nodes were also randomly shifted with $\mathcal{U}[0,1]$ shifts independent of each other and the error tolerances. The accuracy of the algorithm depends mildly on the shift; there is no universally optimal shift.
@@ -1209,7 +1196,7 @@ For each test, the execution times are plotted against $\abs{\mu - \hmu}/\vareps
 
 Ideally, we would optimize both $r$ and $\eta$ simultaneously in the definition of our $C_\vtheta$ in \eqref{eqn:ourkernel}.  However, in these examples we fix $r$ and optimize $\eta$ only.  This is a technical challenge, not a limitation of our theory.
 
-Figures \ref{fig:mvn-guaranteed-MLE} to \ref{fig:optprice-guaranteed-GCV} can be reproduced using the script \code{cubBayesLattice\_guaranteed\_plots.m} in GAIL.
+Figures \ref{fig:mvn-guaranteed-MLE} to \ref{fig:optprice-guaranteed-GCV} can be reproduced using the script \break \code{cubBayesLattice\_guaranteed\_plots.m} in GAIL.
 
 
 \paragraph{Multivariate Gaussian Probability.}
@@ -1246,7 +1233,7 @@ This multidimensional integral function comes from \cite{Kei96} and is inspired 
 %&  = 
 %\int_{\reals^d} \cos(a\norm{ \vt}) \exp(-a^2\norm{ \vt }^2)  a^d \, \dvt \\
 & = \int_{[0,1]^d} f_{\textup{Keister}}(\vx) \, \dvx,\\
-\intertext{where }
+\text{where } \qquad \qquad & \\
 f_\textup{Keister}(\vx) &= \pi^{d/2} \cos\left(\norm{ \Phi^{-1}(\vx)/2}\right)  ,
 \end{align*}
 and again $\Phi$ is the standard Gaussian distribution.
@@ -1259,8 +1246,7 @@ where $\Gamma$ denotes the gamma function, and
 I_c(1) &= \frac{\sqrt{\pi}}{2 \exp(1/4)}, 
 \\
 I_s(1) &= \int_{x=0}^\infty \exp(-\vx^T\vx)\sin(\vx) \, \dvx 
-\\
-& =  0.4244363835020225,
+\; = \;  0.4244363835020225,
 \\
 I_c(2) &= \frac{1-I_s(1)}{2}, \qquad
 I_s(2) = \frac{I_c(1)}{2}
@@ -1407,24 +1393,24 @@ Starting from the Bayesian formula for the posterior density for $\mu$ at the be
 \begin{align*}
 \MoveEqLeft[1]{\rho_{\mu|\vf}(z | \vy)}\\
 & \propto \int_{0}^\infty \int_{-\infty}^\infty 
-\rho_{\mu | m, s^2, \vf}(z | \xi, \lambda , \vy) \\
-& \qquad \times  \rho_{\vf | m, s^2} (\vy | \xi, \lambda) \, \vrho_{m,s^2}(\xi,\lambda)  \, \D \xi \D \lambda \\
-& \propto \displaystyle \int_{0}^\infty  \frac{1}{\lambda^{(n+3)/2}} \cdots \\
-& \cdots \int_{-\infty}^\infty  \exp \biggl( -\frac{1}{2\lambda}\biggl\{
+\rho_{\mu | m, s^2, \vf}(z | \xi, \lambda , \vy) 
+  \rho_{\vf | m, s^2} (\vy | \xi, \lambda) \, \vrho_{m,s^2}(\xi,\lambda)  \, \D \xi \D \lambda \\
+& \propto \displaystyle \int_{0}^\infty  \frac{1}{\lambda^{(n+3)/2}} 
+ \int_{-\infty}^\infty  \exp \biggl( -\frac{1}{2\lambda}\biggl\{
 \frac{
 	[z - \xi (1 - \vc^T \mC^{-1} \vone)  -  \vc^T \mC^{-1} \vy]^2}
 {c_0  -\vc ^T \mC^{-1} \vc}  \\
 & \qquad + (\vy - \xi \vone)^T \mC^{-1}(\vy - \xi \vone) \biggr \} \biggr) \, \D \xi \D \lambda \\
 & \qquad \qquad
 \text{by \eqref{eqn:fGaussDist}, \eqref{eqn:condInteg}} \; \text{and} \; \rho_{m,s^2}(\xi,\lambda) \propto 1/\lambda \\
-& \propto \displaystyle \int_{0}^\infty  \frac{1}{\lambda^{(n+3)/2}}  \cdots  \\ 
-& \qquad  \cdots  \int_{-\infty}^\infty  \exp\left( -\frac{\alpha \xi^2 -2 \beta \xi + \gamma}{2\lambda(c_0  -\vc ^T \mC^{-1} \vc)} \right) \, \D \xi \D \lambda,
+& \propto \displaystyle \int_{0}^\infty  \frac{1}{\lambda^{(n+3)/2}} 
+\int_{-\infty}^\infty  \exp\left( -\frac{\alpha \xi^2 -2 \beta \xi + \gamma}{2\lambda(c_0  -\vc ^T \mC^{-1} \vc)} \right) \, \D \xi \D \lambda,
 \end{align*}
 where
 \begin{align*}
 \alpha & = (1 - \vc^T \mC^{-1} \vone)^2 + \vone^T \mC^{-1} \vone (c_0  -\vc ^T \mC^{-1} \vc),\\
-\beta & =(1 - \vc^T \mC^{-1} \vone)(z - \vc^T \mC^{-1} \vy ) \\
-& \qquad \qquad  + \vone^T \mC^{-1} \vy (c_0  -\vc ^T \mC^{-1} \vc),\\
+\beta & =(1 - \vc^T \mC^{-1} \vone)(z - \vc^T \mC^{-1} \vy )  
++ \vone^T \mC^{-1} \vy (c_0  -\vc ^T \mC^{-1} \vc),\\
 \gamma &  = (z - \vc^T \mC^{-1} \vy )^2  + \vy^T \mC^{-1} \vy (c_0  -\vc ^T \mC^{-1} \vc).
 \end{align*}
 In the derivation above and below, factors that are \emph{independent} of $\xi$, $\lambda$, or $z$ can be discarded since we only need to preserve the proportion.  But, factors that depend on $\xi$, $\lambda$, or $z$ must be kept.  
@@ -1436,10 +1422,11 @@ $
 allows us to evaluate the integrals with respect to $\xi$ and $\lambda$:
 \begin{align*}
 \MoveEqLeft{\rho_{\mu|\vf}(z | \vy)} \\
-& \propto \displaystyle \int_{0}^\infty  \frac{1}{\lambda^{(n+3)/2}}  \exp\left( -\frac{  \gamma - \beta^2/\alpha}{2\lambda(c_0  -\vc ^T \mC^{-1} \vc)} \right)  \cdots \\
-& \qquad \qquad \cdots \int_{-\infty}^\infty  \exp\left( -\frac{\alpha (\xi -\beta/\alpha)^2}{2\lambda(c_0  -\vc ^T \mC^{-1} \vc)} \right) \, \D \xi \D \lambda \\
+& \propto \displaystyle \int_{0}^\infty  \frac{1}{\lambda^{(n+3)/2}}  \exp\left( -\frac{  \gamma - \beta^2/\alpha}{2\lambda(c_0  -\vc ^T \mC^{-1} \vc)} \right)  
+\int_{-\infty}^\infty  \exp\left( -\frac{\alpha (\xi -\beta/\alpha)^2}{2\lambda(c_0  -\vc ^T \mC^{-1} \vc)} \right) \, \D \xi \D \lambda \\
 & \propto \displaystyle \int_{0}^\infty  \frac{1}{\lambda^{(n+2)/2}}  \exp\left( -\frac{  \gamma - \beta^2/\alpha}{2\lambda(c_0  -\vc ^T \mC^{-1} \vc)} \right) \D \lambda \\
-& \propto \left(\gamma - \frac{\beta^2}{\alpha}\right)^{-n/2} \propto \left(\alpha \gamma - \beta^2\right)^{-n/2}.
+& \propto \left(\gamma - \frac{\beta^2}{\alpha}\right)^{-n/2} \\
+& \propto \left(\alpha \gamma - \beta^2\right)^{-n/2}.
 \end{align*}
 Finally, we simplify the key term via straightforward calculations to the following:
 \begin{align*}
@@ -1451,8 +1438,7 @@ where
 := \frac{1}{n-1}
 \vy^T\left[ \mC^{-1} 
 - \frac{ \mC^{-1} \vone\vone^T \mC^{-1}}{\vone^T \mC^{-1} \vone}  \right]\vy
-\\ 
-\times  \left[\frac{(1 - \vc^T \mC^{-1} \vone)^2}{\vone^T \mC^{-1} \vone} + (c_0  -\vc ^T \mC^{-1} \vc) \right].
+\left[\frac{(1 - \vc^T \mC^{-1} \vone)^2}{\vone^T \mC^{-1} \vone} + (c_0  -\vc ^T \mC^{-1} \vc) \right].
 \end{multline*}
 This completes the derivation of \eqref{eqn:sigma2_full}.
 \end{appendices}
