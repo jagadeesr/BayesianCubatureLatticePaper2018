@@ -1137,7 +1137,7 @@ Suppose that the original integral has been expressed as
 where $g$ has sufficient smoothness, but lacks periodicity.  
 The goal is to transform the integral above to the form of \eqref{eqn:defn_mu}, where the integrand $f$---and perhaps its derivatives---are  periodic.  
 
-The baker's transform, also called tent transform,
+The baker's transform, also called the tent transform,
 \begin{align} \label{eq:bakerTrans}
 \vPsi: \vx \mapsto (\Psi(x_1),  \ldots, \Psi(x_d)),  \Psi(x)  =1 - 2 \abs{x - 1/2},
 \end{align}
@@ -1249,19 +1249,19 @@ I_s(j) &= \frac{(j-2)I_s(j-2)-I_c(j-1)}{2},
 \begin{figure}
 	\centering
 	\includegraphics[width=0.95\linewidth]{"Lattice_Keister_guaranteed_time_MLE_C1sin_d4_r2_2019-Jun-27"}
-	\caption[Keister guaranteed:MLE]{Keister example using the empirical Bayes stopping criterion.}
+	\caption[Keister guaranteed:MLE]{Keister's example using the empirical Bayes stopping criterion.}
 	\label{fig:keister-guaranteed-MLE}
 %\end{figure}
 %\begin{figure}
 	\centering
 	\includegraphics[width=0.95\linewidth]{"Lattice_Keister_guaranteed_time_full_C1sin_d4_r2_2019-Jun-27"}
-	\caption[Keister guaranteed:FB]{Keister example using the full Bayes stopping criterion.}
+	\caption[Keister guaranteed:FB]{Keister's example using the full Bayes stopping criterion.}
 	\label{fig:keister-guaranteed-FB}
 %\end{figure}
 %\begin{figure}
 	\centering
 	\includegraphics[width=0.95\linewidth]{"Lattice_Keister_guaranteed_time_GCV_C1sin_d4_r2_2019-Jun-27"}
-	\caption[Keister guaranteed:GCV]{Keister example using the GCV stopping criterion.}
+	\caption[Keister guaranteed:GCV]{Keister's example using the GCV stopping criterion.}
 	\label{fig:keister-guaranteed-GCV}
 \end{figure}
 
@@ -1325,7 +1325,7 @@ In summary, the Bayesian cubature algorithm computes the integral within the use
 
 One may question whether an integrand with non-negative values is well represented by a Gaussian process.  Since we allow a nonzero mean, this assumption is somewhat more palatable. Bayesian algorithms assuming non-Gaussian processes are more difficult to execute, but this is an area for further research.
 
-A noticeable observation from the plots in all three examples is how the ratio of the true error to the error tolerance varies from nearly one all the way down to $10^{-7}$.  Since the credible interval half-widths are not much smaller than $\varepsilon$, this means that the credible intervals are quite conservative in many cases.  For option pricing example, this is less of an issue than for the multivariate Gaussian and Keister examples. The reason that the credible intervals wildy overestimate the true error for the multivariate Gaussian and Keister examples may be that these integrands are significantly smoother than the assumed covariance kernel.  This is a matter for further investigation.
+A noticeable observation from the plots in all three examples is how the ratio of the true error to the error tolerance varies from nearly one all the way down to $10^{-7}$.  Since the credible interval half-widths are not much smaller than $\varepsilon$, this means that the credible intervals are quite conservative in many cases.  For option pricing example, this is less of an issue than for the multivariate Gaussian and Keister's examples. The reason that the credible intervals wildy overestimate the true error for the multivariate Gaussian and Keister's examples may be that these integrands are significantly smoother than the assumed covariance kernel.  This is a matter for further investigation.
 
 
 
