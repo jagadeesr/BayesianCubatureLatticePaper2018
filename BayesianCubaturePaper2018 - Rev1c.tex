@@ -1379,7 +1379,7 @@ The authors would like to thank the organizers of the SAMSI-Lloyds-Turing Worksh
 To simplify, we drop the dependence of $c_{0\vtheta}$, $\vc_\vtheta$, and $\mC_\vtheta$ on $\vtheta$ in the notation below.
 Starting from the Bayesian formula for the posterior density for $\mu$ at the beginning of Section \ref{sec:fullBayes} with the non-informative prior, it follows that 
 \begin{align*}
-\MoveEqLeft[1]{\rho_{\mu|\vf}(z | \vy)}\\
+\rho_{\mu|\vf}(z | \vy)
 & \propto \int_{0}^\infty \int_{-\infty}^\infty 
 \rho_{\mu | m, s^2, \vf}(z | \xi, \lambda , \vy) 
   \rho_{\vf | m, s^2} (\vy | \xi, \lambda) \, \vrho_{m,s^2}(\xi,\lambda)  \, \D \xi \D \lambda \\
@@ -1409,7 +1409,7 @@ Completing the square, $
 $
 allows us to evaluate the integrals with respect to $\xi$ and $\lambda$:
 \begin{align*}
-\MoveEqLeft{\rho_{\mu|\vf}(z | \vy)} \\
+\rho_{\mu|\vf}(z | \vy)
 & \propto \displaystyle \int_{0}^\infty  \frac{1}{\lambda^{(n+3)/2}}  \exp\left( -\frac{  \gamma - \beta^2/\alpha}{2\lambda(c_0  -\vc ^T \mC^{-1} \vc)} \right)  \\
 &\qquad \qquad \times
 \int_{-\infty}^\infty  \exp\left( -\frac{\alpha (\xi -\beta/\alpha)^2}{2\lambda(c_0  -\vc ^T \mC^{-1} \vc)} \right) \, \D \xi \D \lambda \\
