@@ -555,11 +555,11 @@ Thus, \eqref{FJH:eq:CVA} may be re-written as
 \textup{CV} = \sum_{i=1}^n \left(\frac{\zeta_i}{a_{ii}} \right)^2, \qquad \vzeta = \mC^{-1}_\vtheta(\vy - m \vone).
 \end{align*}
 The \emph{generalized cross-validation} criterion (GCV) replaces the $i^{\text{th}}$ diagonal element of $\mA$ in the denominator by the average diagonal element of $\mA$ \cite{CraWah79a,GolHeaWah79a,Wah90}:
-\begin{align*} 
-\textup{GCV} &
-= \frac{\sum_{i=1}^n\zeta_i^2}{\left(\frac 1n \sum_{i=1}^n a_{ii} \right)^2} \\
-& = \frac{(\vy - m\vone)^T \mC^{-2}_\vtheta (\vy - m \vone)}{\left(\frac 1n \trace(\mC_\vtheta^{-1}) \right)^2}.
-\end{align*}
+\begin{equation*} 
+\textup{GCV}
+= \frac{\sum_{i=1}^n\zeta_i^2}{\left(\frac 1n \sum_{i=1}^n a_{ii} \right)^2} 
+= \frac{(\vy - m\vone)^T \mC^{-2}_\vtheta (\vy - m \vone)}{\left(\frac 1n \trace(\mC_\vtheta^{-1}) \right)^2}.
+\end{equation*}
 
 The loss function $\textup{GCV}$ depends on $m$ and $\vtheta$, but not on $s$.  Minimizing the GCV  yields the formulae in Theorem \ref{thm:param} for $m_{\textup{GCV}}$ and $\vtheta_{\textup{GCV}}$.  
 Plugging the value of $m_\GCV$ into \eqref{eqn:BayesCub} yields the formulae in Theorem \ref{thm:param} for $\widehat{\mu}_{\textup{GCV}}$.
@@ -658,12 +658,11 @@ where $(\va,\vb)$ is a finite, semi-infinite or infinite box in $\reals^{d'}$.  
 
 Genz \cite{Gen93} introduced a variable transformation to transform \eqref{eqn:GaussDef} into an integral on the unit cube.  Not only does this variable transformation accommodate domains that are (semi-)infinite, it also tends to smooth out the integrand better, which expedites the cubature.  Let $\mSigma= \mL \mL^T$ be the Cholesky decomposition where $\mL = (l_{jk})_{j,k=1}^d$ is a lower triangular matrix.  Iteratively define
 \allowdisplaybreaks
-\begin{align*}
-\alpha_1& = \Phi(a_1), \qquad \beta_1 = \Phi(b_1),
+\begin{gather*}
+\alpha_1 = \Phi(a_1), \qquad \beta_1 = \Phi(b_1),
 \\
-\alpha_j&(x_1,\dots,x_{j-1}) = 
-\\
-&\; \Phi
+\alpha_j(x_1,\dots,x_{j-1}) = 
+\Phi
 \left(
 \frac{1}{l_{jj}} 
 \left(
@@ -671,11 +670,10 @@ a_j - \sum_{k=1}^{j-1} l_{jk} \Phi^{-1}(\alpha_k + x_k(\beta_k-\alpha_k))
 \right)
 \right), 
 \\
-&\hspace{5cm} j=2,\dots,d,
+\hspace{8cm} j=2,\dots,d,
 \\
-\beta_j&(x_1,\dots,x_{j-1}) = 
-\\
-&\; \Phi
+\beta_j(x_1,\dots,x_{j-1}) = 
+\Phi
 \left(
 \frac{1}{l_{jj}} 
 \left(
@@ -683,12 +681,12 @@ b_j - \sum_{k=1}^{j-1} l_{jk} \Phi^{-1}(\alpha_k + x_k(\beta_k-\alpha_k))
 \right)
 \right), 
 \\
-&\hspace{5cm} j=2,\dots,d,
-\end{align*}
-\begin{align}
+\hspace{8cm} j=2,\dots,d,
+\end{gather*}
+\begin{equation}
 \label{fGenzdef}
-f_{\text{Genz}}(\vx) = \prod_{j=1}^d [\beta_j(\vx) - \alpha_j(\vx)].
-\end{align}
+f_{\text{Genz}}(\vx) = \prod_{j=1}^d [\beta_j(\vx) - \alpha_j(\vx)],
+\end{equation}
 where $\Phi$ is the univariate cumulative standard Gaussian distribution function.  Then, $\mu = \int_{[0,1]^{d'-1}} f_{\text{Genz}}(\vx) \, \dvx$. This approach transforms a $d'$ dimensional integral into a $d=d'-1$ dimensional integral.
 
 \begin{figure}
@@ -751,16 +749,14 @@ We make some assumptions about the relationship between the covariance kernel an
 
 We introduce some further notation:
 \begin{align}
-\nonumber
 \mC = \mC_\vtheta &= \Big(C_\vtheta(\vx_i,\vx_j)\Big)_{i,j=1}^n  = (\vC_1,\dots,\vC_n) 
-\\
 \label{eqn:ftk_factor}
-&= \frac 1n \mV \mLambda \mV^H , 
+= \frac 1n \mV \mLambda \mV^H , 
 \quad \quad \mV^H = n \mV^{-1}, \\
 \nonumber
-\mV &= (\vv_1,\ldots,\vv_n)^T = (\vV_1,\ldots,\vV_n), \\
-\nonumber
-\mC^p  &= \frac 1n \mV \mLambda^{p} \mV^H, \qquad \forall p \in \integers.
+\mV &= (\vv_1,\ldots,\vv_n)^T = (\vV_1,\ldots,\vV_n),
+\qquad
+\mC^p  = \frac 1n \mV \mLambda^{p} \mV^H, \qquad \forall p \in \integers.
 \end{align}
 In this and later sections, we drop the $\vtheta$ dependence of various quantities for simplicity of notation.  Here, $\mV^H$ is the Hermitian of $\mV$, $\vC_1,\dots,\vC_n$ are columns of $\mC$,  $\vV_1,\dots,\vV_n$ are columns of $\mV$, and $\vv_1,\dots,\vv_n$ are rows of $\mV$.  The normalization of $\mV$ assumed in \eqref{eqn:ftk_factor} conveniently allows the first eigenvector, $\vV_1$, to be the vector of ones in \eqref{fastcompAssumpB} below.  The columns of $\mV$ are eigenvectors of $\mC$, and $\mLambda$ is a diagonal matrix of eigenvalues of $\mC$.
 For any $n \times 1$ vector $\vb$, define the notation  $\widetilde{\vb} := \mV^H \vb$.
@@ -779,17 +775,16 @@ We make three assumptions that facilitate  fast computation:
 We call the transformation $\vb \mapsto \mV^H \vb$ a \emph{fast Bayesian transform} and $C_\vtheta$ a \emph{fast Bayesian transform kernel}.  
 
 Under assumptions \eqref{fastcompAssump} the eigenvalues may be identified as the fast Bayesian transform of the first column of $\mC$:
-\begin{align}
-\nonumber
+\begin{equation}
 \vlambda 
-& = \begin{pmatrix}
+= \begin{pmatrix}
 \lambda_1 \\ \vdots \\ \lambda_n
 \end{pmatrix} = \mLambda \vone = \mLambda \vv_1^* 
-= \underbrace{\left( \frac 1n \mV^H  \mV \right) }_{\mathsf{I}} \mLambda \vv_1^* \\
-&= \mV^H \left( \frac 1n \mV \mLambda \vv_1^* \right)
+= \underbrace{\left( \frac 1n \mV^H  \mV \right) }_{\mathsf{I}} \mLambda \vv_1^* 
+= \mV^H \left( \frac 1n \mV \mLambda \vv_1^* \right)
 = \mV^H \vC_1 =  \widetilde{\vC}_1,
 \label{eqn:fast_transform_to_eigvalues}
-\end{align}
+\end{equation}
 where $\mathsf{I}$ is the identity matrix and $\vv_1^*$ is the complex conjugate of the first row of $\mV$.
 Also note that the fast Bayesian transform of $\vone$ has a simple form
 \begin{align*} 
@@ -847,9 +842,7 @@ s^2_\MLE
 \widehat{\sigma}^2_{\textup{full}}
 & =
 \frac{1}{n(n-1)} \sum_{i=2}^n \frac{\abs{\widetilde{y}_i}^2}{\lambda_i}
-\\
-\nonumber
-& \qquad \times
+\times
 \left[\frac{\lambda_1}{n}{\left(1 - \frac{\widetilde{c}_1}{\lambda_1}\right)^2} + \left(c_0  - \frac 1n \sum_{i=1}^n \frac{\abs{\widetilde{c}_i}^2}{\lambda_i}\right) \right], \\
 \nonumber 
 s^2_{\textup{GCV}} & =  \frac 1{n} \sum_{i=2}^n \frac{\abs{\widetilde{y}_i}^2}{\lambda_i^2}  \left [ \sum_{i=1}^n \frac{1}{\lambda_i} \right]^{-1},
@@ -1129,7 +1122,7 @@ Let $C_\vtheta$ be any symmetric, positive definite,  shift-invariant covariance
 
 Although the third part of the computational cost has the largest dependence on $n$, in practice it need not be the largest contributor to the computational cost.  If function values are the result of an expensive simulation, then the first part may consume most of the computation time.
 
-We have implemented the fast adaptive Bayesian cubature algorithm in MATLAB as part of the Guaranteed Adaptive Integration Library (GAIL) \cite{ChoEtal17b} as  \code{cubBayesLattice\_g}. This algorithm uses the covariance kernel defined in \eqref{eqn:ourkernel} with  $r=1$ and $2$, and the periodizing variable transforms in  \secref{period_var_tx}.  The rank-1 lattice node generator is taken from \cite{Nuy17a}  (\code{exod2\_base2\_m20}).
+We have implemented the fast adaptive Bayesian cubature algorithm in MATLAB as part of the Guaranteed Adaptive Integration Library (GAIL) \cite{ChoEtal17b} as \linebreak[4]  \code{cubBayesLattice\_g}. This algorithm uses the covariance kernel defined in \eqref{eqn:ourkernel} with  $r=1$ and $2$, and the periodizing variable transforms in  \secref{period_var_tx}.  The rank-1 lattice node generator is taken from \cite{Nuy17a}  (\code{exod2\_base2\_m20}).
 
 \section{Numerical Experiments} \label{sec:NumExp}
 
@@ -1172,10 +1165,9 @@ Examples of this kind of transform include \cite{Sid08a}:
 %C^0 &: \Psi(x) =  3 x^2 - 2 x^3, \quad   \Psi'(x) = 6x(1-x), \\
 %C^1 & : \Psi(x) = x^3(10-15x+6x^2),  \\
 %&\qquad \qquad \qquad   \Psi'(x) = 30x^2(1-x)^2 \\
-\text{Sidi's } C^1 & : \Psi(x) = x - \frac{\sin(2\pi x)}{2 \pi}, \\
-&\qquad \qquad \qquad   \Psi'(x) = 1 - \cos(2\pi x), \\
-\text{Sidi's } C^2 & : \Psi(x) = \frac {8 - 9 \cos(\pi x) + \cos(3 \pi x)}{16} ,  \\
-&\qquad \qquad \Psi'(x) = \frac {3 \pi[3 \sin(\pi x) - \sin(3 \pi x)]}{16}.
+\text{Sidi's } C^1 & : \Psi(x) = x - \frac{\sin(2\pi x)}{2 \pi},  \qquad   \Psi'(x) = 1 - \cos(2\pi x), \\
+\text{Sidi's } C^2 & : \Psi(x) = \frac {8 - 9 \cos(\pi x) + \cos(3 \pi x)}{16} ,  
+ \quad \Psi'(x) = \frac {3 \pi[3 \sin(\pi x) - \sin(3 \pi x)]}{16}.
 \end{align*}
 
 Periodizing variable transforms are used in the numerical examples below. In some cases, they can speed the convergence of the Bayesian cubature because they allow one to take advantage of smoother covariance kernels. 
@@ -1227,12 +1219,9 @@ This could be due to the periodized integrand being smoother than the $r=2$ cova
 
 This multidimensional integral function comes from \cite{Kei96} and is inspired by a physics application:
 \begin{align*}
-\mu & =  \int_{\reals^d} \cos(\norm{ \vt}) \exp(-\norm{ \vt }^2) \, \dvt \\
-\nonumber
-%&  = 
-%\int_{\reals^d} \cos(a\norm{ \vt}) \exp(-a^2\norm{ \vt }^2)  a^d \, \dvt \\
-& = \int_{[0,1]^d} f_{\textup{Keister}}(\vx) \, \dvx,\\
-\text{where } \qquad \qquad & \\
+\mu & =  \int_{\reals^d} \cos(\norm{ \vt}) \exp(-\norm{ \vt }^2) \, \dvt 
+ = \int_{[0,1]^d} f_{\textup{Keister}}(\vx) \, \dvx,\\
+\text{where } 
 f_\textup{Keister}(\vx) &= \pi^{d/2} \cos\left(\norm{ \Phi^{-1}(\vx)/2}\right)  ,
 \end{align*}
 and again $\Phi$ is the standard Gaussian distribution.
@@ -1421,7 +1410,8 @@ $
 allows us to evaluate the integrals with respect to $\xi$ and $\lambda$:
 \begin{align*}
 \MoveEqLeft{\rho_{\mu|\vf}(z | \vy)} \\
-& \propto \displaystyle \int_{0}^\infty  \frac{1}{\lambda^{(n+3)/2}}  \exp\left( -\frac{  \gamma - \beta^2/\alpha}{2\lambda(c_0  -\vc ^T \mC^{-1} \vc)} \right)  
+& \propto \displaystyle \int_{0}^\infty  \frac{1}{\lambda^{(n+3)/2}}  \exp\left( -\frac{  \gamma - \beta^2/\alpha}{2\lambda(c_0  -\vc ^T \mC^{-1} \vc)} \right)  \\
+&\qquad \qquad \times
 \int_{-\infty}^\infty  \exp\left( -\frac{\alpha (\xi -\beta/\alpha)^2}{2\lambda(c_0  -\vc ^T \mC^{-1} \vc)} \right) \, \D \xi \D \lambda \\
 & \propto \displaystyle \int_{0}^\infty  \frac{1}{\lambda^{(n+2)/2}}  \exp\left( -\frac{  \gamma - \beta^2/\alpha}{2\lambda(c_0  -\vc ^T \mC^{-1} \vc)} \right) \D \lambda \\
 & \propto \left(\gamma - \frac{\beta^2}{\alpha}\right)^{-n/2} \\
