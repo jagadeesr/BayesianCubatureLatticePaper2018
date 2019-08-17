@@ -614,7 +614,7 @@ We recognize that multiple applications of our credible intervals in one run of 
       
       \While{$\err_{\textup{CI}} > \varepsilon$ and $n \le n_{\textup{max}}$}
       
-        \State\label{LoopStart}Generate $\{ \vx_i\}_{i=n' + 1}^{n}$ and sample $\{f(\vx_i)\}_{i=n'+1}^{n}$
+        \State Generate $\{ \vx_i\}_{i=n' + 1}^{n}$ and sample $\{f(\vx_i)\}_{i=n'+1}^{n}$
         \State Compute $\vtheta$ by \eqref{eqn:thetaMLE} or \eqref{vthetaGCV}
         \State Compute $\err_{\textup{CI}}$  according to \eqref{eqn:err_MLEGCV} or \eqref{FJH:eq:errFull}
         
@@ -1094,7 +1094,7 @@ The computational steps for the improved, faster, automatic Bayesian cubature ar
 		
 		\While{$\err_{\textup{CI}} > \varepsilon$ and $n \le n_{\textup{max}}$}
 		
-		\State\label{LoopStart}Generate $\{ \vx_i\}_{i=n' + 1}^{n}$ and sample $\{f(\vx_i)\}_{i=n'+1}^{n}$
+		\State Generate $\{ \vx_i\}_{i=n' + 1}^{n}$ and sample $\{f(\vx_i)\}_{i=n'+1}^{n}$
 		\State Compute $\vtheta$ by \eqref{eqn_MLE_loss_func_optimized_2} or \eqref{thetaGCV}
 		\State Compute $\err_{\textup{CI}}$  according to \eqref{fastStoppingCriterionMLE}, \eqref{fastStoppingCriterionFull}, or \eqref{fastStoppingCriterionGCV}
 		
