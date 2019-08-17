@@ -17,9 +17,9 @@
 %
 \smartqed  % flush right qed marks, e.g. at end of proof
 %
-\usepackage{graphicx}
 \usepackage{natbib}
 \usepackage{xspace}
+\usepackage{graphicx}
 \usepackage{amssymb}
 %\usepackage{cite}
 %
@@ -311,7 +311,7 @@ which is explained in Section \ref{sec:bayes_cubature_algo}. Note that aside fro
 
 \cite{Hic17a} compares different approaches to cubature error analysis depending on whether the rule is deterministic or random and whether the integrand is assumed to be deterministic or random.  Error analysis that assumes a deterministic integrand lying in a Banach space leads to an error bound that is typically impractical for deciding how large $n$ must be to satisfy \eqref{eqn:err_crit}.  The deterministic error bound includes a (semi-) norm of the integrand, often called the variation, which is often more complex to compute than the original integral.
 
-\cite{HicJim16a} and \cite{JimHic16a} have developed stopping criteria for cubature rules based on low discrepancy nodes by tracking the decay of the discrete Fourier coefficients of the integrand.  The algorithm proposed here also relies on discrete Fourier coefficients, but in a different way.  Although we only explore automatic Bayesian cubature for absolute error tolerances, the recent work by Hickernell, Jim\'enez-Rugama, and Li~\cite{HicEtal17a} suggests how one might accommodate more general error criteria, such as relative error tolerances.
+\cite{HicJim16a} and \cite{JimHic16a} have developed stopping criteria for cubature rules based on low discrepancy nodes by tracking the decay of the discrete Fourier coefficients of the integrand.  The algorithm proposed here also relies on discrete Fourier coefficients, but in a different way.  Although we only explore automatic Bayesian cubature for absolute error tolerances, the recent work by \cite{HicEtal17a} suggests how one might accommodate more general error criteria, such as relative error tolerances.
 
 Section \ref{sec:BC} explains the Bayesian approach to estimating the posterior cubature error and defines our automatic Bayesian cubature. Although much of this material is known, it is included for completeness.  We end Section \ref{sec:BC}  by demonstrating why Bayesian cubature is typically computationally expensive.
 Section \ref{sec:fast_BC}  introduces the concept of covariance kernels that match the nodes, which expedites the computations required by our automatic Bayesian cubature. 
@@ -982,7 +982,7 @@ K_\vtheta(\vx) =
 \forall \vt,\vx \in [0,1]^d, \  \vtheta = (r,\eta), \ r \in \naturals, \ \eta > 0.
 \end{multline}
 \end{subequations}
-Symmetric, periodic, positive definite kernels of this form appear in  \cite{Hic96a} and  \cite{DicEtal14a}.  Bernoulli polynomials are described in \cite[Chapter 24]{OlvEtal10a}.
+Symmetric, periodic, positive definite kernels of this form appear in \cite{Hic96a} and  \cite{DicEtal14a}.  Bernoulli polynomials are described in \cite[Chapter 24]{OlvEtal10a}.
 
 Larger $r$ implies a greater degree of smoothness of the covariance kernel.  Larger $\eta$ implies greater fluctuations of the output with respect to the input.  Plots of $C_\vtheta(\cdot, 0.3)$ are given in \figref{fig:fourierkernel-dim1} for various $\vtheta=(r, \eta)$ values.
 
@@ -1124,7 +1124,7 @@ Let $C_\vtheta$ be any symmetric, positive definite,  shift-invariant covariance
 
 Although the third part of the computational cost has the largest dependence on $n$, in practice it need not be the largest contributor to the computational cost.  If function values are the result of an expensive simulation, then the first part may consume most of the computation time.
 
-We have implemented the fast adaptive Bayesian cubature algorithm in MATLAB as part of the Guaranteed Adaptive Integration Library (GAIL) \citep{ChoEtal19a} as  \code{cubBayesLattice\_g}. This algorithm uses the covariance kernel defined in \eqref{eqn:ourkernel} with  $r=1$ and $2$, and the periodizing variable transforms in  \secref{period_var_tx}.  The rank-1 lattice node generator is taken from \cite{Nuy17a}  (\code{exod2\_base2\_m20}).
+We have implemented the fast adaptive Bayesian cubature algorithm in MATLAB as part of the Guaranteed Adaptive Integration Library (GAIL) \citep{ChoEtal19a} as \code{cubBayesLattice\_g}. This algorithm uses the covariance kernel defined in \eqref{eqn:ourkernel} with  $r=1$ and $2$, and the periodizing variable transforms in  \secref{period_var_tx}.  The rank-1 lattice node generator is taken from \cite{Nuy17a}  (\code{exod2\_base2\_m20}).
 
 \section{Numerical Experiments} \label{sec:NumExp}
 
@@ -1185,7 +1185,7 @@ Three integrals were evaluated using the GAIL algorithm \code{cubBayesLattice\_g
 These three integrands are defined below.
 The sequences $\{\vx_i\}_{i=1}^\infty$ are the randomly shifted lattice node sequences supplied by GAIL. 
 For each integral and each of our stopping criteria---empirical Bayes, full Bayes, and generalized cross-validation---our algorithm was run for $400$ different randomly chosen error tolerances. The error tolerances were chosen randomly in an interval depending on the difficulty of the problem. In each run, the nodes were also randomly shifted with $\mathcal{U}[0,1]$ shifts independent of each other and the error tolerances. The accuracy of the algorithm depends mildly on the shift; there is no universally optimal shift.
-For each test, the execution times are plotted against $\abs{\mu - \hmu}/\varepsilon$.  We expect $\abs{\mu - \hmu}/\varepsilon$ to be no greater than one, but hopefully not too much smaller than one, which would indicate a stopping criterion that is too conservative. Figures \ref{fig:mvn-guaranteed-MLE} to \ref{fig:optprice-guaranteed-GCV} can be reproduced using the script \break \code{cubBayesLattice\_guaranteed\_plots.m} in GAIL.
+For each test, the execution times are plotted against $\abs{\mu - \hmu}/\varepsilon$.  We expect $\abs{\mu - \hmu}/\varepsilon$ to be no greater than one, but hopefully not too much smaller than one, which would indicate a stopping criterion that is too conservative. Figures \ref{fig:mvn-guaranteed-MLE} to \ref{fig:optprice-guaranteed-GCV} can be reproduced using the script \code{cubBayesLattice\_guaranteed\_plots.m} in GAIL.
 
 Ideally, we would optimize both $r$ and $\eta$ simultaneously in the definition of our $C_\vtheta$ in \eqref{eqn:ourkernel}.  However, in these examples we fix $r$ and optimize $\eta$ only.  This is a technical challenge, not a limitation of our theory.
 
