@@ -613,7 +613,7 @@ We recognize that multiple applications of our credible intervals in one run of 
       
       \While{$\err_{\textup{CI}} > \varepsilon$ and $n \le n_{\textup{max}}$}
       
-        \State\label{LoopStart}Generate $\{ \vx_i\}_{i=n' + 1}^{n}$ and sample $\{f(\vx_i)\}_{i=n'+1}^{n}$
+        \State Generate $\{ \vx_i\}_{i=n' + 1}^{n}$ and sample $\{f(\vx_i)\}_{i=n'+1}^{n}$
         \State Compute $\vtheta$ by \eqref{eqn:thetaMLE} or \eqref{vthetaGCV}
         \State Compute $\err_{\textup{CI}}$  according to \eqref{eqn:err_MLEGCV} or \eqref{FJH:eq:errFull}
         
@@ -913,14 +913,14 @@ and so $\hmu$ is simply the sample mean.  Also, under assumption \eqref{addAssum
 &=
 t_{n-1,0.995}
 \sqrt{\frac{1}{n(n-1)} \sum_{i=2}^n \frac{\abs{\widetilde{y}_i}^2}{\lambda_i}  \left(\frac{\lambda_1}{n}  - 1  \right)}, \\
-\nonumber
+\label{errGCVSimple}
 \err_{\textup{GCV}} & =
 \frac{2.58}{n}\left\{\sum_{i=2}^n \frac{\abs{\widetilde{y}_i}^2}{\lambda_i^2}  \left [ \frac 1n \sum_{i=1}^n \frac{1}{\lambda_i} \right]^{-1} 
 \left( 1 -  \frac{n}{\lambda_1} \right)  
-\right\}^{1/2}. \label{errGCVSimple}
+\right\}^{1/2}. 
 \end{align}
 \end{subequations}
-In the formulas for the credible interval half-widths, $\vlambda$ depends on $\vtheta$, and  $\vtheta$ is assumed to take on the values $\vtheta_{\MLE}$ or $\vtheta_{\GCV}$ as appropriate.
+In the formulas for the credible interval half-widths and $\vlambda$ depends on $\vtheta$, and  $\vtheta$ is assumed to take on the values $\vtheta_{\MLE}$ or $\vtheta_{\GCV}$ as appropriate.
 \end{theorem}
 
 
@@ -1093,7 +1093,7 @@ The computational steps for the improved, faster, automatic Bayesian cubature ar
 		
 		\While{$\err_{\textup{CI}} > \varepsilon$ and $n \le n_{\textup{max}}$}
 		
-		\State\label{LoopStart}Generate $\{ \vx_i\}_{i=n' + 1}^{n}$ and sample $\{f(\vx_i)\}_{i=n'+1}^{n}$
+		\State Generate $\{ \vx_i\}_{i=n' + 1}^{n}$ and sample $\{f(\vx_i)\}_{i=n'+1}^{n}$
 		\State Compute $\vtheta$ by \eqref{eqn_MLE_loss_func_optimized_2} or \eqref{thetaGCV}
 		\State Compute $\err_{\textup{CI}}$  according to \eqref{fastStoppingCriterionMLE}, \eqref{fastStoppingCriterionFull}, or \eqref{fastStoppingCriterionGCV}
 		
