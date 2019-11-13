@@ -199,7 +199,7 @@
 \newcommand\figref{Figure~\ref}
 \newcommand\secref{Section~\ref}
 
-\graphicspath{{.}{./figures/}{D:/Mega/MyWriteupBackup/Sep_2ndweek_1/}}
+\graphicspath{{.}{./figures/grey/}{D:/Mega/MyWriteupBackup/Sep_2ndweek_1/}}
 %\graphicspath{{./figures/}}
 
 %
@@ -1024,8 +1024,9 @@ Because $\mK_\vtheta$ is circulant, we know the form of it's eigenvector-eigenva
 \end{equation}
 By \eqref{shInvKernGramMatrix} we then have the eigenvector-eigenvalue decomposition for $\mC_{\vtheta}$ assumed in \eqref{eqn:ftk_factor}, namely
 \begin{equation} \label{Clateig}
-    \mC_{\vtheta} = \frac 1n \mV \mLambda_\vtheta \mV^H , \qquad \mV = \mP \mW,
+    \mC_{\vtheta} = \frac 1n \mV \mLambda_\vtheta \mV^H , \qquad \mV = \mP \mW \mP^T,
 \end{equation}
+
 where the eigenvalues of  $\mC_{\vtheta}$ and $\mK_{\vtheta}$ are identical.
 
 Fast Bayesian transform assumptions \eqref{fastcompAssumpA} and \eqref{fastcompAssumpB} can be verified by \eqref{PermMat}, \eqref{Keig}, and \eqref{Clateig}.  Assumption \eqref{fastcompAssumpC} is satisfied because $\mV^H \vb = \mW^H \mP^T \vb$ is just the discrete Fourier transform of a vector whose rows have been permuted.  This can be performed in $\Order(n \log(n))$ operations by the FFT. A proper scaling of the kernel $K_\vtheta$, such as the one given by \eqref{the_kernel_eqn_bernoulli},  ensures that assumption \eqref{addAssump} is satisfied. 
@@ -1124,7 +1125,7 @@ Let $C_\vtheta$ be any symmetric, positive definite,  shift-invariant covariance
 
 Although the third part of the computational cost has the largest dependence on $n$, in practice it need not be the largest contributor to the computational cost.  If function values are the result of an expensive simulation, then the first part may consume most of the computation time.
 
-We have implemented the fast adaptive Bayesian cubature algorithm in MATLAB as part of the Guaranteed Adaptive Integration Library (GAIL) \citep{ChoEtal19a} as \code{cubBayesLattice\_g}. This algorithm uses the covariance kernel defined in \eqref{eqn:ourkernel} with  $r=1$ and $2$, and the periodizing variable transforms in  \secref{period_var_tx}.  The rank-1 lattice node generator is taken from \cite{Nuy17a}  (\code{exod2\_base2\_m20}).
+We have implemented the fast adaptive Bayesian cubature algorithm in MATLAB as part of the Guaranteed Adaptive Integration Library (GAIL) \citep{ChoEtal19a} as \code{cubBayesLattice\_g}. This algorithm uses the covariance kernel defined in \eqref{eqn:ourkernel} with  $r=1$ and $2$, and the periodizing variable transforms in  \secref{period_var_tx}.  The rank-1 lattice node generator is taken from \cite{Nuy17a} \\ (\code{exod2\_base2\_m20}).
 
 \section{Numerical Experiments} \label{sec:NumExp}
 
